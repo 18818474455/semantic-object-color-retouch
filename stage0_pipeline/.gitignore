@@ -1,6 +1,7 @@
 # secrets — never commit API keys
-secrets/
-*.local.json
+secrets/api.local.json
+secrets/*.local.json
+!secrets/*.example
 .env
 
 # python

@@ -3,9 +3,9 @@
 .venv-m2/
 
 # Secrets — never commit API keys
-secrets/
-**/secrets/
-*.local.json
+**/secrets/api.local.json
+**/secrets/*.local.json
+!**/secrets/*.example
 .env
 .env.*
 
