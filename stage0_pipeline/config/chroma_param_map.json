@@ -1,0 +1,58 @@
+{
+  "version": "1.0-draft",
+  "note": "Maps each frozen action to REAL Chroma engine sliders (chroma_process_params_t / BasicAdjustParams), all in [-1,1] except exposure which the AutoColor path treats as EV. Values are at strength=1.0 and are linearly scaled by the plan strength. GLOBAL actions map 1:1 to global sliders and can run TODAY through chroma_process_srgb_image_f32. REGIONAL actions list the sliders to apply INSIDE the region mask; the engine does not yet have a regional/masked operator ('Local/masked edits are later operators' per COLOR_PIPELINE.md), so for Stage 0 they are approximated by the Python preview renderer and are the spec for the future Chroma regional operator. HSL bands use the 8-band Color Mixer order [Red,Orange,Yellow,Green,Aqua,Blue,Purple,Magenta].",
+  "engine": {
+    "render_entry": "chroma_process_srgb_image_f32 / apply_basic_adjustment_image",
+    "params_struct": "chroma_process_params_t (BasicAdjustParams)",
+    "existing_auto_color": "chroma_compute_auto_color_context_f32 + VLM + chroma_validate_auto_color_params",
+    "safety_layer": "5 deterministic rules incl. skin/highlight/shadow protection"
+  },
+  "global": {
+    "none": {},
+    "white_balance_correct": {"_driver": "gray_world", "temperature": 0.0, "tint": 0.0, "_note": "derive temperature/tint sign+magnitude from context.gray_world_rgb; positive temp=warm."},
+    "exposure_lift": {"exposure": 0.35},
+    "exposure_reduce": {"exposure": -0.30},
+    "contrast_soften": {"contrast": -0.25},
+    "contrast_boost": {"contrast": 0.25},
+    "latitude_recovery": {"_executor": "gpt_image_2", "_local_fallback": {"highlights": -0.35, "shadows": 0.35, "whites": -0.15, "blacks": 0.15, "dehaze": 0.15}},
+    "clarity_boost": {"_executor": "gpt_image_2", "_local_fallback": {"clarity": 0.35, "texture": 0.15}}
+  },
+  "sky": {
+    "keep": {},
+    "slight_clean": {"_region": "sky_mask", "temperature": -0.08, "saturation": 0.06, "hsl_sat": {"Blue": 0.1, "Aqua": 0.06}},
+    "natural_daylight_blue": {"_region": "sky_mask", "temperature": -0.15, "saturation": 0.1, "vibrance": 0.1, "hsl_sat": {"Blue": 0.25, "Aqua": 0.12}, "hsl_lum": {"Blue": -0.05}},
+    "deep_blue": {"_region": "sky_mask", "temperature": -0.22, "saturation": 0.18, "vibrance": 0.15, "hsl_sat": {"Blue": 0.4, "Aqua": 0.15}, "hsl_lum": {"Blue": -0.1}},
+    "keep_overcast_mood": {"_region": "sky_mask", "dehaze": 0.1},
+    "keep_sunset": {},
+    "keep_night": {}
+  },
+  "skin": {
+    "keep": {},
+    "remove_yellow_green_cast": {"_region": "skin_mask", "tint": 0.1, "temperature": 0.05, "saturation": -0.02, "_safety": "skin_tone_protection"},
+    "remove_red_orange_cast": {"_region": "skin_mask", "temperature": -0.05, "saturation": -0.06, "_safety": "skin_tone_protection"},
+    "clean_natural": {"_region": "skin_mask", "temperature": 0.02, "tint": 0.05, "_safety": "skin_tone_protection"},
+    "warm_healthy": {"_region": "skin_mask", "temperature": -0.03, "vibrance": 0.04, "_safety": "skin_tone_protection"}
+  },
+  "grass_tree": {
+    "keep": {},
+    "fresh_natural_green": {"_region": "foliage_mask", "hsl_sat": {"Green": 0.1, "Yellow": -0.05}, "hsl_hue": {"Green": 0.05}, "vibrance": 0.05},
+    "reduce_yellow_cast": {"_region": "foliage_mask", "hsl_hue": {"Yellow": 0.1, "Green": 0.05}, "hsl_sat": {"Yellow": -0.08}},
+    "darker_cinematic_green": {"_region": "foliage_mask", "hsl_lum": {"Green": -0.08}, "hsl_sat": {"Green": 0.05}, "hsl_hue": {"Green": 0.08}}
+  },
+  "water": {
+    "keep": {},
+    "cleaner_blue_cyan": {"_region": "water_mask", "hsl_sat": {"Aqua": 0.12, "Blue": 0.08}, "hsl_hue": {"Aqua": 0.06}, "vibrance": 0.06}
+  },
+  "clothing": {
+    "keep": {},
+    "neutralize_white": {"_region": "white_clothing_mask", "saturation": -0.4, "_note": "only where clothing is near-white; do not touch chromatic garments."}
+  },
+  "led_stage": {
+    "keep": {},
+    "reduce_face_color_pollution": {"_region": "face_mask", "saturation": -0.1, "tint": 0.05, "_note": "apply on face mask only, preserve stage/LED background."}
+  },
+  "food": {
+    "keep": {},
+    "warm_appetizing": {"_region": "food_mask", "temperature": 0.08, "vibrance": 0.08, "saturation": 0.04}
+  }
+}

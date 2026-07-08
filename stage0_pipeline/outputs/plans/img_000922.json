@@ -1,0 +1,120 @@
+{
+  "image_id": "img_000922",
+  "scene": {
+    "type": "night_or_dark",
+    "lighting": "night",
+    "bucket": "difficult",
+    "source": "heuristic"
+  },
+  "plans": [
+    {
+      "plan_id": "p1",
+      "name": "commercial_clean",
+      "summary": "Brighter, cleaner, more pleasing delivery color.",
+      "risk": "low",
+      "executor": "gpt_image_2",
+      "routing_reason": "clip_low_pct=71.543>3.0; sharpness_proxy=0.0758<0.2",
+      "two_stage": true,
+      "region_actions": [
+        {
+          "object_type": "global",
+          "region_id": "global",
+          "action": "global.exposure_lift",
+          "action_id": "exposure_lift",
+          "strength": 0.4,
+          "executor": "local_cpp",
+          "local_params": {
+            "exposure": 0.35
+          }
+        },
+        {
+          "object_type": "global",
+          "region_id": "global",
+          "action": "global.contrast_boost",
+          "action_id": "contrast_boost",
+          "strength": 0.3,
+          "executor": "local_cpp",
+          "local_params": {
+            "contrast": 0.25
+          }
+        }
+      ],
+      "preserve": [
+        "identity",
+        "skin_texture",
+        "clothing_color",
+        "logos",
+        "text",
+        "background_structure",
+        "object_shapes",
+        "composition"
+      ],
+      "gpt_image_prompt": "This is a photo retouching task, NOT image generation. Strictly preserve: person identity, facial features, face shape, skin texture, pores, expression, age, hair, body shape, pose, clothing design and brand colors, logos, text and signs, background structure, object shapes, composition, and framing. Do not add, remove, move, or replace any object. Do not beautify or slim faces/bodies.\nGently lift overall exposure to open up midtones while protecting highlights. Add gentle global contrast for a cleaner look without crushing shadows."
+    },
+    {
+      "plan_id": "p2",
+      "name": "restore_original_intent",
+      "summary": "Preserve stage/sunset/night mood, only fix pollution.",
+      "risk": "low",
+      "executor": "gpt_image_2",
+      "routing_reason": "clip_low_pct=71.543>3.0; sharpness_proxy=0.0758<0.2",
+      "two_stage": true,
+      "region_actions": [
+        {
+          "object_type": "global",
+          "region_id": "global",
+          "action": "global.none",
+          "action_id": "none",
+          "strength": 0.0,
+          "executor": "local_cpp",
+          "local_params": {}
+        }
+      ],
+      "preserve": [
+        "identity",
+        "skin_texture",
+        "clothing_color",
+        "logos",
+        "text",
+        "background_structure",
+        "object_shapes",
+        "composition"
+      ],
+      "gpt_image_prompt": "This is a photo retouching task, NOT image generation. Strictly preserve: person identity, facial features, face shape, skin texture, pores, expression, age, hair, body shape, pose, clothing design and brand colors, logos, text and signs, background structure, object shapes, composition, and framing. Do not add, remove, move, or replace any object. Do not beautify or slim faces/bodies."
+    },
+    {
+      "plan_id": "p3",
+      "name": "latitude_recovery",
+      "summary": "Recover highlight/shadow detail and clarity beyond local latitude.",
+      "risk": "medium",
+      "executor": "gpt_image_2",
+      "routing_reason": "clip_high=0.013 clip_low=71.543",
+      "two_stage": true,
+      "local_pre_correction": {
+        "white_balance": "auto"
+      },
+      "region_actions": [
+        {
+          "object_type": "global",
+          "region_id": "global",
+          "action": "global.latitude_recovery",
+          "action_id": "latitude_recovery",
+          "strength": 0.7,
+          "executor": "gpt_image_2",
+          "local_params": {}
+        }
+      ],
+      "preserve": [
+        "identity",
+        "skin_texture",
+        "clothing_color",
+        "logos",
+        "text",
+        "background_structure",
+        "object_shapes",
+        "composition"
+      ],
+      "gpt_image_prompt": "This is a photo retouching task, NOT image generation. Strictly preserve: person identity, facial features, face shape, skin texture, pores, expression, age, hair, body shape, pose, clothing design and brand colors, logos, text and signs, background structure, object shapes, composition, and framing. Do not add, remove, move, or replace any object. Do not beautify or slim faces/bodies.\nRecover highlight and shadow detail naturally, as if the photo was shot with higher dynamic range, without halos, artificial HDR look, or over-sharpening.\nRecover highlight and shadow detail naturally, as if the photo was shot with higher dynamic range, without halos, artificial HDR look, or over-sharpening."
+    }
+  ]
+}

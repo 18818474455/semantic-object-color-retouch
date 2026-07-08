@@ -1,0 +1,30 @@
+# Python virtual environments
+.venv/
+.venv-m2/
+
+# Secrets — never commit API keys
+secrets/
+**/secrets/
+*.local.json
+.env
+.env.*
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# macOS
+.DS_Store
+._*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Large generated datasets (reproducible from scripts + external source photos)
+outputs/stage0/manifest_clean.jsonl
+outputs/stage0/image_metrics.jsonl

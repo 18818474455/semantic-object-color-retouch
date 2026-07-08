@@ -1,0 +1,270 @@
+{
+  "version": "1.0-draft",
+  "status": "draft",
+  "note": "Frozen semantic color action vocabulary. VLM / student model may only SELECT an action id per region; it never writes free-form parameters or prompts. Each action binds two execution templates: local_params (for the Python/C++ renderer) and gpt_prompt_fragment (for GPT Image 2). local_params are applied WITHIN the region mask (feathered) unless object is 'global'. All numeric params are the value at strength=1.0 and are linearly scaled by the plan's strength.",
+  "strength_default": 0.6,
+  "objects": {
+    "global": {
+      "protect_level": "none",
+      "region": "whole_image",
+      "actions": {
+        "none": {
+          "summary": "No global change.",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": ""
+        },
+        "white_balance_correct": {
+          "summary": "Neutralize global color cast (gray-world / cast proxy driven).",
+          "executor": "local_cpp",
+          "default_strength": 0.4,
+          "local_params": { "white_balance": "gray_world" },
+          "gpt_prompt_fragment": "Correct the overall white balance to neutral, removing color casts, without changing subject identity or object colors."
+        },
+        "exposure_lift": {
+          "summary": "Lift global exposure.",
+          "executor": "local_cpp",
+          "default_strength": 0.4,
+          "local_params": { "exposure": 0.35 },
+          "gpt_prompt_fragment": "Gently lift overall exposure to open up midtones while protecting highlights."
+        },
+        "exposure_reduce": {
+          "summary": "Reduce global exposure / recover blown highlights by tone only.",
+          "executor": "local_cpp",
+          "default_strength": 0.4,
+          "local_params": { "exposure": -0.3 },
+          "gpt_prompt_fragment": "Gently reduce overall exposure to restore highlight balance."
+        },
+        "contrast_soften": {
+          "summary": "Soften global contrast.",
+          "executor": "local_cpp",
+          "default_strength": 0.35,
+          "local_params": { "contrast": -0.25 },
+          "gpt_prompt_fragment": "Soften global contrast slightly for a gentler tonal range."
+        },
+        "contrast_boost": {
+          "summary": "Boost global contrast.",
+          "executor": "local_cpp",
+          "default_strength": 0.35,
+          "local_params": { "contrast": 0.25 },
+          "gpt_prompt_fragment": "Add gentle global contrast for a cleaner look without crushing shadows."
+        },
+        "latitude_recovery": {
+          "summary": "Recover highlight/shadow detail beyond original latitude. GPT Image 2 only.",
+          "executor": "gpt_image_2",
+          "default_strength": 0.7,
+          "local_params": {},
+          "gpt_prompt_fragment": "Recover highlight and shadow detail naturally, as if the photo was shot with higher dynamic range, without halos, artificial HDR look, or over-sharpening."
+        },
+        "clarity_boost": {
+          "summary": "Improve perceived sharpness / micro-contrast. GPT Image 2 only.",
+          "executor": "gpt_image_2",
+          "default_strength": 0.6,
+          "local_params": {},
+          "gpt_prompt_fragment": "Improve overall clarity and micro-contrast without halos or over-sharpening, keeping a natural photographic look."
+        }
+      }
+    },
+    "sky": {
+      "protect_level": "medium",
+      "region": "mask",
+      "actions": {
+        "keep": {
+          "summary": "Do not touch the sky.",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": ""
+        },
+        "slight_clean": {
+          "summary": "Slightly clean a dull/hazy sky toward a believable blue-gray.",
+          "executor": "local_cpp",
+          "default_strength": 0.35,
+          "local_params": { "toward_hue": { "deg": 210, "amount": 0.25 }, "sat_add": 0.06, "lum_add": -0.01 },
+          "gpt_prompt_fragment": "Only gently clean the sky toward a believable daylight blue-gray. Preserve clouds, tree edges, buildings, and horizon."
+        },
+        "natural_daylight_blue": {
+          "summary": "Turn a dull gray daytime sky into natural daylight blue.",
+          "executor": "local_cpp",
+          "default_strength": 0.7,
+          "local_params": { "toward_hue": { "deg": 212, "amount": 0.5 }, "sat_add": 0.12, "lum_add": -0.03, "temp": -0.15 },
+          "gpt_prompt_fragment": "Only adjust the sky region. Make the sky a natural daylight blue with realistic brightness and soft saturation. Preserve cloud shape, building edges, trees, horizon, and the original lighting direction."
+        },
+        "deep_blue": {
+          "summary": "Deeper commercial blue sky (higher risk of looking fake).",
+          "executor": "local_cpp",
+          "default_strength": 0.8,
+          "local_params": { "toward_hue": { "deg": 216, "amount": 0.65 }, "sat_add": 0.2, "lum_add": -0.06, "temp": -0.22 },
+          "gpt_prompt_fragment": "Only adjust the sky region toward a deeper, clean commercial blue with realistic gradient. Preserve clouds, edges, horizon, and lighting direction. Avoid neon or fake HDR blue."
+        },
+        "keep_overcast_mood": {
+          "summary": "Keep the overcast documentary mood; only remove haze.",
+          "executor": "local_cpp",
+          "default_strength": 0.2,
+          "local_params": { "sat_add": 0.03 },
+          "gpt_prompt_fragment": "Keep the overcast mood of the sky. Do not make it blue; only reduce haze slightly."
+        },
+        "keep_sunset": {
+          "summary": "Preserve sunset color; never force blue.",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": "Preserve the sunset colors of the sky. Do not neutralize or make it blue."
+        },
+        "keep_night": {
+          "summary": "Preserve night sky; never force blue.",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": "Preserve the night sky. Do not brighten into daylight or make it blue."
+        }
+      }
+    },
+    "skin": {
+      "protect_level": "high",
+      "region": "mask",
+      "actions": {
+        "keep": {
+          "summary": "Do not touch skin.",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": ""
+        },
+        "remove_yellow_green_cast": {
+          "summary": "Gently remove yellow-green pollution from skin.",
+          "executor": "local_cpp",
+          "default_strength": 0.45,
+          "local_params": { "temp": 0.05, "tint": 0.1, "sat_add": -0.02 },
+          "gpt_prompt_fragment": "Correct yellow-green color pollution on skin gently while preserving natural skin texture, identity, pores, and age."
+        },
+        "remove_red_orange_cast": {
+          "summary": "Reduce oversaturated red/orange skin.",
+          "executor": "local_cpp",
+          "default_strength": 0.4,
+          "local_params": { "temp": -0.05, "sat_add": -0.06 },
+          "gpt_prompt_fragment": "Reduce oversaturated red-orange on skin while preserving identity and texture."
+        },
+        "clean_natural": {
+          "summary": "Clean natural skin tone.",
+          "executor": "local_cpp",
+          "default_strength": 0.4,
+          "local_params": { "temp": 0.02, "tint": 0.05, "lum_add": 0.02 },
+          "gpt_prompt_fragment": "Make skin a clean natural tone, preserving identity, texture, pores, and age. Avoid plastic skin."
+        },
+        "warm_healthy": {
+          "summary": "Warm healthy skin tone.",
+          "executor": "local_cpp",
+          "default_strength": 0.35,
+          "local_params": { "temp": -0.03, "sat_add": 0.04, "lum_add": 0.02 },
+          "gpt_prompt_fragment": "Give skin a warm, healthy tone while preserving identity and texture. Avoid orange or plastic skin."
+        }
+      }
+    },
+    "grass_tree": {
+      "protect_level": "low",
+      "region": "mask",
+      "actions": {
+        "keep": {
+          "summary": "Do not touch greenery.",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": ""
+        },
+        "fresh_natural_green": {
+          "summary": "Fresh natural green, not neon.",
+          "executor": "local_cpp",
+          "default_strength": 0.5,
+          "local_params": { "toward_hue": { "deg": 115, "amount": 0.3 }, "sat_add": 0.08, "lum_add": 0.01 },
+          "gpt_prompt_fragment": "Make grass and trees a fresh natural green, keeping local texture. Avoid neon green."
+        },
+        "reduce_yellow_cast": {
+          "summary": "Reduce yellow pollution in greenery.",
+          "executor": "local_cpp",
+          "default_strength": 0.4,
+          "local_params": { "toward_hue": { "deg": 120, "amount": 0.35 }, "sat_add": 0.03 },
+          "gpt_prompt_fragment": "Reduce yellow cast on grass and trees toward a healthy green, keeping texture."
+        },
+        "darker_cinematic_green": {
+          "summary": "Darker cinematic green.",
+          "executor": "local_cpp",
+          "default_strength": 0.5,
+          "local_params": { "toward_hue": { "deg": 130, "amount": 0.35 }, "sat_add": 0.05, "lum_add": -0.05 },
+          "gpt_prompt_fragment": "Shift grass and trees toward a darker cinematic green while keeping texture."
+        }
+      }
+    },
+    "water": {
+      "protect_level": "low",
+      "region": "mask",
+      "actions": {
+        "keep": {
+          "summary": "Do not touch water.",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": ""
+        },
+        "cleaner_blue_cyan": {
+          "summary": "Cleaner blue/cyan water when scene supports it.",
+          "executor": "local_cpp",
+          "default_strength": 0.5,
+          "local_params": { "toward_hue": { "deg": 195, "amount": 0.4 }, "sat_add": 0.1, "lum_add": 0.0 },
+          "gpt_prompt_fragment": "Shift water toward a cleaner blue-cyan while preserving reflections and wave texture."
+        }
+      }
+    },
+    "clothing": {
+      "protect_level": "high",
+      "region": "mask",
+      "actions": {
+        "keep": {
+          "summary": "Protect clothing and brand colors (default).",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": "Preserve clothing design and brand colors exactly."
+        },
+        "neutralize_white": {
+          "summary": "Neutralize a color cast on white clothing only.",
+          "executor": "local_cpp",
+          "default_strength": 0.4,
+          "local_params": { "toward_neutral": 0.4 },
+          "gpt_prompt_fragment": "Neutralize the color cast on white clothing only, without changing other clothing colors or brand colors."
+        }
+      }
+    },
+    "led_stage": {
+      "protect_level": "high",
+      "region": "mask",
+      "actions": {
+        "keep": {
+          "summary": "Preserve stage/LED atmosphere (default).",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": "Preserve the stage and LED screen colors and atmosphere. Do not neutralize them."
+        },
+        "reduce_face_color_pollution": {
+          "summary": "Reduce colored-light pollution on faces only, keep stage color.",
+          "executor": "local_cpp",
+          "default_strength": 0.4,
+          "local_params": { "toward_neutral": 0.25, "sat_add": -0.05 },
+          "gpt_prompt_fragment": "Reduce colored stage-light pollution on faces only while preserving the stage and LED atmosphere elsewhere."
+        }
+      }
+    },
+    "food": {
+      "protect_level": "medium",
+      "region": "mask",
+      "actions": {
+        "keep": {
+          "summary": "Do not touch food.",
+          "executor": "local_cpp",
+          "local_params": {},
+          "gpt_prompt_fragment": ""
+        },
+        "warm_appetizing": {
+          "summary": "Warm appetizing food color.",
+          "executor": "local_cpp",
+          "default_strength": 0.45,
+          "local_params": { "temp": -0.08, "sat_add": 0.08, "lum_add": 0.02 },
+          "gpt_prompt_fragment": "Give food a warm appetizing color. Avoid gray, dull, or overly cool tones."
+        }
+      }
+    }
+  }
+}

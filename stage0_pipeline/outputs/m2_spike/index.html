@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Phase B 语义分割仿色 — 20 图验证</title>
+<style>
+  body { background:#111; color:#eee; font-family:-apple-system,"PingFang SC",sans-serif; margin:0; padding:24px 32px 80px; }
+  h1 { font-size:22px; margin-bottom:4px; }
+  h2 { font-size:16px; color:#ffb84d; margin:40px 0 8px; border-left:4px solid #ffb84d; padding-left:10px; }
+  p.sub { color:#999; font-size:13px; margin-top:0; }
+  .note { background:#1c1c1c; border:1px solid #333; border-radius:8px; padding:14px 18px; margin:14px 0 24px; font-size:14px; line-height:1.7; }
+  .note b { color:#ffb84d; }
+  .sheet { max-width:100%; border-radius:6px; display:block; margin:8px 0 4px; border:1px solid #333; }
+  .badge { display:inline-block; font-size:12px; background:#2a2a2a; color:#9fd; padding:2px 8px; border-radius:10px; margin-left:8px; }
+  .badge.fix { background:#402020; color:#ff8080; }
+  .row { display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start; margin:12px 0; }
+  .row figure { margin:0; flex:1; min-width:260px; }
+  .row img { width:100%; border-radius:6px; border:1px solid #333; }
+  figcaption { font-size:12px; color:#aaa; margin-top:4px; text-align:center; }
+</style>
+</head>
+<body>
+<h1>语义分割仿色 Phase B — 20 张图完整验证</h1>
+<p class="sub">Grounding DINO + SAM 真分割 · 天空合理性过滤 · neutral 兜底类动态收力 · 全部图片按原始抽样顺序展示，无挑选</p>
+
+<div class="note">
+<b>已更新为加强版：</b> 匹配上类别的强度从 0.9→1.6，肤色 1.15→1.3，精修层（vibrance/contrast/sharpen）也整体调强，天空/建筑这些能识别的区域现在颜色更饱和、更贴近参考图。
+<br><b>本轮修的 bug：</b> 之前提高强度后，<code>DAP02394_2</code>（分割没认出任何具体内容，96.9% 落进 "neutral" 兜底类）被整图硬套参考图的橙色调，白色卫衣变橙——这正是最初被吐槽的"橙黄暖色滤镜"。
+修复方式：当 neutral 兜底类吃掉的画面比例越大（代表模型没看懂这张图的内容），迁移强度就按平方曲线收到接近 0，不再瞎套色。这次强度整体调强之后重新验证过，这张依然安全（见下方 stage_led_mixed 新增抽样图）。
+</div>
+
+<h2>Bug 修复对比：DAP02394_2 <span class="badge fix">修复前 → 修复后</span></h2>
+<img class="sheet" src="BUGFIX_DAP02394_2.jpg">
+
+<h2>outdoor_sky（户外天空 / 建筑）<span class="badge">回归 2 图</span></h2>
+<img class="sheet" src="outdoor_sky_v2_sheet.jpg">
+<h2>outdoor_sky <span class="badge">新增抽样 3 图</span></h2>
+<img class="sheet" src="outdoor_sky_r2_v2_sheet.jpg">
+<div class="note">其中 <code>DAP03170(1)</code> 原本被启发式颜色规则误归为"户外天空"桶，实际内容是室内蓝屏演讲台。真分割正确识别成 "screen" 并和参考图（同款蓝屏演讲台）精准匹配上色，比颜色统计规则更懂内容。</div>
+
+<h2>person_event（人群合影）<span class="badge">回归 2 图</span></h2>
+<img class="sheet" src="person_event_v2_sheet.jpg">
+<h2>person_event <span class="badge">新增抽样 3 图</span></h2>
+<img class="sheet" src="person_event_r2_v2_sheet.jpg">
+
+<h2>stage_led_mixed（舞台 / LED 高危场景）<span class="badge">回归 2 图</span></h2>
+<img class="sheet" src="stage_led_mixed_v2_sheet.jpg">
+<h2>stage_led_mixed <span class="badge fix">新增抽样 3 图（含 bug 修复案例）</span></h2>
+<img class="sheet" src="stage_led_mixed_r2_v2_sheet.jpg">
+
+<h2>difficult（逆光 / 夜景 / 极端场景）<span class="badge">回归 2 图</span></h2>
+<img class="sheet" src="difficult_v2_sheet.jpg">
+<h2>difficult <span class="badge">新增抽样 3 图</span></h2>
+<img class="sheet" src="difficult_r2_v2_sheet.jpg">
+
+</body>
+</html>

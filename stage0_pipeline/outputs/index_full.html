@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>语义仿色 — 开发进度汇总</title>
+<style>
+  body { background:#111; color:#eee; font-family:-apple-system,"PingFang SC",sans-serif; margin:0; padding:24px 32px 100px; }
+  h1 { font-size:24px; margin-bottom:4px; }
+  h2 { font-size:18px; color:#7fd1ff; margin:44px 0 6px; border-left:4px solid #7fd1ff; padding-left:10px; }
+  h3 { font-size:15px; color:#ffb84d; margin:22px 0 6px; border-left:3px solid #ffb84d; padding-left:8px; }
+  p.sub { color:#999; font-size:13px; margin-top:0; }
+  .note { background:#1c1c1c; border:1px solid #333; border-radius:8px; padding:14px 18px; margin:12px 0 20px; font-size:14px; line-height:1.75; }
+  .note.warn { border-color:#5a3a1a; background:#221a10; }
+  .note.blocked { border-color:#5a1a1a; background:#221010; }
+  .note b { color:#ffb84d; }
+  .note.blocked b { color:#ff8080; }
+  code { background:#262626; padding:1px 5px; border-radius:4px; font-size:13px; }
+  .sheet { max-width:100%; border-radius:6px; display:block; margin:8px 0 4px; border:1px solid #333; }
+  .badge { display:inline-block; font-size:12px; background:#2a2a2a; color:#9fd; padding:2px 8px; border-radius:10px; margin-left:8px; }
+  .badge.done { background:#183a1c; color:#7ee08a; }
+  .badge.blocked { background:#402020; color:#ff8080; }
+  .badge.pending { background:#333; color:#bbb; }
+  .toc { background:#1a1a1a; border-radius:8px; padding:14px 20px; margin-bottom:30px; }
+  .toc a { color:#7fd1ff; text-decoration:none; }
+  .toc li { margin:4px 0; }
+  table { border-collapse:collapse; width:100%; margin:10px 0; font-size:13px; }
+  td, th { border:1px solid #333; padding:6px 10px; text-align:left; }
+  th { background:#1e1e1e; color:#ffb84d; }
+</style>
+</head>
+<body>
+<h1>语义仿色（Color Reference Transfer）开发进度汇总</h1>
+<p class="sub">Phase A（产品化）+ Phase B（真分割，已验证）+ Phase C（GPT 蒸馏，已尝试）全量记录</p>
+
+<div class="toc">
+<b>目录</b>
+<ul>
+  <li><a href="#phaseb">Phase B 回顾：真分割 + 安全门（已验证，20图无退步）</a></li>
+  <li><a href="#merge">正式版整合：统一 CLI 工具 <code>color_reference_transfer.py</code></a> <span class="badge done">完成</span></li>
+  <li><a href="#profile">Phase A-1：参考图 Style Profile 缓存</a> <span class="badge done">完成</span></li>
+  <li><a href="#strength">Phase A-2：强度档位（轻/中/强）</a> <span class="badge done">完成</span></li>
+  <li><a href="#gate">Phase A-3：整图内容匹配度硬门槛（过程中抓到并修复一个新 bug）</a> <span class="badge done">完成</span></li>
+  <li><a href="#regression">合并后 20 图完整回归复测</a> <span class="badge done">完成，无退步</span></li>
+  <li><a href="#phasec">Phase C：GPT 蒸馏尝试</a> <span class="badge blocked">被 API 阻塞</span></li>
+  <li><a href="#next">Phase E / F 现状说明</a> <span class="badge pending">未开始</span></li>
+</ul>
+</div>
+
+<h2 id="phaseb">Phase B 回顾</h2>
+<div class="note">
+真分割（Grounding DINO + SAM）+ 天空合理性过滤 + neutral 兜底类动态收力，已经在 20 张覆盖 4 类场景（户外天空/人群合影/舞台LED/逆光夜景）的样本上验证过，过程详见 <a href="m2_spike/index.html">Phase B 验证页面</a>。这是本轮 Phase A/C 工作的基础。
+</div>
+
+<h2 id="merge">正式版整合</h2>
+<div class="note">
+把调试用的 <code>scripts_m2/semantic_transfer_v2.py</code> 整理成正式模块 <code>scripts_m2/color_reference_transfer.py</code>，提供统一命令行：
+<pre style="background:#0d0d0d;padding:10px 14px;border-radius:6px;overflow-x:auto;">python color_reference_transfer.py --ref REF.jpg --tgt TGT1.jpg TGT2.jpg \
+    --out-dir OUT/ --strength {light,medium,strong} \
+    [--profile-out profile.json]   # 保存参考图分析结果，之后可复用
+    [--profile-in profile.json]    # 跳过重新分析参考图，直接套用</pre>
+</div>
+
+<h2 id="profile">Phase A-1：参考图 Style Profile 缓存</h2>
+<div class="note">
+以前每套一次参考图色调都要重新对参考图跑一次分割。现在参考图只分析一次，存成 JSON（每个识别到的类别记录 Lab 均值/标准差/亮度分位），之后可以直接加载复用到任意数量的目标照片，不用重复跑分割模型。冒烟测试：先保存 profile，再用 <code>--profile-in</code> 直接套用到新照片，行为一致。
+</div>
+
+<h2 id="strength">Phase A-2：强度档位</h2>
+<div class="note">强度从"手改数字"变成三档可选，各档位在同一张图上的效果：</div>
+<img class="sheet" src="color_reference_transfer/smoke/strength_ladder.jpg">
+<p class="sub">light → medium → strong：天空饱和度和通透度递增，medium 是 Phase B 已验证过的强度，strong 更激进但目前只做了小范围测试，量产前建议先用 medium。</p>
+
+<h2 id="gate">Phase A-3：整图内容匹配度门槛</h2>
+<div class="note warn">
+<b>过程中真的抓到一个新 bug：</b>最初这道门槛只是"打印警告"，没有真正拦截。用一张内容明显不匹配的参考图（户外蓝天）套到一张室内暖色人像照片上时，"clothing"类别的标签虽然同名，但参考图里的衣服和目标照片里的衣服根本不是一回事——被强行迁移后，女士的黑红色外套变成了诡异的白色鬼影。
+</div>
+<img class="sheet" src="color_reference_transfer/smoke/mismatch_check.jpg">
+<p class="sub">↑ 修复前：门槛只是警告，衣服被错误染白</p>
+<div class="note">
+<b>修复：</b>把内容匹配度门槛改成硬拦截——整图判定"不适合"时，除了 <code>skin</code>（人脸检测来源，有色相锁保护）和 <code>neutral</code>（本身已有动态收力保护）之外，其余所有具体类别一律跳过迁移，保持"宁可不动，不动错"。
+</div>
+<img class="sheet" src="color_reference_transfer/smoke/mismatch_check_fixed.jpg">
+<p class="sub">↑ 修复后：内容不匹配时基本保持原样</p>
+
+<h2 id="regression">合并后 20 图完整回归复测</h2>
+<div class="note">用整理后的正式版 <code>color_reference_transfer.py</code> 重跑了 Phase B 验证过的全部 20 张图（8 张原始回归 + 12 张扩展抽样），确认整合和门槛修复没有引入退步。</div>
+<h3>outdoor_sky</h3>
+<img class="sheet" src="color_reference_transfer/regression_20/outdoor_sky_sheet.jpg">
+<img class="sheet" src="color_reference_transfer/regression_20/outdoor_sky_r2_sheet.jpg">
+<h3>person_event</h3>
+<img class="sheet" src="color_reference_transfer/regression_20/person_event_sheet.jpg">
+<img class="sheet" src="color_reference_transfer/regression_20/person_event_r2_sheet.jpg">
+<h3>stage_led_mixed（高危场景）</h3>
+<img class="sheet" src="color_reference_transfer/regression_20/stage_led_mixed_sheet.jpg">
+<img class="sheet" src="color_reference_transfer/regression_20/stage_led_mixed_r2_sheet.jpg">
+<p class="sub">这个 bucket 里大部分图现在被内容匹配度门槛判定"不适合"（比如 DAP08349 的红色背景婚庆场景，跟户外蓝天参考图完全不是一回事），只保留 neutral 兜底类的轻微调整，比之前更保守也更安全。</p>
+<h3>difficult</h3>
+<img class="sheet" src="color_reference_transfer/regression_20/difficult_sheet.jpg">
+<img class="sheet" src="color_reference_transfer/regression_20/difficult_r2_sheet.jpg">
+
+<h2 id="phasec">Phase C：GPT 蒸馏尝试</h2>
+<div class="note blocked">
+<b>结论：GPT Image 2 参考仿色接口（双图 <code>images/edits</code>）目前不可靠，Phase C 蒸馏工作被此阻塞，不是本地算法的问题。</b>
+<br><br>
+具体发现：
+<ol>
+<li><b>接口经常超时</b>：连续 3 次调用参考仿色接口（传目标图+参考图两张图），全部在代理层 120 秒硬超时失败（Cloudflare Error 524），换小图也一样。</li>
+<li><b>更严重的问题——历史结果内容对不上：</b>检查之前跑过的两个参考仿色结果文件时发现，它们的画面内容和输入完全不符——本该是"雾中山间牌坊"场景的调色结果，实际存的却是"商场排队"和"K-pop 舞台跳舞"这种完全不相关的画面。说明这个 API 的双图参考编辑功能不仅慢，偶尔返回时内容也可能是错的/不相关的，不能直接当作可信的 teacher 信号使用。</li>
+<li><b>对照实验：单图编辑（不带参考图）是可靠的</b>——同一批早期测试里，不带参考图的单图编辑结果内容是对的（同一张操场升旗照，只是颜色变化）。所以问题精确定位在"双图参考"这个具体能力上，不是这个 API 整体不能用。今天重新验证单图编辑时，接口目前处于繁忙/超时状态，暂时也没能拿到新的可信 teacher 样本。</li>
+</ol>
+</div>
+<h3>问题证据：调色结果画面完全对不上原图</h3>
+<img class="sheet" src="color_reference_transfer/gpt_teacher/DAP00641_compare.jpg">
+<img class="sheet" src="color_reference_transfer/gpt_teacher/DAP00643_compare.jpg">
+<p class="sub">最右侧 "gpt teacher" 面板应该是左边"雾中山间牌坊"照片的调色版本，但实际内容完全是另外的场景——这两个文件不能用于量化残差分析。</p>
+<div class="note">
+<b>建议：</b>Phase C 暂缓，等 API 稳定或确认这家供应商双图参考编辑功能可用后再重新尝试；或者考虑换一种蒸馏思路——不依赖"目标图+参考图"双图输入，改成把参考图的颜色统计量（我们本地算法已经能提取的 Lab 均值/标准差）转成文字描述，用可靠的单图编辑 + 文字描述做蒸馏 teacher，绕开双图接口。
+</div>
+
+<h2 id="next">Phase E / F 现状说明</h2>
+<div class="note">
+<b>没有开始，也不建议在当前会话里"顺手做完"：</b>
+<ul>
+<li><b>Phase E</b>（2000-5000 张伪标签蒸馏 + 训练学生规划模型）是数天到数周量级的数据标注+GPU训练工作，需要单独规划算力和时间预算，不是能在当前会话里现算出来的。</li>
+<li><b>Phase F</b>（把验证过的算法接入 Chroma C++ 引擎、做成 App 里用户可选的"仿色"功能）需要涉及 iOS/Android 客户端和 C++ 代码改动，建议在 Python 原型效果和取舍方向都最终确认后再排期，避免返工。</li>
+</ul>
+本次已完成的 Phase A（产品化）+ Phase B（真分割验证）+ Phase C（发现并记录蒸馏路径的阻塞点）是当前这条技术路线里、在现有环境和 API 条件下能扎实推进的部分。
+</div>
+
+</body>
+</html>

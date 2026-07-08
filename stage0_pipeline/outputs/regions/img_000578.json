@@ -1,0 +1,129 @@
+{
+  "image_id": "img_000578",
+  "source_path": "/Volumes/未命名/大模型/原图1/DSC04085(1).JPG",
+  "scene": {
+    "type": "outdoor",
+    "lighting": "daylight",
+    "bucket": "outdoor_sky",
+    "source": "heuristic"
+  },
+  "global_metrics": {
+    "pixel_count": 1306200,
+    "area_frac": 1.0,
+    "rgb_mean": [
+      0.505,
+      0.56,
+      0.5936
+    ],
+    "lab_mean": [
+      58.2031,
+      -3.0156,
+      -4.687
+    ],
+    "hue_mean_deg": 187.16,
+    "saturation_mean": 0.274,
+    "value_mean": 0.6452,
+    "brightness": 139.62,
+    "lum_p05": 53.042,
+    "lum_p50": 165.684,
+    "lum_p95": 200.027,
+    "clip_high_pct": 0.061,
+    "clip_low_pct": 0.0,
+    "colorfulness": 0.1967,
+    "sharpness_proxy": 0.2766,
+    "green_magenta_a": -3.016,
+    "warm_cool_b": -4.689
+  },
+  "routing_metrics": {
+    "clip_high_pct": 0.061,
+    "clip_low_pct": 0.0,
+    "sharpness_proxy": 0.2766,
+    "mixed_light_score": 0.1
+  },
+  "regions": [
+    {
+      "region_id": "global",
+      "object_type": "global",
+      "role": "whole_image",
+      "bbox": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "confidence": 1.0,
+      "mask_quality": 1.0,
+      "protect_level": "none",
+      "source": "constant",
+      "color_metrics": {
+        "pixel_count": 1306200,
+        "area_frac": 1.0,
+        "rgb_mean": [
+          0.505,
+          0.56,
+          0.5936
+        ],
+        "lab_mean": [
+          58.2031,
+          -3.0156,
+          -4.687
+        ],
+        "hue_mean_deg": 187.16,
+        "saturation_mean": 0.274,
+        "value_mean": 0.6452,
+        "brightness": 139.62,
+        "lum_p05": 53.042,
+        "lum_p50": 165.684,
+        "lum_p95": 200.027,
+        "clip_high_pct": 0.061,
+        "clip_low_pct": 0.0,
+        "colorfulness": 0.1967,
+        "sharpness_proxy": 0.2766,
+        "green_magenta_a": -3.016,
+        "warm_cool_b": -4.689
+      }
+    },
+    {
+      "region_id": "r_sky_001",
+      "object_type": "sky",
+      "role": "background",
+      "bbox": [
+        0.0,
+        0.0,
+        1.0,
+        0.5102
+      ],
+      "confidence": 0.9,
+      "mask_quality": 1.0,
+      "protect_level": "medium",
+      "source": "heuristic",
+      "color_metrics": {
+        "pixel_count": 633773,
+        "area_frac": 0.4852,
+        "rgb_mean": [
+          0.6605,
+          0.7487,
+          0.8706
+        ],
+        "lab_mean": [
+          76.6804,
+          -0.8391,
+          -18.0357
+        ],
+        "hue_mean_deg": 215.22,
+        "saturation_mean": 0.2406,
+        "value_mean": 0.8716,
+        "brightness": 187.93,
+        "lum_p05": 167.035,
+        "lum_p50": 190.884,
+        "lum_p95": 200.027,
+        "clip_high_pct": 0.0,
+        "clip_low_pct": 0.0,
+        "colorfulness": 0.1047,
+        "sharpness_proxy": 0.0745,
+        "green_magenta_a": -0.839,
+        "warm_cool_b": -18.04
+      }
+    }
+  ]
+}

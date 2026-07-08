@@ -1,0 +1,2 @@
+image_id,bucket,scene_type,plans_offered,executors,sky_action,gpt_needed,best_plan,usable,should_not_edit_but_changed,face_changed,text_logo_changed,notes
+img_000324,person_event,event_portrait,safe_natural|commercial_clean|object_enhancement,local_cpp|local_cpp|local_cpp,sky.natural_daylight_blue,no,,,,,,

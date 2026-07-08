@@ -1,0 +1,21 @@
+{
+  "root": "/Volumes/未命名/大模型/原图1",
+  "image_count": 20562,
+  "candidate_metric_count": 1200,
+  "error_count": 0,
+  "stage0_count": 100,
+  "stage0_bucket_counts": {
+    "outdoor_sky": 30,
+    "person_event": 30,
+    "stage_led_mixed": 20,
+    "difficult": 20
+  },
+  "outputs": {
+    "clean_manifest": "outputs/stage0/manifest_clean.jsonl",
+    "image_metrics": "outputs/stage0/image_metrics.jsonl",
+    "stage0_selection": "outputs/stage0/stage0_selection.jsonl",
+    "stage0_review": "outputs/stage0/stage0_review.csv",
+    "contact_sheet": "outputs/stage0/stage0_contact_sheet.png"
+  },
+  "errors": []
+}

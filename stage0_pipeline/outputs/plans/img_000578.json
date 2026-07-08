@@ -1,0 +1,168 @@
+{
+  "image_id": "img_000578",
+  "scene": {
+    "type": "outdoor",
+    "lighting": "daylight",
+    "bucket": "outdoor_sky",
+    "source": "heuristic"
+  },
+  "plans": [
+    {
+      "plan_id": "p1",
+      "name": "safe_natural",
+      "summary": "Correct white balance and skin, keep sky mostly realistic.",
+      "risk": "low",
+      "executor": "local_cpp",
+      "routing_reason": "color/tone only; no severe clipping",
+      "two_stage": false,
+      "region_actions": [
+        {
+          "object_type": "global",
+          "region_id": "global",
+          "action": "global.white_balance_correct",
+          "action_id": "white_balance_correct",
+          "strength": 0.457,
+          "executor": "local_cpp",
+          "local_params": {
+            "white_balance": "gray_world"
+          }
+        },
+        {
+          "object_type": "sky",
+          "region_id": "r_sky_001",
+          "action": "sky.slight_clean",
+          "action_id": "slight_clean",
+          "strength": 0.35,
+          "executor": "local_cpp",
+          "local_params": {
+            "toward_hue": {
+              "deg": 210,
+              "amount": 0.25
+            },
+            "sat_add": 0.06,
+            "lum_add": -0.01
+          }
+        }
+      ],
+      "preserve": [
+        "identity",
+        "skin_texture",
+        "clothing_color",
+        "logos",
+        "text",
+        "background_structure",
+        "object_shapes",
+        "composition"
+      ]
+    },
+    {
+      "plan_id": "p2",
+      "name": "commercial_clean",
+      "summary": "Brighter, cleaner, more pleasing delivery color.",
+      "risk": "low",
+      "executor": "local_cpp",
+      "routing_reason": "color/tone only; no severe clipping",
+      "two_stage": false,
+      "region_actions": [
+        {
+          "object_type": "global",
+          "region_id": "global",
+          "action": "global.white_balance_correct",
+          "action_id": "white_balance_correct",
+          "strength": 0.457,
+          "executor": "local_cpp",
+          "local_params": {
+            "white_balance": "gray_world"
+          }
+        },
+        {
+          "object_type": "global",
+          "region_id": "global",
+          "action": "global.exposure_lift",
+          "action_id": "exposure_lift",
+          "strength": 0.4,
+          "executor": "local_cpp",
+          "local_params": {
+            "exposure": 0.35
+          }
+        },
+        {
+          "object_type": "global",
+          "region_id": "global",
+          "action": "global.contrast_boost",
+          "action_id": "contrast_boost",
+          "strength": 0.3,
+          "executor": "local_cpp",
+          "local_params": {
+            "contrast": 0.25
+          }
+        },
+        {
+          "object_type": "sky",
+          "region_id": "r_sky_001",
+          "action": "sky.natural_daylight_blue",
+          "action_id": "natural_daylight_blue",
+          "strength": 0.55,
+          "executor": "local_cpp",
+          "local_params": {
+            "toward_hue": {
+              "deg": 212,
+              "amount": 0.5
+            },
+            "sat_add": 0.12,
+            "lum_add": -0.03,
+            "temp": -0.15
+          }
+        }
+      ],
+      "preserve": [
+        "identity",
+        "skin_texture",
+        "clothing_color",
+        "logos",
+        "text",
+        "background_structure",
+        "object_shapes",
+        "composition"
+      ]
+    },
+    {
+      "plan_id": "p3",
+      "name": "object_enhancement",
+      "summary": "Targeted enhancement of key objects (e.g. blue sky).",
+      "risk": "medium",
+      "executor": "local_cpp",
+      "routing_reason": "color/tone only; no severe clipping",
+      "two_stage": false,
+      "region_actions": [
+        {
+          "object_type": "sky",
+          "region_id": "r_sky_001",
+          "action": "sky.natural_daylight_blue",
+          "action_id": "natural_daylight_blue",
+          "strength": 0.7,
+          "executor": "local_cpp",
+          "local_params": {
+            "toward_hue": {
+              "deg": 212,
+              "amount": 0.5
+            },
+            "sat_add": 0.12,
+            "lum_add": -0.03,
+            "temp": -0.15
+          }
+        }
+      ],
+      "preserve": [
+        "identity",
+        "skin_texture",
+        "clothing_color",
+        "logos",
+        "text",
+        "background_structure",
+        "object_shapes",
+        "composition"
+      ]
+    }
+  ]
+}

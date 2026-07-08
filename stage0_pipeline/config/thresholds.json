@@ -1,0 +1,32 @@
+{
+  "version": "1.0-draft",
+  "note": "Confidence gates and executor routing thresholds. Values are placeholders to be calibrated on the 100-image Stage 0 set, then frozen.",
+  "confidence_gates": {
+    "region_min_confidence": 0.6,
+    "diagnosis_min_confidence": 0.6,
+    "mask_min_quality": 0.5
+  },
+  "routing": {
+    "clip_high_pct_gpt": 3.0,
+    "clip_low_pct_gpt": 3.0,
+    "sharpness_proxy_gpt_below": 0.20,
+    "mixed_light_score_gpt_above": 0.7,
+    "local_preview_quality_gpt_below": 0.45
+  },
+  "plan_ranking_default": [
+    "safe_natural",
+    "commercial_clean",
+    "object_enhancement",
+    "restore_original_intent",
+    "latitude_recovery"
+  ],
+  "plan_ranking_note": "Default order = event delivery natural first. Change the first entry to 'commercial_clean' or 'cinematic' to bias ranking. This is a pick-a-default decision; adjust once the user confirms preferred house style.",
+  "scene_gate_heuristics": {
+    "sunset_warm_cast_above": 0.12,
+    "sunset_brightness_below": 120,
+    "night_brightness_below": 60,
+    "stage_bucket": "stage_led_mixed",
+    "dull_sky_saturation_below": 0.28,
+    "dull_sky_brightness_above": 90
+  }
+}

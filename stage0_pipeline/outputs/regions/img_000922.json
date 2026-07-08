@@ -1,0 +1,87 @@
+{
+  "image_id": "img_000922",
+  "source_path": "/Volumes/未命名/大模型/原图1/DSC03839.JPG",
+  "scene": {
+    "type": "night_or_dark",
+    "lighting": "night",
+    "bucket": "difficult",
+    "source": "heuristic"
+  },
+  "global_metrics": {
+    "pixel_count": 1306200,
+    "area_frac": 1.0,
+    "rgb_mean": [
+      0.0766,
+      0.0733,
+      0.0783
+    ],
+    "lab_mean": [
+      7.5168,
+      0.6264,
+      -0.5263
+    ],
+    "hue_mean_deg": 351.08,
+    "saturation_mean": 0.0429,
+    "value_mean": 0.0812,
+    "brightness": 19.01,
+    "lum_p05": 0.0,
+    "lum_p50": 2.0,
+    "lum_p95": 127.884,
+    "clip_high_pct": 0.013,
+    "clip_low_pct": 71.543,
+    "colorfulness": 0.0327,
+    "sharpness_proxy": 0.0758,
+    "green_magenta_a": 0.627,
+    "warm_cool_b": -0.526
+  },
+  "routing_metrics": {
+    "clip_high_pct": 0.013,
+    "clip_low_pct": 71.543,
+    "sharpness_proxy": 0.0758,
+    "mixed_light_score": 0.1
+  },
+  "regions": [
+    {
+      "region_id": "global",
+      "object_type": "global",
+      "role": "whole_image",
+      "bbox": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "confidence": 1.0,
+      "mask_quality": 1.0,
+      "protect_level": "none",
+      "source": "constant",
+      "color_metrics": {
+        "pixel_count": 1306200,
+        "area_frac": 1.0,
+        "rgb_mean": [
+          0.0766,
+          0.0733,
+          0.0783
+        ],
+        "lab_mean": [
+          7.5168,
+          0.6264,
+          -0.5263
+        ],
+        "hue_mean_deg": 351.08,
+        "saturation_mean": 0.0429,
+        "value_mean": 0.0812,
+        "brightness": 19.01,
+        "lum_p05": 0.0,
+        "lum_p50": 2.0,
+        "lum_p95": 127.884,
+        "clip_high_pct": 0.013,
+        "clip_low_pct": 71.543,
+        "colorfulness": 0.0327,
+        "sharpness_proxy": 0.0758,
+        "green_magenta_a": 0.627,
+        "warm_cool_b": -0.526
+      }
+    }
+  ]
+}

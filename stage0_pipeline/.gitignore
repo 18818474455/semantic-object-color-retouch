@@ -1,0 +1,18 @@
+# secrets — never commit API keys
+secrets/
+*.local.json
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.venv-m2/
+
+# generated artifacts — keep json/csv/html reports, ignore large image blobs in git
+outputs/**/*.jpg
+outputs/**/*.jpeg
+outputs/**/*.png
+outputs/masks/
+outputs/previews/
+outputs/sheets/

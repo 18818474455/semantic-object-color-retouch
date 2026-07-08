@@ -1,0 +1,48 @@
+{
+  "root": "/Volumes/未命名/大模型/原图1",
+  "image_count": 20562,
+  "resource_fork_count": 21894,
+  "ext_counts": {
+    ".jpg": 20562
+  },
+  "top_dirs": {
+    ".": 20562
+  },
+  "non_image_ext_counts": {
+    "<no_ext>": 1,
+    ".json": 1326,
+    ".csv": 3
+  },
+  "sample_count": 300,
+  "sample_errors": [],
+  "orientation_counts_sample": {
+    "landscape": 216,
+    "portrait": 84
+  },
+  "long_edge_buckets_sample": {
+    "1500_2499": 229,
+    "3500_4999": 68,
+    "gte_5000": 1,
+    "lt_1500": 2
+  },
+  "brightness_sample": {
+    "min": 18.28,
+    "median": 107.77,
+    "max": 232.44
+  },
+  "saturation_proxy_sample": {
+    "min": 0.19,
+    "median": 9.11,
+    "max": 75.13
+  },
+  "face_manifest": {
+    "rows": 7156,
+    "unique_images": 1294,
+    "split_counts": {
+      "val": 844,
+      "train": 6312
+    },
+    "avg_quality_score": 83.95,
+    "avg_face_probability": 0.9
+  }
+}

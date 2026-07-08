@@ -1,0 +1,21 @@
+{
+  "version": "1.0-draft",
+  "note": "Open-vocabulary text prompts for the M2 Grounding DINO detector. Not used by the Stage 0 heuristic region provider, but consumed once real detection is wired in. object_type is the canonical key used everywhere else (matches actions.v1.json objects).",
+  "prompts": {
+    "sky": ["sky", "clouds", "blue sky", "overcast sky"],
+    "skin": ["face", "human face", "person skin", "arm skin"],
+    "grass_tree": ["grass", "lawn", "tree", "green foliage", "bushes"],
+    "water": ["water", "lake", "sea", "river", "pool"],
+    "clothing": ["clothing", "shirt", "dress", "jacket", "uniform"],
+    "led_stage": ["LED screen", "stage light", "stage background", "display screen"],
+    "building": ["building", "wall", "architecture"],
+    "food": ["food", "dish", "plate of food", "cake"],
+    "text_logo": ["text", "sign", "logo", "banner text"]
+  },
+  "protect_only": ["building", "text_logo"],
+  "detector_defaults": {
+    "box_threshold": 0.30,
+    "text_threshold": 0.25,
+    "max_boxes_per_type": 8
+  }
+}
