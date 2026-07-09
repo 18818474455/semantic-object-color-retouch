@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>语义物体调色专家 · 仿色 Demo</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px 32px 60px; background: #f4f5f7; color: #1a1a1a;
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .subtitle { color: #6b7280; font-size: 13px; margin-bottom: 24px; }
+  .card {
+    background: #fff; border-radius: 12px; padding: 20px 24px; margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .upload-row { display: flex; gap: 20px; flex-wrap: wrap; }
+  .upload-box {
+    flex: 1; min-width: 220px; border: 2px dashed #d1d5db; border-radius: 10px;
+    padding: 16px; text-align: center; cursor: pointer; transition: border-color .15s;
+    position: relative; min-height: 160px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .upload-box:hover { border-color: #6366f1; }
+  .upload-box.has-image { border-style: solid; padding: 8px; }
+  .upload-box img { max-width: 100%; max-height: 200px; border-radius: 6px; display: block; }
+  .upload-box input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-label { font-size: 13px; color: #6b7280; margin-top: 8px; }
+  .upload-title { font-weight: 600; font-size: 14px; color: #374151; margin-bottom: 4px; }
+  button#analyzeBtn {
+    margin-top: 18px; padding: 10px 28px; border: none; border-radius: 8px;
+    background: #4f46e5; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  button#analyzeBtn:disabled { background: #9ca3af; cursor: not-allowed; }
+  button#analyzeBtn:hover:not(:disabled) { background: #4338ca; }
+  .status { margin-top: 10px; font-size: 13px; color: #6b7280; min-height: 18px; }
+  .status.error { color: #dc2626; }
+  .compat-banner {
+    display: none; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px;
+  }
+  .compat-banner.suitable { background: #ecfdf5; color: #047857; display: block; }
+  .compat-banner.unsuitable { background: #fef3c7; color: #92400e; display: block; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .tag {
+    background: #eef2ff; color: #4338ca; font-size: 12px; padding: 3px 9px;
+    border-radius: 999px; font-weight: 500;
+  }
+  .result-section { display: none; }
+  .compare-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .compare-col { flex: 1; min-width: 260px; }
+  .compare-col h3 { font-size: 13px; color: #6b7280; margin: 0 0 8px; font-weight: 500; }
+  .compare-col img { width: 100%; border-radius: 8px; display: block; background: #eee;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .slider-wrap { margin: 22px 0 4px; }
+  .slider-wrap label { font-size: 13px; font-weight: 600; color: #374151; }
+  .slider-wrap input[type=range] { width: 100%; margin-top: 10px; accent-color: #4f46e5; }
+  .slider-scale { display: flex; justify-content: space-between; font-size: 11px; color: #9ca3af; margin-top: 2px; }
+  .render-loading { font-size: 12px; color: #9ca3af; margin-top: 4px; height: 16px; }
+</style>
+</head>
+<body>
+
+<h1>语义物体调色专家 · 仿色 Demo</h1>
+<div class="subtitle">上传一张「参考图」（想要的调色风格）+ 一张「目标图」（要处理的照片），拖动强度滑杆看效果。跑的是 C2 主路径的规则教师 <code>color_reference_transfer.py</code>（真实语义分割 + 逐区域 Lab 统计匹配），不是 GPT。</div>
+
+<div class="card">
+  <div class="upload-row">
+    <div class="upload-box" id="refBox">
+      <div class="upload-title">参考图（风格来源）</div>
+      <div class="upload-label" id="refLabel">点击或拖拽上传</div>
+      <input type="file" id="refInput" accept="image/*">
+    </div>
+    <div class="upload-box" id="tgtBox">
+      <div class="upload-title">目标图（要调色的照片）</div>
+      <div class="upload-label" id="tgtLabel">点击或拖拽上传</div>
+      <input type="file" id="tgtInput" accept="image/*">
+    </div>
+  </div>
+  <button id="analyzeBtn" disabled>开始分析</button>
+  <div class="status" id="status"></div>
+</div>
+
+<div class="card result-section" id="resultSection">
+  <div class="compat-banner" id="compatBanner"></div>
+
+  <div class="compare-row">
+    <div class="compare-col">
+      <h3>目标图（原图）</h3>
+      <img id="tgtPreview" alt="target">
+    </div>
+    <div class="compare-col">
+      <h3>仿色结果</h3>
+      <img id="resultImg" alt="result">
+      <div class="render-loading" id="renderLoading"></div>
+    </div>
+  </div>
+
+  <div class="slider-wrap">
+    <label for="strengthSlider">强度：<span id="strengthValue">50</span></label>
+    <input type="range" id="strengthSlider" min="0" max="100" value="50">
+    <div class="slider-scale"><span>0 无效果</span><span>33 light</span><span>66 medium</span><span>100 strong</span></div>
+  </div>
+</div>
+
+<script>
+let refFile = null, tgtFile = null, currentToken = null, renderTimer = null;
+
+function setupUpload(boxId, inputId, labelId, onPick) {
+  const box = document.getElementById(boxId);
+  const input = document.getElementById(inputId);
+  input.addEventListener('change', () => {
+    if (input.files && input.files[0]) onPick(input.files[0], box);
+  });
+  ['dragover', 'dragleave', 'drop'].forEach(evt => {
+    box.addEventListener(evt, e => e.preventDefault());
+  });
+  box.addEventListener('drop', e => {
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) onPick(e.dataTransfer.files[0], box);
+  });
+}
+
+function previewInBox(file, box) {
+  box.classList.add('has-image');
+  const label = box.querySelector('.upload-label');
+  const title = box.querySelector('.upload-title');
+  let img = box.querySelector('img');
+  if (!img) {
+    img = document.createElement('img');
+    box.insertBefore(img, label);
+  }
+  img.src = URL.createObjectURL(file);
+  label.textContent = file.name;
+  title.style.display = 'none';
+}
+
+setupUpload('refBox', 'refInput', 'refLabel', (file, box) => { refFile = file; previewInBox(file, box); checkReady(); });
+setupUpload('tgtBox', 'tgtInput', 'tgtLabel', (file, box) => { tgtFile = file; previewInBox(file, box); checkReady(); });
+
+function checkReady() {
+  document.getElementById('analyzeBtn').disabled = !(refFile && tgtFile);
+}
+
+document.getElementById('analyzeBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('analyzeBtn');
+  const status = document.getElementById('status');
+  btn.disabled = true;
+  status.className = 'status';
+  status.textContent = '分析中……真实分割模型跑一次要几秒到十几秒，请稍候';
+
+  const fd = new FormData();
+  fd.append('ref', refFile);
+  fd.append('tgt', tgtFile);
+
+  try {
+    const resp = await fetch('/api/analyze', { method: 'POST', body: fd });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || '分析失败');
+
+    currentToken = data.token;
+    status.textContent = `分析完成，用了 ${data.analyze_seconds}s`;
+
+    const banner = document.getElementById('compatBanner');
+    if (data.compat.suitable) {
+      banner.className = 'compat-banner suitable';
+      banner.innerHTML = `内容匹配：合适（Jaccard ${data.compat.jaccard}，可解释占比 ${data.compat.explainable_tgt_frac}）` +
+        (data.matched_classes.length ? `<div class="tags">${data.matched_classes.map(c => `<span class="tag">${c}</span>`).join('')}</div>` : '');
+    } else {
+      banner.className = 'compat-banner unsuitable';
+      banner.innerHTML = `内容匹配：不太合适（Jaccard ${data.compat.jaccard}，可解释占比 ${data.compat.explainable_tgt_frac}）—— 除肤色/兜底区域外，其它区域的调色会被硬门槛拦截，效果会偏保守`;
+    }
+
+    document.getElementById('tgtPreview').src = `/api/preview/${currentToken}/tgt`;
+    document.getElementById('resultSection').style.display = 'block';
+    renderAtCurrentStrength();
+  } catch (err) {
+    status.className = 'status error';
+    status.textContent = '出错了：' + err.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+function renderAtCurrentStrength() {
+  if (!currentToken) return;
+  const pct = document.getElementById('strengthSlider').value;
+  const loading = document.getElementById('renderLoading');
+  loading.textContent = '渲染中…';
+  const img = new Image();
+  img.onload = () => { document.getElementById('resultImg').src = img.src; loading.textContent = ''; };
+  img.onerror = () => { loading.textContent = '渲染失败'; };
+  img.src = `/api/render/${currentToken}?strength=${pct}&_=${Date.now()}`;
+}
+
+const slider = document.getElementById('strengthSlider');
+slider.addEventListener('input', () => {
+  document.getElementById('strengthValue').textContent = slider.value;
+  clearTimeout(renderTimer);
+  renderTimer = setTimeout(renderAtCurrentStrength, 120);
+});
+</script>
+</body>
+</html>

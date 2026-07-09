@@ -156,14 +156,22 @@ def _grade_class_from_stats(c: str, tgt_lab: np.ndarray, tm: np.ndarray, ref_sta
     return out
 
 
-def apply_profile(profile: dict, tgt_rgb: np.ndarray, strength: str = "medium",
-                  feather: float = 4.0) -> tuple[np.ndarray, dict, dict]:
-    preset = STRENGTH_PRESETS[strength]
+def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> dict:
+    """Strength-INDEPENDENT half of apply_profile: segmentation, the content-
+    match gate, feathered blend weights, and per-class graded Lab targets.
+
+    Split out so a caller that wants to render the SAME (profile, target)
+    pair at multiple strengths (e.g. an interactive strength slider in
+    scripts_c1c/../webdemo) can pay the expensive part — Grounding DINO + SAM
+    detection in build_classes(), plus the per-class Lab regrade — exactly
+    once, then call render_from_analysis() repeatedly for near-instant
+    re-renders. apply_profile() itself is unchanged in behavior; it now just
+    calls these two halves in sequence.
+    """
     tgt_lab = common.rgb_to_lab(tgt_rgb)
     tgt_cls = build_classes(tgt_rgb)
     compat = content_match_score(profile, tgt_cls)
 
-    matched_info = {}
     class_names = set(tgt_cls) | set(profile["classes"]) | {"neutral"}
     feathered = {c: common.feather_mask(tgt_cls.get(c, np.zeros(tgt_rgb.shape[:2], np.float32)), radius=feather)
                 for c in class_names}
@@ -179,13 +187,15 @@ def apply_profile(profile: dict, tgt_rgb: np.ndarray, strength: str = "medium",
     # label name alone, per the project's standing rule: low confidence ->
     # keep, don't guess.
     # "neutral" and "skin" are exempt from this gate: neutral already has its
-    # own dynamic taper (see below) built specifically for the "content not
-    # recognized" case, and skin comes from a reliable face detector with its
-    # own hue-lock safety rather than a fuzzy text-label match — both were
-    # already validated safe standalone across the 20-image sweep.
+    # own dynamic taper (see render_from_analysis) built specifically for the
+    # "content not recognized" case, and skin comes from a reliable face
+    # detector with its own hue-lock safety rather than a fuzzy text-label
+    # match — both were already validated safe standalone across the
+    # 20-image sweep.
     allow_class_transfer = compat["suitable"]
 
-    acc = np.zeros_like(tgt_lab)
+    matched_info = {}
+    graded_by_class = {}
     for c in class_names:
         tm = tgt_cls.get(c)
         ref_stats = profile["classes"].get(c)
@@ -195,25 +205,52 @@ def apply_profile(profile: dict, tgt_rgb: np.ndarray, strength: str = "medium",
         matched = (class_allowed and tm is not None and ref_stats is not None
                   and t_frac > MIN_FRAC and r_frac > MIN_FRAC)
         matched_info[c] = {"tgt_frac": round(t_frac, 4), "ref_frac": round(r_frac, 4), "matched": matched}
-        if matched:
-            graded = _grade_class_from_stats(c, tgt_lab, tm, ref_stats)
+        graded_by_class[c] = _grade_class_from_stats(c, tgt_lab, tm, ref_stats) if matched else tgt_lab
+
+    return {
+        "tgt_rgb": tgt_rgb, "tgt_lab": tgt_lab, "tgt_cls": tgt_cls, "compat": compat,
+        "class_names": class_names, "weights": weights,
+        "matched_info": matched_info, "graded_by_class": graded_by_class,
+    }
+
+
+def render_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.ndarray:
+    """Strength-DEPENDENT half of apply_profile: blend the precomputed
+    per-class graded targets (analyze_target) using a strength preset, then
+    the global vibrance/contrast/sharpen finishing pass. No segmentation or
+    per-class regrading happens here — this is the cheap call an interactive
+    strength slider re-runs on every drag. `strength` may be a preset name
+    ("light"/"medium"/"strong") or a raw preset dict (e.g. interpolated
+    between two presets for a continuous slider)."""
+    preset = STRENGTH_PRESETS[strength] if isinstance(strength, str) else strength
+    tgt_lab = analysis["tgt_lab"]
+    acc = np.zeros_like(tgt_lab)
+    for c in analysis["class_names"]:
+        info = analysis["matched_info"][c]
+        graded = analysis["graded_by_class"][c]
+        if info["matched"]:
             cs = preset["skin"] if c == "skin" else (preset["neutral"] if c == "neutral" else preset["default"])
-            if c == "neutral" and t_frac > 0.5:
+            if c == "neutral" and info["tgt_frac"] > 0.5:
                 # Unrecognized leftover swallowing most of the frame means the
                 # segmentation didn't understand this scene — taper toward a
                 # no-op instead of forcing the reference's global cast on it
                 # (this is the concrete "orange-wash on DAP02394_2" bug fix).
-                cs *= max(0.0, 1.0 - (t_frac - 0.5) / 0.5) ** 2
+                cs *= max(0.0, 1.0 - (info["tgt_frac"] - 0.5) / 0.5) ** 2
             graded = tgt_lab * (1.0 - cs) + graded * cs
-        else:
-            graded = tgt_lab
-        acc += graded * weights[c][..., None]
+        acc += graded * analysis["weights"][c][..., None]
 
     acc[..., 0] = np.clip(acc[..., 0], 0.0, 100.0)
     out_rgb = np.clip(common.lab_to_rgb(acc), 0.0, 1.0)
-    out_rgb = _vibrance_contrast_sharpen(out_rgb, tgt_cls["skin"], vibrance=preset["vibrance"],
+    out_rgb = _vibrance_contrast_sharpen(out_rgb, analysis["tgt_cls"]["skin"], vibrance=preset["vibrance"],
                                           contrast=preset["contrast"], sharpen_amount=preset["sharpen"])
-    return out_rgb, matched_info, compat
+    return out_rgb
+
+
+def apply_profile(profile: dict, tgt_rgb: np.ndarray, strength: str = "medium",
+                  feather: float = 4.0) -> tuple[np.ndarray, dict, dict]:
+    analysis = analyze_target(profile, tgt_rgb, feather=feather)
+    out_rgb = render_from_analysis(analysis, strength=strength)
+    return out_rgb, analysis["matched_info"], analysis["compat"]
 
 
 def transfer(ref_rgb: np.ndarray, tgt_rgb: np.ndarray, strength: str = "medium") -> tuple[np.ndarray, dict, dict]:
