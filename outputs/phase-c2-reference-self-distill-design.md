@@ -252,7 +252,7 @@ cd stage0_pipeline
 
 > **2026-07-09 更正（C1c 实验后）**：上面最初把这个 bug 类比成「项目历史上 LED墙误判天空」的语义假阳性，**这个类比是错的**。用 Qwen3-VL 核实 + 人工看原图后确认：`058A1518` 是真实户外活动合影，那块区域确实是天空，只是曝光过度到几乎纯白——`region_provider_v2._sky_plausible()` 的语义判断是对的，bug 纯粹是数值层面（std-ratio 估计器在近零方差区域上没有良定义的意义），跟"误判成天空的 LED 墙/屏幕"完全是两类问题。详见 `outputs/phase-c1c-vlm-sky-gate-results.md`。
 
-n_rows 已远超 ridge baseline 的最低门槛，下一步可以考虑升级为 torch MLP（`.venv-m2` 已含 torch）；也可以先直接进入 C2.4 Smart Color v2 嫁接。
+n_rows 已远超 ridge baseline 的最低门槛，~~下一步可以考虑升级为 torch MLP~~ ✅ 已尝试（`scripts_c2/train_per_class_head_mlp.py`）：训练集内 5-fold CV 分数 MLP 和 ridge 几乎一样（3.27 vs 3.26），但换到真实 held-out 测试集，ridge 只退化到 4.20、MLP 退化到 6.13——n=208 还是不够撑起非线性模型，**继续用 ridge (v0) 作生产头**，详见 `outputs/phase-c2.3b-mlp-head-experiment.md`。下一步直接进入 C2.4 Smart Color v2 嫁接。
 
 **C1 并行**：API易 GPT 双图冒烟通过后，仅对 C2.3 残差最大的 10% 类补 GPT label，写入 `dataset/c2/gpt_residual/`。
 
@@ -299,7 +299,8 @@ Phase B ✅  →  Phase A 产品化 ✅
 1. ~~实现 `scripts_c2/export_bootstrap_dataset.py`~~ ✅ 已实现并跑通（97 条样本：20 图回归集 + Stage 0 100 张验证集）
 2. ~~实现 `scripts_c2/fit_region_params.py`（C2.2）~~ ✅ 已实现并跑通（208 条 class-row，修复了假天空检测导致的退化 scale 数值 bug）
 3. ~~实现 `scripts_c2/train_per_class_head.py`（C2.3 ridge baseline）~~ ✅ 已实现并跑通，n=208 held-out MAE=4.20 < 基线 6.31，与 n=41 时的泛化比例一致
-4. **下一步（二选一/都做）**：a) 升级 `train_per_class_head.py` 从 ridge 到轻量 torch MLP；b) 直接启动 C2.4，在 Chroma 仓开 `feature/regional-smart-color-head` 分支做 Smart Color v2 嫁接
+3b. ~~升级 `train_per_class_head.py` 从 ridge 到轻量 torch MLP~~ ✅ 已实现并跑通 CV 选参 + 多 seed 评估（`train_per_class_head_mlp.py`），结论：n=208 时 MLP 泛化不如 ridge（held-out MAE 6.13 vs 4.20），**ridge (v0) 继续作生产头**，详见 `outputs/phase-c2.3b-mlp-head-experiment.md`
+4. **下一步**：直接启动 C2.4，在 Chroma 仓开 `feature/regional-smart-color-head` 分支做 Smart Color v2 嫁接
 5. C1 继续 API易 双图测试，结果只写入 `gpt_residual/`，不阻塞 C2.1
 
 ---

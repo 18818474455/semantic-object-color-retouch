@@ -1,0 +1,102 @@
+{
+  "n_rows": 208,
+  "feature_dim_onehot": 19,
+  "classes": [
+    "neutral",
+    "sky",
+    "skin",
+    "building",
+    "floor",
+    "clothing",
+    "screen",
+    "stage backdrop"
+  ],
+  "target_keys": [
+    "lab_L_scale",
+    "lab_L_shift",
+    "lab_a_scale",
+    "lab_a_shift",
+    "lab_b_scale",
+    "lab_b_shift"
+  ],
+  "split": {
+    "test_n": 41,
+    "train_n": 167,
+    "val_n": 27,
+    "fit_n": 140
+  },
+  "predict_mean_baseline_mae": 6.90123,
+  "ridge_v0_held_out_mae": 4.20292,
+  "cv_grid_search": [
+    {
+      "cfg": {
+        "hidden": [
+          16
+        ],
+        "dropout": 0.1,
+        "weight_decay": 0.01
+      },
+      "cv_mae": 3.2746
+    },
+    {
+      "cfg": {
+        "hidden": [
+          16
+        ],
+        "dropout": 0.3,
+        "weight_decay": 0.03
+      },
+      "cv_mae": 3.31959
+    },
+    {
+      "cfg": {
+        "hidden": [
+          32,
+          16
+        ],
+        "dropout": 0.25,
+        "weight_decay": 0.003
+      },
+      "cv_mae": 3.38483
+    },
+    {
+      "cfg": {
+        "hidden": [
+          8
+        ],
+        "dropout": 0.1,
+        "weight_decay": 0.01
+      },
+      "cv_mae": 3.41328
+    },
+    {
+      "cfg": {
+        "hidden": [
+          16,
+          8
+        ],
+        "dropout": 0.2,
+        "weight_decay": 0.01
+      },
+      "cv_mae": 3.56694
+    }
+  ],
+  "best_cfg_by_cv": {
+    "hidden": [
+      16
+    ],
+    "dropout": 0.1,
+    "weight_decay": 0.01
+  },
+  "mlp_v1_held_out_mae_mean": 6.13366,
+  "mlp_v1_held_out_mae_std": 0.3874,
+  "mlp_v1_held_out_mae_best": 5.82525,
+  "mlp_v1_seeds_maes": [
+    5.91698,
+    6.88135,
+    5.82525,
+    5.91167,
+    6.13304
+  ],
+  "verdict": "ridge still beats MLP at this n; keep ridge as the production head"
+}

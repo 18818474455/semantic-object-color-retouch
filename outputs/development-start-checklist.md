@@ -120,6 +120,8 @@ cd stage0_pipeline
 
 样本量从 41 扩到 208 后，held-out MAE / 基线 的降幅比例几乎不变（34.3% → 33.4%），说明规则教师信号稳定可泛化。过程中顺带修复了 `fit_region_params.py` 里一个真 bug：一张 person_event 照片的天空区域原图近乎纯色，导致 Lab-affine scale 除以近零方差爆炸到 68 倍，改为方差过低时 scale 退化为 1.0 + 只用均值差算 shift（详见设计稿 §7）。**这个 bug 最初被误判为"假天空检测"（语义问题），C1c 实验用 Qwen3-VL 复核 + 人工看原图后确认那其实是真实过曝天空——bug 纯粹是数值拟合问题，见 `outputs/phase-c1c-vlm-sky-gate-results.md`。**
 
+**ridge → MLP 升级尝试（`train_per_class_head_mlp.py`）**：用 5-fold CV（仅在训练集内部）选出最优 MLP 配置后，在同一个 held-out 测试集上评估，结果 ridge (4.20) 明显优于 MLP (6.13)——训练集内 CV 分数两者几乎一样（3.26 vs 3.27），但 MLP 迁移到新样本上的能力更弱，说明 n=208 还没到能撑起非线性模型的规模。**继续用 ridge (v0) 作生产头**，详见 `outputs/phase-c2.3b-mlp-head-experiment.md`。
+
 ---
 
 ## What The User Needs To Prepare
