@@ -9,7 +9,7 @@ description: Acts as the entry point for the "语义物体调色专家" (semanti
 
 Standalone R&D codebase (independent of the 云享传 App repo) that takes a *reference* photo + a *target* photo, detects semantic regions in both (sky/skin/clothing/building/grass/...) via Grounding DINO + SAM, and grades each region of the target towards the reference's Lab color statistics — a smarter, region-aware version of "仿色" than naive global histogram matching. End goal: distill this into a lightweight per-region MLP head that plugs into the company's existing Smart Color v2 / Chroma differentiable renderer (no dependency on unstable external APIs).
 
-**This folder (`整体代码1.0/仿色模型/`) is the canonical base.** Save all future code/doc changes here. It is a full git repo (`git remote -v` → `github.com/18818474455/semantic-object-color-retouch`), synced from the original dev path `/Users/mac/Documents/Codex/2026-07-05/gpt-image-2/`.
+**This folder (`整体代码1.0/仿色模型/`) is the canonical and only local base.** Save all future code/doc changes here. It is a full git repo (`git remote -v` → `github.com/18818474455/semantic-object-color-retouch`). The former `/Users/mac/Documents/Codex/2026-07-05/gpt-image-2/` copy was deleted after migration.
 
 ## Directory map
 
@@ -45,7 +45,12 @@ If the exact python minor version isn't available, install the closest 3.13/3.14
   - **C2** — Reference self-distillation (**main line**): use the rule-based `color_reference_transfer.py` itself as a pseudo-teacher to bootstrap a dataset, fit per-class Lab-affine params, train a `PerClassHead` (ridge regression beat an MLP upgrade at n=208 rows — see `outputs/phase-c2.3b-mlp-head-experiment.md`).
   - **C1c** — Local VLM (Qwen3-VL) semantic gating experiment. De-prioritized: 100% agreement with existing heuristic, motivating bug turned out to be numerical not semantic.
 - **Current held-out MAE**: 3.74 (ridge, n=208 rows), after three teacher bug fixes discovered via the Web Demo (see below).
-- **Current main line**: M3.7 — graft the trained `PerClassHead` into Smart Color v2 / Chroma Engine's differentiable renderer (`feature/regional-smart-color-head` branch in the Chroma repo).
+- **Current main line**: C3 Teacher v1 coherence upgrade — global mood base (C3-1, done) + trust-controlled regional residuals (C3-2, in progress). The old formula `1 + (cs_base - 1) * confidence` left a full statistical match at confidence=0, so the previous patch-based teacher is frozen as `legacy_v0`. M3.7 is paused until `FG-BG-Coord-v1` passes visual acceptance.
+- **C3-0 baseline**: `stage0_pipeline/baselines/c3-0/legacy_v0/manifest.json` binds teacher code, 97-sample/208-row C2 data and ridge head to commit `85edb68` and SHA-256 hashes. `pipeline=legacy` is the default.
+- **C3-1 global mood base (done)**: `coherence_controller.py` — a hard-capped whole-image additive Lab shift (ΔL≤10, Δab≤9), scaled by content-match confidence and preset tier, skin halved. `pipeline=coherence` now renders this (no regional residual yet — that's C3-2). Verified on the two original bug photos: the material-mismatch disconnect (`person_event_DSC04819_r2`) and the overshoot halo (`outdoor_sky_DSC04085(1)`) are both visibly gone, at the cost of a much milder overall effect than legacy — expected until C3-2 adds residual punch back. See `outputs/phase-c3-1-global-mood-base.md`.
+- **C3-2 (next)**: rewrite per-class grading as a residual on top of the C3-1 base; `trust = scene_confidence * pair_confidence * homogeneity_confidence * pixel_confidence` must gate the WHOLE residual, not just the `cs>1` overshoot term like the old code did.
+- **C3 visual gate**: `stage0_pipeline/eval/fg_bg_coord_v1/` has the inherited 20 regression pairs; add at least 10 real problem pairs before acceptance.
+- **Rebuilding `.venv-m2`**: was deleted with the old dev path; rebuilt via `python3.13 -m venv .venv-m2 && .venv-m2/bin/pip install -r stage0_pipeline/requirements-venv-m2.txt` (torch download, a couple minutes).
 
 ## Established workflow pattern (repeat this loop for any teacher/grading bug)
 

@@ -31,3 +31,8 @@ __pycache__/
 
 # C1c VLM experiment crops (large images; keep the JSON report in git)
 **/outputs/c1c/crops/
+
+# C3 FG/BG visual evaluation renders (keep manifests/reviews/metrics in git)
+stage0_pipeline/eval/fg_bg_coord_v1/outputs/**/*.jpg
+stage0_pipeline/eval/fg_bg_coord_v1/outputs/**/*.jpeg
+stage0_pipeline/eval/fg_bg_coord_v1/outputs/**/*.png

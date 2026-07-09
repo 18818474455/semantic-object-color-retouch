@@ -34,19 +34,29 @@ import common
 import face_detect
 from semantic_color_transfer import _percentile_stats, _vibrance_contrast_sharpen, SKIN_HUE_LOCK
 from region_provider_v2 import detect_classes
+from coherence_controller import compute_global_mood, apply_global_base
 
 MIN_FRAC = 0.01
 
 # Validated in the Phase B / Phase D 20-image sweep. "medium" is exactly the
 # strength tier that passed the full regression + expanded-sample run.
+# `global_base` (added C3-1) is the coherence pipeline's whole-image mood
+# shift fraction — see coherence_controller.py. It rides the same
+# light/medium/strong tiers and the same slider interpolation (webdemo's
+# `_interp_preset` linearly blends every key in these dicts, including this
+# one) as a plain new numeric knob, no separate slider needed.
 STRENGTH_PRESETS = {
-    "light":  {"default": 1.0, "skin": 0.9, "neutral": 0.25,
+    "light":  {"default": 1.0, "skin": 0.9, "neutral": 0.25, "global_base": 0.15,
                "vibrance": 0.22, "contrast": 1.06, "sharpen": 0.25},
-    "medium": {"default": 1.6, "skin": 1.3, "neutral": 0.45,
+    "medium": {"default": 1.6, "skin": 1.3, "neutral": 0.45, "global_base": 0.30,
                "vibrance": 0.40, "contrast": 1.14, "sharpen": 0.40},
-    "strong": {"default": 2.0, "skin": 1.5, "neutral": 0.55,
+    "strong": {"default": 2.0, "skin": 1.5, "neutral": 0.55, "global_base": 0.45,
                "vibrance": 0.50, "contrast": 1.18, "sharpen": 0.45},
 }
+
+PIPELINE_LEGACY = "legacy"
+PIPELINE_COHERENCE = "coherence"
+SUPPORTED_PIPELINES = (PIPELINE_LEGACY, PIPELINE_COHERENCE)
 
 
 def build_classes(rgb: np.ndarray) -> dict[str, np.ndarray]:
@@ -69,6 +79,14 @@ def compute_style_profile(ref_rgb: np.ndarray, name: str = "reference") -> dict:
     and reusable for any number of future target photos."""
     ref_lab = common.rgb_to_lab(ref_rgb)
     ref_cls = build_classes(ref_rgb)
+    # C3-1: unmasked whole-image stats, consumed by coherence_controller's
+    # global mood base. Older cached profile JSON files won't have this key;
+    # compute_global_mood() treats that as "skip the global base", not an error.
+    global_ab = ref_lab[..., 1:3].reshape(-1, 2)
+    global_stats = {
+        "l_mean": float(ref_lab[..., 0].mean()),
+        "mean_ab": [float(global_ab[:, 0].mean()), float(global_ab[:, 1].mean())],
+    }
     classes = {}
     for c, rm in ref_cls.items():
         r_sel = rm > 0.5
@@ -88,7 +106,8 @@ def compute_style_profile(ref_rgb: np.ndarray, name: str = "reference") -> dict:
             "c_std": float(np.hypot(*std_ab)),
             "h_mean": float(np.arctan2(mean_ab[1], mean_ab[0])),
         }
-    return {"name": name, "size": [int(ref_rgb.shape[1]), int(ref_rgb.shape[0])], "classes": classes}
+    return {"name": name, "size": [int(ref_rgb.shape[1]), int(ref_rgb.shape[0])],
+            "classes": classes, "global": global_stats}
 
 
 def save_profile(profile: dict, path: str | Path) -> None:
@@ -331,6 +350,7 @@ def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> 
                                 if matched and c not in ("neutral", "skin") else 1.0)
 
     return {
+        "profile": profile,
         "tgt_rgb": tgt_rgb, "tgt_lab": tgt_lab, "tgt_cls": tgt_cls, "compat": compat,
         "class_names": class_names, "weights": weights,
         "matched_info": matched_info, "graded_by_class": graded_by_class,
@@ -338,7 +358,7 @@ def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> 
     }
 
 
-def render_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.ndarray:
+def _render_legacy_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.ndarray:
     """Strength-DEPENDENT half of apply_profile: blend the precomputed
     per-class graded targets (analyze_target) using a strength preset, then
     the global vibrance/contrast/sharpen finishing pass. No segmentation or
@@ -383,17 +403,52 @@ def render_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.
     return out_rgb
 
 
+def _render_coherence_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.ndarray:
+    """C3-1 coherence renderer: global mood base ONLY, no per-region residual
+    yet (that's C3-2). Deliberately isolated like this so the global base's
+    own effect on the reported foreground/background disconnect cases can be
+    judged before any regional logic is layered back on top.
+    """
+    preset = STRENGTH_PRESETS[strength] if isinstance(strength, str) else strength
+    tgt_lab = analysis["tgt_lab"]
+    mood = compute_global_mood(analysis["profile"], tgt_lab, analysis["compat"],
+                                preset.get("global_base", 0.0))
+    base_lab = apply_global_base(tgt_lab, mood, analysis["tgt_cls"].get("skin"))
+    base_lab[..., 0] = np.clip(base_lab[..., 0], 0.0, 100.0)
+    out_rgb = np.clip(common.lab_to_rgb(base_lab), 0.0, 1.0)
+    out_rgb = _vibrance_contrast_sharpen(out_rgb, analysis["tgt_cls"]["skin"], vibrance=preset["vibrance"],
+                                          contrast=preset["contrast"], sharpen_amount=preset["sharpen"])
+    return out_rgb
+
+
+def render_from_analysis(analysis: dict, strength: str | dict = "medium",
+                         pipeline: str = PIPELINE_LEGACY) -> np.ndarray:
+    """Render an analyzed pair through an explicitly versioned pipeline.
+
+    ``legacy`` is the C3-0-frozen previously validated implementation.
+    ``coherence`` is the C3-1 global-mood-base renderer (regional residuals
+    land in C3-2 — see _render_coherence_from_analysis's docstring).
+    """
+    if pipeline == PIPELINE_LEGACY:
+        return _render_legacy_from_analysis(analysis, strength=strength)
+    if pipeline == PIPELINE_COHERENCE:
+        return _render_coherence_from_analysis(analysis, strength=strength)
+    raise ValueError(f"unknown pipeline {pipeline!r}; expected one of {SUPPORTED_PIPELINES}")
+
+
 def apply_profile(profile: dict, tgt_rgb: np.ndarray, strength: str = "medium",
-                  feather: float = 4.0) -> tuple[np.ndarray, dict, dict]:
+                  feather: float = 4.0, pipeline: str = PIPELINE_LEGACY
+                  ) -> tuple[np.ndarray, dict, dict]:
     analysis = analyze_target(profile, tgt_rgb, feather=feather)
-    out_rgb = render_from_analysis(analysis, strength=strength)
+    out_rgb = render_from_analysis(analysis, strength=strength, pipeline=pipeline)
     return out_rgb, analysis["matched_info"], analysis["compat"]
 
 
-def transfer(ref_rgb: np.ndarray, tgt_rgb: np.ndarray, strength: str = "medium") -> tuple[np.ndarray, dict, dict]:
+def transfer(ref_rgb: np.ndarray, tgt_rgb: np.ndarray, strength: str = "medium",
+             pipeline: str = PIPELINE_LEGACY) -> tuple[np.ndarray, dict, dict]:
     """Convenience one-shot call: build + apply a profile in one step."""
     profile = compute_style_profile(ref_rgb)
-    return apply_profile(profile, tgt_rgb, strength=strength)
+    return apply_profile(profile, tgt_rgb, strength=strength, pipeline=pipeline)
 
 
 def main() -> int:
@@ -404,6 +459,8 @@ def main() -> int:
     ap.add_argument("--tgt", nargs="+", required=True, help="one or more target image paths")
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--strength", choices=list(STRENGTH_PRESETS), default="medium")
+    ap.add_argument("--pipeline", choices=SUPPORTED_PIPELINES, default=PIPELINE_LEGACY,
+                    help="legacy is the frozen Teacher v0; coherence is reserved until C3-1/C3-2")
     args = ap.parse_args()
 
     if not args.ref and not args.profile_in:
@@ -423,9 +480,11 @@ def main() -> int:
 
     for tp in args.tgt:
         tgt_rgb = common.load_rgb(tp, max_side=1024)
-        out_rgb, matched_info, compat = apply_profile(profile, tgt_rgb, strength=args.strength)
+        out_rgb, matched_info, compat = apply_profile(
+            profile, tgt_rgb, strength=args.strength, pipeline=args.pipeline
+        )
         stem = Path(tp).stem.replace(" ", "_")
-        out_path = out_dir / f"{stem}_{args.strength}.jpg"
+        out_path = out_dir / f"{stem}_{args.pipeline}_{args.strength}.jpg"
         common.save_rgb(out_rgb, out_path)
         print(f"{stem}: compat={compat} matched={[c for c, v in matched_info.items() if v['matched']]}")
         if not compat["suitable"]:

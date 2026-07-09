@@ -2,7 +2,7 @@
 
 独立预研项目：识别照片中的语义区域（天空、人脸、皮肤、服装、草地、建筑等），判断各区域是否应调色及如何调色，并通过本地 Chroma 引擎或 GPT Image 2 执行。
 
-**当前状态（2026-07-10）**：Stage 0 + 仿色产品化已完成；**C2 Reference 自蒸馏为主开发线**；C1 GPT 量化为辅助轨（API易已配置）。Web Demo 肉眼验证发现并修复了 teacher 的过冲光晕瑕疵，C2 训练数据已用修复后版本重新生成。
+**当前状态（2026-07-10）**：C3 仿色一致性升级进行中——C3-0（基线冻结）、C3-1（全局氛围基底）已完成并验证；C3-1 单独一层就已经修好了"背景/前景脱节"和"过冲光晕"两个原始 bug case，效果比 legacy 更自然但更弱，符合预期。**当前主线是 C3-2：把区域分级改成受信任度控制的残差**，把"抓眼感"找回来同时不破坏 C3-1 的安全性。M3.7 Smart Color v2 嫁接暂停，等待 30 组 `FG-BG-Coord-v1` 视觉验收。
 
 **本目录即代码基地**：本项目已从 `/Users/mac/Documents/Codex/2026-07-05/gpt-image-2/` 迁移到 `/Users/mac/Desktop/整体代码1.0/仿色模型/` 作为唯一持续开发位置（`.git`/远程仓库随迁移保留）。虚拟环境 `.venv`/`.venv-m2` 太大（合计约1GB）未一起迁移，重建方式：
 
@@ -53,6 +53,10 @@ cd stage0_pipeline
 | 过冲光晕瑕疵：根因+修复+C2重跑 | `outputs/phase-teacher-overshoot-halo-fix.md` |
 | neutral 加法mood-cast（前景/人群多样性保留）+C2重跑 | `outputs/phase-teacher-neutral-mood-cast.md` |
 | 同标签类别外观差过大压制强度（背景/前景脱节）+C2重跑 | `outputs/phase-teacher-class-mismatch-fix.md` |
+| C3 仿色一致性升级方案 | Obsidian `[[语义物体调色专家-仿色一致性升级方案]]` |
+| C3-0 legacy 基线清单 | `stage0_pipeline/baselines/c3-0/legacy_v0/manifest.json` |
+| C3-1 全局氛围基底（已实现+验证） | `outputs/phase-c3-1-global-mood-base.md`、`stage0_pipeline/scripts_m2/coherence_controller.py` |
+| FG-BG-Coord-v1 专项评审集 | `stage0_pipeline/eval/fg_bg_coord_v1/` |
 | 仿色 Web Demo（参考图+目标图+强度滑杆） | `stage0_pipeline/webdemo/` |
 | 开发启动清单 | `outputs/development-start-checklist.md` |
 | Stage 0 管线说明 | `stage0_pipeline/README.md` |
@@ -77,5 +81,9 @@ cp stage0_pipeline/secrets/api.local.json.example stage0_pipeline/secrets/api.lo
 6. ~~**排查并修复过冲光晕瑕疵**~~ ✅ —— 根因是 `STRENGTH_PRESETS` 里 `cs>1` 过冲设计在羽化边界上失控（跟分割精度/BSHM无关），已按局部方差自适应抑制过冲修复，20图回归验证通过，**C2 训练数据用修复后 teacher 重新生成**（held-out MAE 4.20→4.02，小幅改善）。建筑立面整片过冲偏色是另一机制，留作后续（详见 `outputs/phase-teacher-overshoot-halo-fix.md`）
 7. ~~**"前景没反应"问题：neutral 改用加法 mood-cast**~~ ✅ —— 密集人群没被检测器识别、掉进 neutral 兜底类，重缩放式分级会洗掉人群衣服的颜色多样性；改成固定加法偏移后人群色彩多样性保留、整体氛围仍有柔和偏移，20图回归验证通过，**C2 训练数据再次重新生成**（held-out MAE 4.02→4.07，噪声级波动，信号稳定）（详见 `outputs/phase-teacher-neutral-mood-cast.md`）
 8. ~~**"背景跟前景脱节"问题：同标签类别外观差过大压制强度**~~ ✅ —— 开放词汇标签把两种物理上完全不同的东西（商场白吊顶 vs 钢架顶棚）都标成"building"强行统计匹配，新增类别配对置信度按绝对 Lab 差距压制过冲，20图回归验证通过（顺带修好一张过曝背景模糊的图），**C2 训练数据再次重新生成**（held-out MAE 4.07→3.74，真实改善）（详见 `outputs/phase-teacher-class-mismatch-fix.md`）
-9. **M3.7**：Chroma 仓开 `feature/regional-smart-color-head` 分支，启动 C2.4 Smart Color v2 嫁接（数据门槛已达标，teacher 已修复）——**当前主线**
-10. **C1** API易 双图冒烟（并行，不阻塞 C2）
+9. ~~**C3-0** 仿色一致性升级基线冻结~~ ✅ —— 已用 commit+SHA-256 锁定 `legacy_v0` teacher、97样本/208 class-rows C2 数据与 ridge head；核心接口新增 `pipeline=legacy/coherence`；`FG-BG-Coord-v1` 已登记旧20组
+10. ~~**C3-1** 全局氛围基底~~ ✅ —— `coherence_controller.py`：整图 Lab 加法位移，`ΔL≤10`/`Δab≤9` 严格限幅 + 内容匹配度打折 + 皮肤减半，20图回归全通过；`person_event_DSC04819_r2`（材质错配脱节）和 `outdoor_sky_DSC04085(1)`（光晕）两个原始bug case 视觉验证：脱节/光晕都消失，效果比 legacy 更自然但更弱（预期内，区域残差还没加回来）（详见 `outputs/phase-c3-1-global-mood-base.md`）
+11. **C3-2（当前主线）**：把区域分级结果改写成"相对全局基底的残差"，pair/pixel confidence 控制整个残差而不是只控制 `cs>1` 过冲部分；每区域设最大ΔE预算
+12. **C3-3/C3-4**：残差级边缘融合 + `eval_harmony.py` + 补齐 FG-BG-Coord-v1 到 30 组 + 人工A/B验收
+13. **C3-5/C3-6**：验收通过后重建C2 teacher数据，再恢复M3.7 Smart Color v2嫁接
+14. **C1** API易 双图冒烟（并行，不阻塞 C3）

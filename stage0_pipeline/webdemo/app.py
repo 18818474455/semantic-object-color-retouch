@@ -37,6 +37,7 @@ sys.path.insert(0, str(PIPELINE_ROOT / "scripts_m2"))
 import common  # noqa: E402
 from color_reference_transfer import (  # noqa: E402
     compute_style_profile, analyze_target, render_from_analysis, STRENGTH_PRESETS,
+    PIPELINE_LEGACY, SUPPORTED_PIPELINES,
 )
 
 app = Flask(__name__)
@@ -46,7 +47,8 @@ MAX_SESSIONS = 12  # small in-memory LRU-ish cap; this is a local demo, not a se
 SESSIONS: dict[str, dict] = {}
 SESSION_ORDER: list[str] = []
 
-IDENTITY_PRESET = {"default": 0.0, "skin": 0.0, "neutral": 0.0, "vibrance": 0.0, "contrast": 1.0, "sharpen": 0.0}
+IDENTITY_PRESET = {"default": 0.0, "skin": 0.0, "neutral": 0.0, "global_base": 0.0,
+                   "vibrance": 0.0, "contrast": 1.0, "sharpen": 0.0}
 # Slider anchors: 0% = no-op passthrough, 33/66/100% = the three validated
 # presets from the 20-image regression sweep. Anything in between is a
 # linear interpolation of each numeric knob between the two bracketing
@@ -152,8 +154,11 @@ def api_render(token: str):
         pct = float(request.args.get("strength", "50"))
     except ValueError:
         pct = 50.0
+    pipeline = request.args.get("pipeline", PIPELINE_LEGACY)
+    if pipeline not in SUPPORTED_PIPELINES:
+        return jsonify({"error": f"unknown pipeline {pipeline!r}; expected one of {SUPPORTED_PIPELINES}"}), 400
     preset = _interp_preset(pct)
-    out_rgb = render_from_analysis(session["analysis"], strength=preset)
+    out_rgb = render_from_analysis(session["analysis"], strength=preset, pipeline=pipeline)
     return send_file(io.BytesIO(_rgb_to_jpeg_bytes(out_rgb)), mimetype="image/jpeg")
 
 

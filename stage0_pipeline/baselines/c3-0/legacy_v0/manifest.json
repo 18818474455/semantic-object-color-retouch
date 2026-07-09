@@ -1,0 +1,48 @@
+{
+  "baseline_id": "teacher_legacy_v0_c3_0",
+  "frozen_at": "2026-07-10",
+  "source_commit": "85edb68",
+  "description": "Teacher v0 after halo, neutral mood-cast and class-pair mismatch fixes; frozen before the C3 coherence architecture upgrade.",
+  "restore": {
+    "teacher_source": "git show 85edb68:stage0_pipeline/scripts_m2/color_reference_transfer.py",
+    "regression_source": "git show 85edb68:stage0_pipeline/scripts_m2/regression_20.py",
+    "dataset": "git checkout 85edb68 -- stage0_pipeline/dataset/c2",
+    "note": "Generated edited images and masks are intentionally excluded from git; regenerate them from the tracked 97-row manifest using the legacy pipeline."
+  },
+  "artifacts": [
+    {
+      "path": "stage0_pipeline/scripts_m2/color_reference_transfer.py",
+      "sha256": "874889746f9151f452db477242d8f2fe47abb12f180aff31acda5d0ed8bbe3c2"
+    },
+    {
+      "path": "stage0_pipeline/scripts_m2/regression_20.py",
+      "sha256": "19414c3b24c7e0950543ce4bfb2e9bacc21857b763b25cae3b9ed68706ea6ce4"
+    },
+    {
+      "path": "stage0_pipeline/dataset/c2/manifest.jsonl",
+      "sha256": "30e9976c2ef11224c6f40871507e4098ea9dd7e7e5daae524418236dd3755431",
+      "rows": 97
+    },
+    {
+      "path": "stage0_pipeline/dataset/c2/param_targets.jsonl",
+      "sha256": "30e4e9a3ea68cb69dbe4de50f0a1ad2c6daaa0101c555b37191c7bddf38172ab",
+      "rows": 208
+    },
+    {
+      "path": "stage0_pipeline/dataset/c2/head_ridge_v0.json",
+      "sha256": "adaecbcded5a28077c078694f31ecfff24f368ee8aebcd5a214c043a654fbe79"
+    },
+    {
+      "path": "stage0_pipeline/dataset/c2/head_ridge_v0_report.json",
+      "sha256": "29e1c1f9f1facc701a44751819b459821ae8f93556455ce13675a4b1ff1e2501",
+      "held_out_mae": 3.74317,
+      "predict_mean_baseline_mae": 5.48641
+    }
+  ],
+  "acceptance": {
+    "pipeline_name": "legacy",
+    "strength": "medium",
+    "regression_cases": 20,
+    "command": ".venv-m2/bin/python stage0_pipeline/scripts_m2/regression_20.py --pipeline legacy"
+  }
+}

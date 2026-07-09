@@ -6,6 +6,7 @@ same-scene transfers.
 """
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -14,11 +15,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import common
 from build_review_sheet import make_comparison
-from color_reference_transfer import compute_style_profile, apply_profile
+from color_reference_transfer import (
+    PIPELINE_LEGACY,
+    SUPPORTED_PIPELINES,
+    apply_profile,
+    compute_style_profile,
+)
 from semantic_transfer_v2 import FULL_CASES, EXPANDED_CASES
 
 
-def run(cases: dict, tag: str, out: Path) -> None:
+def run(cases: dict, tag: str, out: Path, pipeline: str) -> None:
     for bucket, spec in cases.items():
         print(f"\n=== {bucket}{tag} ===")
         ref = common.load_rgb(spec["ref"], max_side=1024)
@@ -26,7 +32,9 @@ def run(cases: dict, tag: str, out: Path) -> None:
         panels = [("reference", ref)]
         for tp in spec["targets"]:
             tgt = common.load_rgb(tp, max_side=1024)
-            graded, info, compat = apply_profile(profile, tgt, strength="medium")
+            graded, info, compat = apply_profile(
+                profile, tgt, strength="medium", pipeline=pipeline
+            )
             stem = Path(tp).stem.replace(" ", "_")
             status = "OK" if compat["suitable"] else "SKIPPED(gate)"
             print(f" -- {stem}: {status} jaccard={compat['jaccard']} explainable={compat['explainable_tgt_frac']}")
@@ -37,10 +45,15 @@ def run(cases: dict, tag: str, out: Path) -> None:
 
 
 def main() -> int:
-    out = Path(__file__).resolve().parents[1] / "outputs" / "color_reference_transfer" / "regression_20"
+    ap = argparse.ArgumentParser(description="20-image color-transfer regression")
+    ap.add_argument("--pipeline", choices=SUPPORTED_PIPELINES, default=PIPELINE_LEGACY)
+    args = ap.parse_args()
+
+    out = (Path(__file__).resolve().parents[1] / "outputs" /
+           "color_reference_transfer" / f"regression_20_{args.pipeline}")
     out.mkdir(parents=True, exist_ok=True)
-    run(FULL_CASES, "", out)
-    run(EXPANDED_CASES, "_r2", out)
+    run(FULL_CASES, "", out, pipeline=args.pipeline)
+    run(EXPANDED_CASES, "_r2", out, pipeline=args.pipeline)
     print(f"\noutputs -> {out}")
     return 0
 
