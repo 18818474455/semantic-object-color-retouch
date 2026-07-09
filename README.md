@@ -52,7 +52,8 @@ cp stage0_pipeline/secrets/api.local.json.example stage0_pipeline/secrets/api.lo
 
 1. ~~**C2.1/C2.2/C2.3** 全量导出 + 拟合 + 训练~~ ✅ —— 外置盘挂载后跑通：21 样本 / 41 class-rows，held-out MAE=3.83。过程中发现并修复了一个假天空检测导致 Lab-affine scale 数值爆炸的 bug（详见设计稿 §7）
 2. ~~**扩样**：把 Stage 0 100 张验证集也导入 C2.1~~ ✅ —— n_rows 从 41 提到 **208**（97 样本），held-out MAE=4.20 < 基线 6.31，降幅比例（~34%）与扩样前基本一致，信号稳定可泛化
-3. **M3.7**：Chroma 仓开 `feature/regional-smart-color-head` 分支，启动 C2.4 Smart Color v2 嫁接（数据门槛已达标）
-4. **升级模型**：n=208 已足够，可把 `train_per_class_head.py` 从 ridge baseline 升级为 torch MLP
-5. **C1** API易 双图冒烟（并行，不阻塞 C2）
-6. Web Demo：参考图 + 目标图 + 强度滑杆
+3. **C1c（新增）**：Qwen3-VL-8B-Instruct（ModelScope 核实 Apache-2.0，商用无门槛）在 20 图回归集上做门控实验，替代/校验现有启发式天空合理性规则——这正是上面 bug 的根因所在，也是 V3 §4.2 一直没落地的那格
+4. **M3.7**：Chroma 仓开 `feature/regional-smart-color-head` 分支，启动 C2.4 Smart Color v2 嫁接（数据门槛已达标）
+5. **升级模型**：n=208 已足够，可把 `train_per_class_head.py` 从 ridge baseline 升级为 torch MLP
+6. **C1** API易 双图冒烟（并行，不阻塞 C2）
+7. Web Demo：参考图 + 目标图 + 强度滑杆

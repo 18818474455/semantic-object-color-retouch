@@ -115,11 +115,13 @@ manifest 示例：
 
 | 模块 | 推荐 | 职责 |
 |---|---|---|
-| VLM | Qwen3-VL / Qwen2.5-VL / InternVL | 全局场景理解、语义判断、门控 |
+| VLM | **Qwen3-VL-8B-Instruct**（2026-07-09 核实：ModelScope 官方仓库，Apache-2.0，商用无门槛，见下方更新说明） | 全局场景理解、语义判断、门控 |
 | 检测 | Grounding DINO / Grounding DINO 1.5 | 按文本提示找天空、草地、衣服、建筑、LED 屏等 |
 | 分割 | SAM2 | 将检测框/点提示转成区域 mask |
 | 人脸/皮肤 | BeautySDK 现有资产 + 阿里云人脸结果 | 人脸、皮肤区域优先使用现成高可信资产 |
 | 色彩指标 | OpenCV / Pillow / scikit-image | 计算全图和 mask 内客观指标 |
+
+> **2026-07-09 更新（VLM 选型落地 + 当前实现差距）**：本节 §4.2 从方案定稿起就要求"VLM 认为该物体在图中存在"作为交叉验证门槛之一，但 `scripts_m2/region_provider_v2.py` 实际实现至今只有**启发式规则**（纹理+饱和度双指标判断"天空合理性"），没有接入任何真实 VLM——这正是 2026-07-09 在 C2 训练数据里复现的"person_event 照片假天空检测"bug 的根因（近乎纯色的小块区域被规则误判成天空，见 `phase-c2-reference-self-distill-design.md` §7）。ModelScope 图文多模态盘点（`09-行业方案与知识库/App/2026-07-09-ModelScope图文多模态VLM模型盘点.md`）核实了 Qwen3-VL 全系列（2B~32B，含 Instruct/Thinking）License 为 **Apache-2.0，完全商用无门槛**，建议的落地路径：先用 **Qwen3-VL-8B-Instruct** 在现有 20 图跨场景回归集上做一次"能不能替代/简化现有启发式天空合理性规则"的小实验（详见 §12.0 C1c）。
 
 ### 4.2 交叉验证原则
 
@@ -651,14 +653,17 @@ dataset/
 > **V3.1（2026-07-09）**：本节被双轨 Phase C 扩展。C2 Reference 自蒸馏为主路径，不依赖 GPT API。  
 > 详见 `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` 与 `phase-c2-reference-self-distill-design.md`。
 
-### 12.0 Phase C 双轨概览
+### 12.0 Phase C 三轨概览（2026-07-09 新增 C1c）
 
 | 轨道 | 名称 | 依赖 | 产出 |
 |------|------|------|------|
 | **C1** | GPT teacher 量化 | API易 `gpt-image-2-all` | per-class Lab 残差（hard-case 标注） |
+| **C1c**（新增） | 本地 VLM 语义门控/critic | Qwen3-VL-8B-Instruct（Apache-2.0，自部署） | 替代/校验启发式天空合理性规则；可选：本地 plan/critic，缓解 C1 的 API 依赖 |
 | **C2** | Reference 自蒸馏 ★ | 本地 pseudo-target + Smart Color v2 | RegionalParamHead 权重 |
 
 C2 teacher v0 = `color_reference_transfer.py` medium 档；数据从 20 图回归集 bootstrap。
+
+**C1c 动机**：§4.2 感知层设计从一开始就要求"VLM 认为该物体在图中存在"作为交叉验证门槛，但实现至今是纯启发式规则，这正是 C2 数据管线里复现的"假天空检测"bug 的根因。C1c 不是另起一个新蒸馏轨道，而是用一个**license 已确认可商用、可本地部署、没有 GPT API 那种超时/内容错位风险**的 VLM，去补齐 §4.2 一直缺失的那一格，同时顺带给 C1 提供一个不依赖第三方 API 的本地 teacher/critic 备选。
 
 ---
 

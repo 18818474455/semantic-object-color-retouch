@@ -99,11 +99,12 @@ Do not train pixel generation in V1.
 
 ---
 
-## Phase C 双轨（V3.1，2026-07-09）
+## Phase C 三轨（V3.1，2026-07-09 新增 C1c）
 
 | 轨道 | 文档 | 状态 |
 |------|------|------|
 | **C2 Reference 自蒸馏（主路径）** | `outputs/phase-c2-reference-self-distill-design.md` | ✅ C2.1/C2.2/C2.3 扩样跑通（97 样本/208 class-rows），held-out MAE=4.20 < 基线 6.31 |
+| **C1c 本地 VLM 语义门控（新增）** | `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` §2 | Qwen3-VL-8B-Instruct（Apache-2.0）核实可商用；待排期实验，替代/校验现有启发式天空合理性规则 |
 | **C1 GPT teacher 量化（辅助）** | `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` | API 已切 API易；待双图冒烟 |
 
 C2 teacher v0 = `color_reference_transfer.py` medium 伪标签 → RegionalParamHead → Smart Color v2。

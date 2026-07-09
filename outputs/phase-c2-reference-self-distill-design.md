@@ -286,8 +286,9 @@ Phase B ✅  →  Phase A 产品化 ✅
 |------|------|
 | 伪标签天花板 = 手写 Lab 公式 | C2.3 后引入摄影师 gold 对；C1 只补 hard-case |
 | Smart Color 无 mask 算子 | C2.3 用 Python parity；C2.4 向 Chroma 提 masked operator |
-| 数据规模不足 | 同 ref 多 tgt 扩增；Stage 0 100 张优先 |
+| 数据规模不足 | 同 ref 多 tgt 扩增；Stage 0 100 张已并入（97 样本/208 rows） |
 | 与全局 Smart Color 冲突 | 独立 head 权重；全局 SC 不动，区域叠加 |
+| **teacher 本身的假检测污染训练数据**（如假天空 bug） | 数值层面已加 `MIN_STD` 退化守护（§7）；根因层面见 **C1c**（本地 VLM 语义门控，v3.1 addendum §2）——用 Qwen3-VL 替代/校验启发式检测规则，从源头减少这类假阳性 |
 
 ---
 
@@ -307,4 +308,5 @@ Phase B ✅  →  Phase A 产品化 ✅
 - Chroma 对齐：`stage0_pipeline/config/CHROMA_ALIGNMENT.md`
 - 仿色正式版：`stage0_pipeline/scripts_m2/color_reference_transfer.py`
 - VeraRetouch 对比：云享传知识库 `2026-07-09-VeraRetouch与语义调色专家架构对比`
+- ModelScope VLM 盘点（C1c 依据）：云享传知识库 `09-行业方案与知识库/App/2026-07-09-ModelScope图文多模态VLM模型盘点.md`
 - Smart Color v2 skills：`beautysdk-smart-color-training`、`beautysdk-smart-color-cpp-renderer`
