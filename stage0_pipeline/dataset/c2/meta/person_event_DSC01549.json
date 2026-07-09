@@ -22,20 +22,20 @@
     "skin"
   ],
   "matched_info": {
-    "neutral": {
-      "tgt_frac": 0.3769,
-      "ref_frac": 0.7631,
-      "matched": true
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0231,
+      "matched": false
+    },
+    "clothing": {
+      "tgt_frac": 0.0705,
+      "ref_frac": 0.0,
+      "matched": false
     },
     "building": {
       "tgt_frac": 0.3532,
       "ref_frac": 0.0156,
       "matched": true
-    },
-    "flag": {
-      "tgt_frac": 0.0632,
-      "ref_frac": 0.0,
-      "matched": false
     },
     "water": {
       "tgt_frac": 0.1454,
@@ -47,13 +47,13 @@
       "ref_frac": 0.0813,
       "matched": false
     },
-    "stage backdrop": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.0231,
-      "matched": false
+    "neutral": {
+      "tgt_frac": 0.3769,
+      "ref_frac": 0.7631,
+      "matched": true
     },
-    "clothing": {
-      "tgt_frac": 0.0705,
+    "flag": {
+      "tgt_frac": 0.0632,
       "ref_frac": 0.0,
       "matched": false
     },

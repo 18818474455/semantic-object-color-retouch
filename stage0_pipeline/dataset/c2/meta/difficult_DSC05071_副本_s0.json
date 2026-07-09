@@ -17,13 +17,18 @@
     "neutral"
   ],
   "matched_info": {
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
     "neutral": {
       "tgt_frac": 0.2047,
       "ref_frac": 0.7911,
       "matched": true
     },
-    "building": {
-      "tgt_frac": 0.6729,
+    "stage backdrop floor": {
+      "tgt_frac": 0.122,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -32,13 +37,8 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
-    "stage backdrop floor": {
-      "tgt_frac": 0.122,
+    "building": {
+      "tgt_frac": 0.6729,
       "ref_frac": 0.0,
       "matched": false
     }

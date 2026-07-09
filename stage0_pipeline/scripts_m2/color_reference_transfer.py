@@ -156,6 +156,41 @@ def _grade_class_from_stats(c: str, tgt_lab: np.ndarray, tm: np.ndarray, ref_sta
     return out
 
 
+def _grade_neutral_additive(tgt_lab: np.ndarray, tm: np.ndarray, ref_stats: dict) -> np.ndarray:
+    """"neutral" (unrecognized/heterogeneous leftover content — e.g. a dense
+    crowd's mixed-color clothing that no detector query matched) gets a
+    constant per-channel ADDITIVE shift instead of the mean/std RESCALE
+    _grade_class_from_stats uses for real semantic classes.
+
+    Found via a Web Demo test (2026-07-10): trying to give a crowd its own
+    matched "people" class and rescaling it toward the reference's mean/std
+    like sky/building do washes every person's differently-colored clothing
+    into one flat tint — a rescale forces convergence to ONE target
+    statistic, which is fine for a visually uniform class (sky) but wrong for
+    content whose whole visual identity IS "lots of different colors". An
+    additive shift instead translates the whole region by a constant vector
+    toward the reference's overall mood, leaving every pixel's relative hue/
+    lightness difference from its neighbors completely untouched — same
+    "nudge toward the reference" intent, without erasing local variety.
+    render_from_analysis's existing cs blend still controls how much of this
+    shift actually lands (medium neutral cs=0.45, taper for huge neutral_frac
+    still applies on top).
+    """
+    t_sel = tm > 0.5
+    out = tgt_lab.copy()
+    if t_sel.sum() < 20:
+        return out
+    t_mean_ab = tgt_lab[t_sel][:, 1:3].mean(axis=0)
+    t_mean_L = float(tgt_lab[..., 0][t_sel].mean())
+    d_L = ref_stats["l_mean"] - t_mean_L
+    d_a = ref_stats["mean_ab"][0] - t_mean_ab[0]
+    d_b = ref_stats["mean_ab"][1] - t_mean_ab[1]
+    out[..., 0] = tgt_lab[..., 0] + d_L
+    out[..., 1] = tgt_lab[..., 1] + d_a
+    out[..., 2] = tgt_lab[..., 2] + d_b
+    return out
+
+
 def _class_outlier_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> np.ndarray:
     """Per-pixel confidence in [0,1]: how well does THIS pixel's own Lab value
     match the (mean, std) of the class's own masked pixels? 1.0 = solidly
@@ -240,7 +275,12 @@ def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> 
         matched = (class_allowed and tm is not None and ref_stats is not None
                   and t_frac > MIN_FRAC and r_frac > MIN_FRAC)
         matched_info[c] = {"tgt_frac": round(t_frac, 4), "ref_frac": round(r_frac, 4), "matched": matched}
-        graded_by_class[c] = _grade_class_from_stats(c, tgt_lab, tm, ref_stats) if matched else tgt_lab
+        if not matched:
+            graded_by_class[c] = tgt_lab
+        elif c == "neutral":
+            graded_by_class[c] = _grade_neutral_additive(tgt_lab, tm, ref_stats)
+        else:
+            graded_by_class[c] = _grade_class_from_stats(c, tgt_lab, tm, ref_stats)
         confidence_by_class[c] = _class_outlier_confidence(tgt_lab, tm) if matched else None
 
     return {

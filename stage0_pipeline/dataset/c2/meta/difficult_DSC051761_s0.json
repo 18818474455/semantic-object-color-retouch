@@ -17,6 +17,11 @@
     "neutral"
   ],
   "matched_info": {
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
     "neutral": {
       "tgt_frac": 0.3188,
       "ref_frac": 0.7911,
@@ -35,11 +40,6 @@
     "skin": {
       "tgt_frac": 0.0551,
       "ref_frac": 0.0,
-      "matched": false
-    },
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
       "matched": false
     }
   },

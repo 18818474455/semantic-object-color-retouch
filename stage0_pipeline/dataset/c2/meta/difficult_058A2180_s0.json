@@ -17,23 +17,23 @@
     "neutral"
   ],
   "matched_info": {
+    "wall": {
+      "tgt_frac": 0.0049,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
     "neutral": {
       "tgt_frac": 0.936,
       "ref_frac": 0.7911,
       "matched": true
     },
+    "spotlight": {
+      "tgt_frac": 0.0021,
+      "ref_frac": 0.0,
+      "matched": false
+    },
     "tree": {
       "tgt_frac": 0.0068,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "led screen": {
-      "tgt_frac": 0.0154,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "water": {
-      "tgt_frac": 0.0036,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -42,13 +42,13 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "wall": {
-      "tgt_frac": 0.0049,
-      "ref_frac": 0.2077,
+    "water": {
+      "tgt_frac": 0.0036,
+      "ref_frac": 0.0,
       "matched": false
     },
-    "spotlight": {
-      "tgt_frac": 0.0021,
+    "led screen": {
+      "tgt_frac": 0.0154,
       "ref_frac": 0.0,
       "matched": false
     }

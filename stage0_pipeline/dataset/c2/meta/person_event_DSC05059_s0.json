@@ -27,9 +27,9 @@
       "ref_frac": 0.7631,
       "matched": true
     },
-    "building": {
-      "tgt_frac": 0.2438,
-      "ref_frac": 0.0156,
+    "skin": {
+      "tgt_frac": 0.0218,
+      "ref_frac": 0.1084,
       "matched": true
     },
     "floor": {
@@ -37,19 +37,19 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "skin": {
-      "tgt_frac": 0.0218,
-      "ref_frac": 0.1084,
+    "stage backdrop": {
+      "tgt_frac": 0.006,
+      "ref_frac": 0.0231,
+      "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.2438,
+      "ref_frac": 0.0156,
       "matched": true
     },
     "sky": {
       "tgt_frac": 0.0,
       "ref_frac": 0.0813,
-      "matched": false
-    },
-    "stage backdrop": {
-      "tgt_frac": 0.006,
-      "ref_frac": 0.0231,
       "matched": false
     }
   },

@@ -20,40 +20,25 @@
     "sky"
   ],
   "matched_info": {
-    "neutral": {
-      "tgt_frac": 0.3628,
-      "ref_frac": 0.0585,
-      "matched": true
+    "wall": {
+      "tgt_frac": 0.0566,
+      "ref_frac": 0.0,
+      "matched": false
     },
     "grass floor": {
       "tgt_frac": 0.1434,
       "ref_frac": 0.0,
       "matched": false
     },
-    "screen": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.5433,
-      "matched": false
-    },
-    "building": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.8945,
+    "spotlight": {
+      "tgt_frac": 0.0022,
+      "ref_frac": 0.0,
       "matched": false
     },
     "floor": {
       "tgt_frac": 0.0,
       "ref_frac": 0.0165,
       "matched": false
-    },
-    "wall": {
-      "tgt_frac": 0.0566,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "sky": {
-      "tgt_frac": 0.4158,
-      "ref_frac": 0.0987,
-      "matched": true
     },
     "stage backdrop": {
       "tgt_frac": 0.0,
@@ -65,14 +50,29 @@
       "ref_frac": 0.0324,
       "matched": false
     },
+    "building": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.8945,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.4158,
+      "ref_frac": 0.0987,
+      "matched": true
+    },
+    "neutral": {
+      "tgt_frac": 0.3628,
+      "ref_frac": 0.0585,
+      "matched": true
+    },
     "skin": {
       "tgt_frac": 0.0193,
       "ref_frac": 0.0,
       "matched": false
     },
-    "spotlight": {
-      "tgt_frac": 0.0022,
-      "ref_frac": 0.0,
+    "screen": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.5433,
       "matched": false
     }
   },

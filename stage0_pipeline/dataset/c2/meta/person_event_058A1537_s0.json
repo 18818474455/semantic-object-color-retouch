@@ -21,44 +21,14 @@
     "skin"
   ],
   "matched_info": {
-    "neutral": {
-      "tgt_frac": 0.2403,
-      "ref_frac": 0.7631,
-      "matched": true
-    },
-    "tree": {
-      "tgt_frac": 0.0161,
+    "wall": {
+      "tgt_frac": 0.42,
       "ref_frac": 0.0,
       "matched": false
     },
     "grass floor": {
       "tgt_frac": 0.1001,
       "ref_frac": 0.0,
-      "matched": false
-    },
-    "screen": {
-      "tgt_frac": 0.0367,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "building": {
-      "tgt_frac": 0.001,
-      "ref_frac": 0.0156,
-      "matched": false
-    },
-    "water": {
-      "tgt_frac": 0.0019,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "wall": {
-      "tgt_frac": 0.42,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "sky": {
-      "tgt_frac": 0.0603,
-      "ref_frac": 0.0813,
       "matched": false
     },
     "stage backdrop": {
@@ -71,10 +41,40 @@
       "ref_frac": 0.0,
       "matched": false
     },
+    "water": {
+      "tgt_frac": 0.0019,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.001,
+      "ref_frac": 0.0156,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.0603,
+      "ref_frac": 0.0813,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.2403,
+      "ref_frac": 0.7631,
+      "matched": true
+    },
+    "tree": {
+      "tgt_frac": 0.0161,
+      "ref_frac": 0.0,
+      "matched": false
+    },
     "skin": {
       "tgt_frac": 0.0535,
       "ref_frac": 0.1084,
       "matched": true
+    },
+    "screen": {
+      "tgt_frac": 0.0367,
+      "ref_frac": 0.0,
+      "matched": false
     }
   },
   "split": "train"

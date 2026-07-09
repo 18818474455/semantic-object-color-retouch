@@ -17,23 +17,23 @@
     "neutral"
   ],
   "matched_info": {
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "wall stage backdrop": {
+      "tgt_frac": 0.2562,
+      "ref_frac": 0.0,
+      "matched": false
+    },
     "neutral": {
       "tgt_frac": 0.0647,
       "ref_frac": 0.7911,
       "matched": true
     },
-    "screen": {
-      "tgt_frac": 0.5743,
-      "ref_frac": 0.0,
-      "matched": false
-    },
     "spotlight": {
       "tgt_frac": 0.0037,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "clothing": {
-      "tgt_frac": 0.0619,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -42,13 +42,13 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
+    "clothing": {
+      "tgt_frac": 0.0619,
+      "ref_frac": 0.0,
       "matched": false
     },
-    "wall stage backdrop": {
-      "tgt_frac": 0.2562,
+    "screen": {
+      "tgt_frac": 0.5743,
       "ref_frac": 0.0,
       "matched": false
     }

@@ -6,20 +6,20 @@
       "frac": 0.4829,
       "pixels": 337730,
       "lab_affine": {
-        "L_scale": 0.959,
-        "L_shift": -8.915,
-        "a_scale": 1.0261,
-        "a_shift": 0.01,
-        "b_scale": 1.301,
-        "b_shift": 2.896
+        "L_scale": 1.0329,
+        "L_shift": -10.509,
+        "a_scale": 1.1922,
+        "a_shift": -0.264,
+        "b_scale": 1.1702,
+        "b_shift": 2.474
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": 0.0004793494004077914,
-        "temperature": 0.144823811011018,
-        "saturation": 0.16357196996564172,
-        "vibrance": 0.0981
+        "tint": -0.013181843292617157,
+        "temperature": 0.12370467637879172,
+        "saturation": 0.18115849405421547,
+        "vibrance": 0.1087
       }
     }
   }

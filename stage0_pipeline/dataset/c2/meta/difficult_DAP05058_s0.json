@@ -17,18 +17,18 @@
     "neutral"
   ],
   "matched_info": {
+    "wall": {
+      "tgt_frac": 0.0036,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
     "neutral": {
       "tgt_frac": 0.6627,
       "ref_frac": 0.7911,
       "matched": true
     },
-    "screen": {
-      "tgt_frac": 0.0002,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "clothing": {
-      "tgt_frac": 0.0136,
+    "spotlight": {
+      "tgt_frac": 0.0009,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -37,18 +37,18 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "wall": {
-      "tgt_frac": 0.0036,
-      "ref_frac": 0.2077,
+    "clothing": {
+      "tgt_frac": 0.0136,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "screen": {
+      "tgt_frac": 0.0002,
+      "ref_frac": 0.0,
       "matched": false
     },
     "sky": {
       "tgt_frac": 0.3172,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "spotlight": {
-      "tgt_frac": 0.0009,
       "ref_frac": 0.0,
       "matched": false
     }

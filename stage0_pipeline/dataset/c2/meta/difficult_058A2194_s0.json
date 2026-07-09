@@ -17,13 +17,18 @@
     "neutral"
   ],
   "matched_info": {
+    "wall": {
+      "tgt_frac": 0.0088,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
     "neutral": {
       "tgt_frac": 0.5528,
       "ref_frac": 0.7911,
       "matched": true
     },
-    "screen": {
-      "tgt_frac": 0.0033,
+    "skin": {
+      "tgt_frac": 0.0559,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -32,14 +37,9 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "skin": {
-      "tgt_frac": 0.0559,
+    "screen": {
+      "tgt_frac": 0.0033,
       "ref_frac": 0.0,
-      "matched": false
-    },
-    "wall": {
-      "tgt_frac": 0.0088,
-      "ref_frac": 0.2077,
       "matched": false
     },
     "sky": {

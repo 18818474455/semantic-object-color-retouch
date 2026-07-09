@@ -27,9 +27,19 @@
       "ref_frac": 0.7631,
       "matched": true
     },
-    "screen": {
-      "tgt_frac": 0.0251,
+    "skin": {
+      "tgt_frac": 0.0275,
+      "ref_frac": 0.1084,
+      "matched": true
+    },
+    "floor": {
+      "tgt_frac": 0.1979,
       "ref_frac": 0.0,
+      "matched": false
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0231,
       "matched": false
     },
     "building": {
@@ -37,25 +47,15 @@
       "ref_frac": 0.0156,
       "matched": false
     },
-    "floor": {
-      "tgt_frac": 0.1979,
+    "screen": {
+      "tgt_frac": 0.0251,
       "ref_frac": 0.0,
       "matched": false
-    },
-    "skin": {
-      "tgt_frac": 0.0275,
-      "ref_frac": 0.1084,
-      "matched": true
     },
     "sky": {
       "tgt_frac": 0.335,
       "ref_frac": 0.0813,
       "matched": true
-    },
-    "stage backdrop": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.0231,
-      "matched": false
     }
   },
   "split": "train"

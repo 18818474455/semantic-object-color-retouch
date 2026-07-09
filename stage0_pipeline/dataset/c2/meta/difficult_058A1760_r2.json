@@ -19,6 +19,31 @@
     "neutral"
   ],
   "matched_info": {
+    "wall": {
+      "tgt_frac": 0.0414,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "grass": {
+      "tgt_frac": 0.012,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "spotlight": {
+      "tgt_frac": 0.0016,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.1377,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.307,
+      "ref_frac": 0.0,
+      "matched": false
+    },
     "neutral": {
       "tgt_frac": 0.4829,
       "ref_frac": 0.7911,
@@ -29,33 +54,8 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "floor": {
-      "tgt_frac": 0.1377,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "wall": {
-      "tgt_frac": 0.0414,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
-    "sky": {
-      "tgt_frac": 0.307,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "grass": {
-      "tgt_frac": 0.012,
-      "ref_frac": 0.0,
-      "matched": false
-    },
     "skin": {
       "tgt_frac": 0.016,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "spotlight": {
-      "tgt_frac": 0.0016,
       "ref_frac": 0.0,
       "matched": false
     }

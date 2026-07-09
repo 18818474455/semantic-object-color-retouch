@@ -22,19 +22,14 @@
       "ref_frac": 0.0154,
       "matched": true
     },
+    "sky backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.7677,
+      "matched": false
+    },
     "tree": {
       "tgt_frac": 0.0,
       "ref_frac": 0.3239,
-      "matched": false
-    },
-    "building": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.0165,
-      "matched": false
-    },
-    "clothing": {
-      "tgt_frac": 0.0576,
-      "ref_frac": 0.0,
       "matched": false
     },
     "skin": {
@@ -42,9 +37,14 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "sky backdrop": {
+    "clothing": {
+      "tgt_frac": 0.0576,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "building": {
       "tgt_frac": 0.0,
-      "ref_frac": 0.7677,
+      "ref_frac": 0.0165,
       "matched": false
     }
   },
