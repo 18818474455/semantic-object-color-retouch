@@ -6,11 +6,11 @@
       "frac": 0.3496,
       "pixels": 244145,
       "lab_affine": {
-        "L_scale": 0.5973,
+        "L_scale": 0.771,
         "L_shift": 60.0,
-        "a_scale": 0.6185,
-        "a_shift": -36.353,
-        "b_scale": 0.3683,
+        "a_scale": 0.866,
+        "a_shift": -40.0,
+        "b_scale": 0.4752,
         "b_shift": 40.0
       },
       "chroma_proxy": {
@@ -18,28 +18,28 @@
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
         "tint": -1.0,
         "temperature": 1.0,
-        "saturation": -0.506606927737623,
-        "vibrance": -0.304
+        "saturation": -0.3294217409626591,
+        "vibrance": -0.1977
       }
     },
     "neutral": {
       "frac": 0.633,
       "pixels": 442092,
       "lab_affine": {
-        "L_scale": 1.1436,
-        "L_shift": 2.087,
-        "a_scale": 0.9863,
-        "a_shift": 1.066,
-        "b_scale": 1.0598,
-        "b_shift": 13.455
+        "L_scale": 1.1389,
+        "L_shift": 2.117,
+        "a_scale": 0.9883,
+        "a_shift": 1.114,
+        "b_scale": 1.0535,
+        "b_shift": 13.427
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": 0.05331252175785419,
-        "temperature": 0.6727308571140632,
-        "saturation": 0.023027766669905247,
-        "vibrance": 0.0138
+        "tint": 0.0557138294759719,
+        "temperature": 0.6713527261464127,
+        "saturation": 0.020921642766159376,
+        "vibrance": 0.0126
       }
     }
   }

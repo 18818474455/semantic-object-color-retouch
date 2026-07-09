@@ -103,7 +103,8 @@ Do not train pixel generation in V1.
 
 | 轨道 | 文档 | 状态 |
 |------|------|------|
-| **C2 Reference 自蒸馏（主路径）** | `outputs/phase-c2-reference-self-distill-design.md` | ✅ C2.1/C2.2/C2.3 扩样跑通（97 样本/208 class-rows），held-out MAE=4.20 < 基线 6.31 |
+| **C2 Reference 自蒸馏（主路径）** | `outputs/phase-c2-reference-self-distill-design.md` | ✅ C2.1/C2.2/C2.3 扩样跑通（97 样本/208 class-rows），修复过冲光晕后重跑 held-out MAE=4.02 < 基线 6.08 |
+| **过冲光晕瑕疵：根因+修复+重跑（新增）** | `outputs/phase-teacher-overshoot-halo-fix.md` | ✅ Web Demo 肉眼验证发现，跟分割精度/BSHM无关，已修复并重跑 C2 全流程 |
 | **C1c 本地/托管 VLM 语义门控（实验完成，优先级下调）** | `outputs/phase-c1c-vlm-sky-gate-results.md` | ✅ `qwen3-vl-plus` 对比 30 个 sky 样本，100% 认同启发式规则（0 语义假阳性）；"替代规则"动机不成立 |
 | **C1 GPT teacher 量化（辅助）** | `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` | API 已切 API易；待双图冒烟 |
 
@@ -115,12 +116,14 @@ C2 teacher v0 = `color_reference_transfer.py` medium 伪标签 → RegionalParam
 cd stage0_pipeline
 ../.venv-m2/bin/python scripts_c2/export_bootstrap_dataset.py   # 97 样本
 ../.venv-m2/bin/python scripts_c2/fit_region_params.py          # 208 class-rows
-../.venv-m2/bin/python scripts_c2/train_per_class_head.py       # held-out MAE=4.20
+../.venv-m2/bin/python scripts_c2/train_per_class_head.py       # held-out MAE=4.02（修复后重跑）
 ```
 
 样本量从 41 扩到 208 后，held-out MAE / 基线 的降幅比例几乎不变（34.3% → 33.4%），说明规则教师信号稳定可泛化。过程中顺带修复了 `fit_region_params.py` 里一个真 bug：一张 person_event 照片的天空区域原图近乎纯色，导致 Lab-affine scale 除以近零方差爆炸到 68 倍，改为方差过低时 scale 退化为 1.0 + 只用均值差算 shift（详见设计稿 §7）。**这个 bug 最初被误判为"假天空检测"（语义问题），C1c 实验用 Qwen3-VL 复核 + 人工看原图后确认那其实是真实过曝天空——bug 纯粹是数值拟合问题，见 `outputs/phase-c1c-vlm-sky-gate-results.md`。**
 
 **ridge → MLP 升级尝试（`train_per_class_head_mlp.py`）**：用 5-fold CV（仅在训练集内部）选出最优 MLP 配置后，在同一个 held-out 测试集上评估，结果 ridge (4.20) 明显优于 MLP (6.13)——训练集内 CV 分数两者几乎一样（3.26 vs 3.27），但 MLP 迁移到新样本上的能力更弱，说明 n=208 还没到能撑起非线性模型的规模。**继续用 ridge (v0) 作生产头**，详见 `outputs/phase-c2.3b-mlp-head-experiment.md`。
+
+**过冲光晕瑕疵修复 + C2 重跑（2026-07-10）**：Web Demo 肉眼验证真实回归图时发现天空/树冠边界有不自然的光晕，排查后确认跟分割精度（BSHM 之类的抠图模型）无关，根因是 `STRENGTH_PRESETS` 里 `cs>1` 的"过冲"设计在羽化边界/材质混杂区域上失控。已实现按局部方差自适应抑制过冲的修复（`_class_outlier_confidence`），20 图回归验证门槛决策不变、视觉瑕疵明显改善；因为 C2 伪标签的老师就是这套 medium 档，重跑了 C2.1→C2.3 全流程，新 held-out MAE=4.02（略优于修复前 4.20）。详见 `outputs/phase-teacher-overshoot-halo-fix.md`。
 
 ---
 

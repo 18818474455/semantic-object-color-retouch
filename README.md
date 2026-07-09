@@ -2,7 +2,7 @@
 
 独立预研项目：识别照片中的语义区域（天空、人脸、皮肤、服装、草地、建筑等），判断各区域是否应调色及如何调色，并通过本地 Chroma 引擎或 GPT Image 2 执行。
 
-**当前状态（2026-07-09）**：Stage 0 + 仿色产品化已完成；**C2 Reference 自蒸馏为主开发线**；C1 GPT 量化为辅助轨（API易已配置）。
+**当前状态（2026-07-10）**：Stage 0 + 仿色产品化已完成；**C2 Reference 自蒸馏为主开发线**；C1 GPT 量化为辅助轨（API易已配置）。Web Demo 肉眼验证发现并修复了 teacher 的过冲光晕瑕疵，C2 训练数据已用修复后版本重新生成。
 
 ## 目录结构
 
@@ -41,6 +41,7 @@ cd stage0_pipeline
 | C2.1 Bootstrap 导出脚本 | `stage0_pipeline/scripts_c2/export_bootstrap_dataset.py` |
 | C1c VLM 天空门控实验结果 | `outputs/phase-c1c-vlm-sky-gate-results.md` |
 | C2.3b ridge→MLP 升级实验结果 | `outputs/phase-c2.3b-mlp-head-experiment.md` |
+| 过冲光晕瑕疵：根因+修复+C2重跑 | `outputs/phase-teacher-overshoot-halo-fix.md` |
 | 仿色 Web Demo（参考图+目标图+强度滑杆） | `stage0_pipeline/webdemo/` |
 | 开发启动清单 | `outputs/development-start-checklist.md` |
 | Stage 0 管线说明 | `stage0_pipeline/README.md` |
@@ -61,6 +62,7 @@ cp stage0_pipeline/secrets/api.local.json.example stage0_pipeline/secrets/api.lo
 2. ~~**扩样**：把 Stage 0 100 张验证集也导入 C2.1~~ ✅ —— n_rows 从 41 提到 **208**（97 样本），held-out MAE=4.20 < 基线 6.31，降幅比例（~34%）与扩样前基本一致，信号稳定可泛化
 3. ~~**C1c**：Qwen3-VL 天空门控对比实验~~ ✅ —— `qwen3-vl-plus` 对 30 个样本 100% 认同启发式规则（0 语义假阳性），上面的 bug 案例人工复核后确认是真实过曝天空、非语义误检；C1c"替代规则"动机不成立，优先级下调（详见 `outputs/phase-c1c-vlm-sky-gate-results.md`）
 4. ~~**升级模型**：ridge baseline 升级为 torch MLP~~ ✅ —— CV 选参 + 多 seed 评估后，n=208 时 MLP 泛化不如 ridge（held-out MAE 6.13 vs 4.20），**继续用 ridge (v0)**（详见 `outputs/phase-c2.3b-mlp-head-experiment.md`）
-5. ~~**Web Demo**：参考图 + 目标图 + 强度滑杆~~ ✅ —— `stage0_pipeline/webdemo/`，本地 Flask，分析一次（跑分割）+ 滑杆秒级重渲染。用真实回归图肉眼验证时发现一个此前只看 Lab 数值指标没发现的瑕疵：`outdoor_sky` 桶天空过饱和 + 树冠/建筑轮廓边缘青色光晕（原版 CLI 复现，非 demo 引入，详见 `webdemo/README.md`）——**值得在推进 M3.7 之前先排查**
-6. **M3.7**：Chroma 仓开 `feature/regional-smart-color-head` 分支，启动 C2.4 Smart Color v2 嫁接（数据门槛已达标）——建议先处理第 5 点的视觉瑕疵，再嫁接到生产引擎
-7. **C1** API易 双图冒烟（并行，不阻塞 C2）
+5. ~~**Web Demo**：参考图 + 目标图 + 强度滑杆~~ ✅ —— `stage0_pipeline/webdemo/`，本地 Flask，分析一次（跑分割）+ 滑杆秒级重渲染。用真实回归图肉眼验证时发现一个此前只看 Lab 数值指标没发现的瑕疵：`outdoor_sky` 桶天空过饱和 + 树冠边缘青色光晕
+6. ~~**排查并修复过冲光晕瑕疵**~~ ✅ —— 根因是 `STRENGTH_PRESETS` 里 `cs>1` 过冲设计在羽化边界上失控（跟分割精度/BSHM无关），已按局部方差自适应抑制过冲修复，20图回归验证通过，**C2 训练数据用修复后 teacher 重新生成**（held-out MAE 4.20→4.02，小幅改善）。建筑立面整片过冲偏色是另一机制，留作后续（详见 `outputs/phase-teacher-overshoot-halo-fix.md`）
+7. **M3.7**：Chroma 仓开 `feature/regional-smart-color-head` 分支，启动 C2.4 Smart Color v2 嫁接（数据门槛已达标，teacher 已修复）——**当前主线**
+8. **C1** API易 双图冒烟（并行，不阻塞 C2）

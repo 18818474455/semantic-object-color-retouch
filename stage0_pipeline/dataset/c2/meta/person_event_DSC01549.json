@@ -32,14 +32,24 @@
       "ref_frac": 0.0156,
       "matched": true
     },
+    "flag": {
+      "tgt_frac": 0.0632,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "water": {
+      "tgt_frac": 0.1454,
+      "ref_frac": 0.0,
+      "matched": false
+    },
     "sky": {
       "tgt_frac": 0.0,
       "ref_frac": 0.0813,
       "matched": false
     },
-    "flag": {
-      "tgt_frac": 0.0632,
-      "ref_frac": 0.0,
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0231,
       "matched": false
     },
     "clothing": {
@@ -51,16 +61,6 @@
       "tgt_frac": 0.0538,
       "ref_frac": 0.1084,
       "matched": true
-    },
-    "stage backdrop": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.0231,
-      "matched": false
-    },
-    "water": {
-      "tgt_frac": 0.1454,
-      "ref_frac": 0.0,
-      "matched": false
     }
   },
   "split": "train"

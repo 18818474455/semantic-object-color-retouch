@@ -7,18 +7,18 @@
       "pixels": 591301,
       "lab_affine": {
         "L_scale": 1.1112,
-        "L_shift": -4.483,
+        "L_shift": -4.484,
         "a_scale": 0.9414,
-        "a_shift": 2.523,
+        "a_shift": 2.522,
         "b_scale": 0.9908,
         "b_shift": 2.377
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": 0.12616279004679426,
-        "temperature": 0.11884385949646567,
-        "saturation": -0.033914733815032516,
+        "tint": 0.12610812470677893,
+        "temperature": 0.11883365517317249,
+        "saturation": -0.0338994786711726,
         "vibrance": -0.0203
       }
     }

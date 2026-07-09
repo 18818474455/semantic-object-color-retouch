@@ -37,10 +37,20 @@
       "ref_frac": 0.5433,
       "matched": false
     },
+    "floor": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0165,
+      "matched": false
+    },
     "sky": {
       "tgt_frac": 0.3257,
       "ref_frac": 0.0987,
       "matched": true
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.175,
+      "matched": false
     },
     "clothing": {
       "tgt_frac": 0.0,
@@ -50,16 +60,6 @@
     "skin": {
       "tgt_frac": 0.035,
       "ref_frac": 0.0,
-      "matched": false
-    },
-    "stage backdrop": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.175,
-      "matched": false
-    },
-    "floor": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.0165,
       "matched": false
     }
   },

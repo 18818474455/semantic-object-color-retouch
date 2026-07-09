@@ -27,14 +27,14 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
     "skin": {
       "tgt_frac": 0.0342,
       "ref_frac": 0.0,
+      "matched": false
+    },
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
       "matched": false
     }
   },

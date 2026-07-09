@@ -22,11 +22,6 @@
     "skin"
   ],
   "matched_info": {
-    "stage backdrop": {
-      "tgt_frac": 0.006,
-      "ref_frac": 0.0231,
-      "matched": false
-    },
     "neutral": {
       "tgt_frac": 0.4769,
       "ref_frac": 0.7631,
@@ -42,15 +37,20 @@
       "ref_frac": 0.0,
       "matched": false
     },
+    "skin": {
+      "tgt_frac": 0.0218,
+      "ref_frac": 0.1084,
+      "matched": true
+    },
     "sky": {
       "tgt_frac": 0.0,
       "ref_frac": 0.0813,
       "matched": false
     },
-    "skin": {
-      "tgt_frac": 0.0218,
-      "ref_frac": 0.1084,
-      "matched": true
+    "stage backdrop": {
+      "tgt_frac": 0.006,
+      "ref_frac": 0.0231,
+      "matched": false
     }
   },
   "split": "train"

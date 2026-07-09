@@ -156,6 +156,40 @@ def _grade_class_from_stats(c: str, tgt_lab: np.ndarray, tm: np.ndarray, ref_sta
     return out
 
 
+def _class_outlier_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> np.ndarray:
+    """Per-pixel confidence in [0,1]: how well does THIS pixel's own Lab value
+    match the (mean, std) of the class's own masked pixels? 1.0 = solidly
+    inside the class's own distribution; tapers toward 0.0 for pixels far
+    outside it (mixed/outlier/edge pixels — e.g. a few tree-branch pixels
+    swept into a "sky" mask by a coarse SAM boundary, or an odd-colored
+    window swept into a "building" mask).
+
+    Found via a real bug (2026-07-10): STRENGTH_PRESETS deliberately uses
+    cs > 1 ("overshoot", more than a full statistical match to the
+    reference) for most classes at medium/strong, to make punchy results on
+    genuinely homogeneous regions (a clean blue sky). But a flat per-class cs
+    blended through a feathered mask boundary amplifies exactly the pixels
+    LEAST representative of the class into a visible unnatural halo/cast —
+    e.g. a bright cyan ring at a treeline-vs-sky boundary, or an oversaturated
+    cast across a multi-material building facade. Verified: capping cs to 1.0
+    (no overshoot at all) removes the artifact; this function lets overshoot
+    stay on for pixels it's actually safe for instead of removing it globally.
+    """
+    t_sel = tm > 0.5
+    if t_sel.sum() < 20:
+        return np.ones(tgt_lab.shape[:2], dtype=np.float32)
+    t_L, t_a, t_b = tgt_lab[..., 0], tgt_lab[..., 1], tgt_lab[..., 2]
+    mean_L, std_L = float(t_L[t_sel].mean()), float(t_L[t_sel].std()) + 1e-5
+    mean_a, std_a = float(t_a[t_sel].mean()), float(t_a[t_sel].std()) + 1e-5
+    mean_b, std_b = float(t_b[t_sel].mean()), float(t_b[t_sel].std()) + 1e-5
+    z = np.sqrt(((t_L - mean_L) / std_L) ** 2 + ((t_a - mean_a) / std_a) ** 2 + ((t_b - mean_b) / std_b) ** 2)
+    # confidence=1.0 within 1.5 std of the class's own mean (still "typical"
+    # for that class), linearly tapering to 0.0 by 3.5 std (clearly an
+    # outlier/mixed pixel this class's statistics don't really describe).
+    Z_FULL, Z_ZERO = 1.5, 3.5
+    return np.clip(1.0 - (z - Z_FULL) / (Z_ZERO - Z_FULL), 0.0, 1.0).astype(np.float32)
+
+
 def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> dict:
     """Strength-INDEPENDENT half of apply_profile: segmentation, the content-
     match gate, feathered blend weights, and per-class graded Lab targets.
@@ -196,6 +230,7 @@ def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> 
 
     matched_info = {}
     graded_by_class = {}
+    confidence_by_class = {}
     for c in class_names:
         tm = tgt_cls.get(c)
         ref_stats = profile["classes"].get(c)
@@ -206,11 +241,13 @@ def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> 
                   and t_frac > MIN_FRAC and r_frac > MIN_FRAC)
         matched_info[c] = {"tgt_frac": round(t_frac, 4), "ref_frac": round(r_frac, 4), "matched": matched}
         graded_by_class[c] = _grade_class_from_stats(c, tgt_lab, tm, ref_stats) if matched else tgt_lab
+        confidence_by_class[c] = _class_outlier_confidence(tgt_lab, tm) if matched else None
 
     return {
         "tgt_rgb": tgt_rgb, "tgt_lab": tgt_lab, "tgt_cls": tgt_cls, "compat": compat,
         "class_names": class_names, "weights": weights,
         "matched_info": matched_info, "graded_by_class": graded_by_class,
+        "confidence_by_class": confidence_by_class,
     }
 
 
@@ -221,7 +258,14 @@ def render_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.
     per-class regrading happens here — this is the cheap call an interactive
     strength slider re-runs on every drag. `strength` may be a preset name
     ("light"/"medium"/"strong") or a raw preset dict (e.g. interpolated
-    between two presets for a continuous slider)."""
+    between two presets for a continuous slider).
+
+    cs > 1 ("overshoot") is damped per-pixel by each class's outlier
+    confidence map (see _class_outlier_confidence) so it stays strong on
+    pixels that genuinely look like the rest of the class, and fades out on
+    pixels that don't — fixes the treeline color-halo / building-cast bug
+    (2026-07-10) without touching the validated preset numbers themselves.
+    """
     preset = STRENGTH_PRESETS[strength] if isinstance(strength, str) else strength
     tgt_lab = analysis["tgt_lab"]
     acc = np.zeros_like(tgt_lab)
@@ -229,14 +273,20 @@ def render_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.
         info = analysis["matched_info"][c]
         graded = analysis["graded_by_class"][c]
         if info["matched"]:
-            cs = preset["skin"] if c == "skin" else (preset["neutral"] if c == "neutral" else preset["default"])
+            cs_base = preset["skin"] if c == "skin" else (preset["neutral"] if c == "neutral" else preset["default"])
+            if cs_base > 1.0:
+                confidence = analysis["confidence_by_class"][c]
+                cs = 1.0 + (cs_base - 1.0) * confidence  # array, per-pixel damped overshoot
+            else:
+                cs = cs_base  # <=1 is a plain undershoot/no-op blend, nothing to damp
             if c == "neutral" and info["tgt_frac"] > 0.5:
                 # Unrecognized leftover swallowing most of the frame means the
                 # segmentation didn't understand this scene — taper toward a
                 # no-op instead of forcing the reference's global cast on it
                 # (this is the concrete "orange-wash on DAP02394_2" bug fix).
-                cs *= max(0.0, 1.0 - (info["tgt_frac"] - 0.5) / 0.5) ** 2
-            graded = tgt_lab * (1.0 - cs) + graded * cs
+                cs = cs * (max(0.0, 1.0 - (info["tgt_frac"] - 0.5) / 0.5) ** 2)
+            cs_bcast = cs[..., None] if isinstance(cs, np.ndarray) else cs
+            graded = tgt_lab * (1.0 - cs_bcast) + graded * cs_bcast
         acc += graded * analysis["weights"][c][..., None]
 
     acc[..., 0] = np.clip(acc[..., 0], 0.0, 100.0)

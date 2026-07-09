@@ -27,24 +27,24 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "floor": {
-      "tgt_frac": 0.2395,
+    "clothing": {
+      "tgt_frac": 0.0419,
       "ref_frac": 0.0,
       "matched": false
     },
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
-    "clothing": {
-      "tgt_frac": 0.0419,
+    "floor": {
+      "tgt_frac": 0.2395,
       "ref_frac": 0.0,
       "matched": false
     },
     "skin": {
       "tgt_frac": 0.0022,
       "ref_frac": 0.0,
+      "matched": false
+    },
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
       "matched": false
     }
   },

@@ -16,9 +16,9 @@
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": 0.050533306616055554,
-        "temperature": -0.11439429954893292,
-        "saturation": 0.05102367456657331,
+        "tint": 0.05055242640428821,
+        "temperature": -0.11441833367720466,
+        "saturation": 0.051017757454386414,
         "vibrance": 0.0306
       }
     }

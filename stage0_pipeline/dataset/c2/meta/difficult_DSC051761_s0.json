@@ -27,9 +27,9 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
+    "floor": {
+      "tgt_frac": 0.0133,
+      "ref_frac": 0.0,
       "matched": false
     },
     "skin": {
@@ -37,9 +37,9 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "floor": {
-      "tgt_frac": 0.0133,
-      "ref_frac": 0.0,
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
       "matched": false
     }
   },

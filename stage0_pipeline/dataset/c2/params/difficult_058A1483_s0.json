@@ -11,14 +11,14 @@
         "a_scale": 1.2689,
         "a_shift": -0.216,
         "b_scale": 1.255,
-        "b_shift": 0.489
+        "b_shift": 0.49
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": -0.01080981371177685,
-        "temperature": 0.02447450538054296,
-        "saturation": 0.26193119614658666,
+        "tint": -0.010811124404113559,
+        "temperature": 0.024475623332646013,
+        "saturation": 0.26195213860356015,
         "vibrance": 0.1572
       }
     }

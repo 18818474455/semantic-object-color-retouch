@@ -6,40 +6,40 @@
       "frac": 0.503,
       "pixels": 351781,
       "lab_affine": {
-        "L_scale": 0.956,
-        "L_shift": -11.665,
-        "a_scale": 1.1034,
-        "a_shift": 0.847,
-        "b_scale": 1.3398,
-        "b_shift": -6.304
+        "L_scale": 0.9563,
+        "L_shift": -11.67,
+        "a_scale": 1.1061,
+        "a_shift": 0.845,
+        "b_scale": 1.3402,
+        "b_shift": -6.297
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": 0.04234840550521959,
-        "temperature": -0.3152061245580128,
-        "saturation": 0.22159120838224755,
-        "vibrance": 0.133
+        "tint": 0.04226792477316384,
+        "temperature": -0.3148574427496992,
+        "saturation": 0.22315122773162566,
+        "vibrance": 0.1339
       }
     },
     "skin": {
       "frac": 0.0496,
       "pixels": 34717,
       "lab_affine": {
-        "L_scale": 1.106,
-        "L_shift": -12.541,
-        "a_scale": 0.9469,
-        "a_shift": -0.085,
-        "b_scale": 0.9397,
-        "b_shift": -2.786
+        "L_scale": 1.1122,
+        "L_shift": -12.734,
+        "a_scale": 0.9698,
+        "a_shift": -0.356,
+        "b_scale": 0.9681,
+        "b_shift": -2.861
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": -0.0042387593231583585,
-        "temperature": -0.1392812580046064,
-        "saturation": -0.05670698359654569,
-        "vibrance": -0.034
+        "tint": -0.017809845666749348,
+        "temperature": -0.14305814889050747,
+        "saturation": -0.031084303371930355,
+        "vibrance": -0.0187
       }
     }
   }

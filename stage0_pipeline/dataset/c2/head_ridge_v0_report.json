@@ -9,8 +9,8 @@
     "lab_b_scale",
     "lab_b_shift"
   ],
-  "in_sample_mae": 3.16759,
-  "predict_mean_baseline_mae": 6.3066,
+  "in_sample_mae": 3.12409,
+  "predict_mean_baseline_mae": 6.08334,
   "note": "in-sample only; upgrade to held-out split once class diversity grows.",
   "rows": [
     {
@@ -1054,5 +1054,5 @@
       "bucket": "smoke"
     }
   ],
-  "held_out_mae": 4.20292
+  "held_out_mae": 4.01886
 }

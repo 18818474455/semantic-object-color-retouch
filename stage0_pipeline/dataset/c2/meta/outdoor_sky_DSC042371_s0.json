@@ -41,18 +41,28 @@
       "ref_frac": 0.5433,
       "matched": false
     },
-    "sky": {
-      "tgt_frac": 0.3111,
-      "ref_frac": 0.0987,
-      "matched": true
-    },
     "flag": {
       "tgt_frac": 0.0015,
       "ref_frac": 0.0,
       "matched": false
     },
-    "spotlight": {
-      "tgt_frac": 0.0021,
+    "floor": {
+      "tgt_frac": 0.2309,
+      "ref_frac": 0.0165,
+      "matched": true
+    },
+    "sky": {
+      "tgt_frac": 0.3111,
+      "ref_frac": 0.0987,
+      "matched": true
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0323,
+      "ref_frac": 0.175,
+      "matched": true
+    },
+    "led screen": {
+      "tgt_frac": 0.0043,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -66,18 +76,8 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "stage backdrop": {
-      "tgt_frac": 0.0323,
-      "ref_frac": 0.175,
-      "matched": true
-    },
-    "floor": {
-      "tgt_frac": 0.2309,
-      "ref_frac": 0.0165,
-      "matched": true
-    },
-    "led screen": {
-      "tgt_frac": 0.0043,
+    "spotlight": {
+      "tgt_frac": 0.0021,
       "ref_frac": 0.0,
       "matched": false
     }

@@ -20,29 +20,29 @@
     "neutral"
   ],
   "matched_info": {
-    "tree": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.3239,
-      "matched": false
-    },
     "neutral": {
       "tgt_frac": 0.633,
       "ref_frac": 0.0154,
       "matched": true
+    },
+    "tree": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.3239,
+      "matched": false
     },
     "building": {
       "tgt_frac": 0.3496,
       "ref_frac": 0.0165,
       "matched": true
     },
-    "sky backdrop": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.7677,
-      "matched": false
-    },
     "skin": {
       "tgt_frac": 0.0197,
       "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.7677,
       "matched": false
     }
   },

@@ -22,8 +22,8 @@
       "ref_frac": 0.7911,
       "matched": true
     },
-    "grass": {
-      "tgt_frac": 0.0047,
+    "skin": {
+      "tgt_frac": 0.0478,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -32,8 +32,8 @@
       "ref_frac": 0.2077,
       "matched": false
     },
-    "skin": {
-      "tgt_frac": 0.0478,
+    "grass": {
+      "tgt_frac": 0.0047,
       "ref_frac": 0.0,
       "matched": false
     }

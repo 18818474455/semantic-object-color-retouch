@@ -300,7 +300,8 @@ Phase B ✅  →  Phase A 产品化 ✅
 2. ~~实现 `scripts_c2/fit_region_params.py`（C2.2）~~ ✅ 已实现并跑通（208 条 class-row，修复了假天空检测导致的退化 scale 数值 bug）
 3. ~~实现 `scripts_c2/train_per_class_head.py`（C2.3 ridge baseline）~~ ✅ 已实现并跑通，n=208 held-out MAE=4.20 < 基线 6.31，与 n=41 时的泛化比例一致
 3b. ~~升级 `train_per_class_head.py` 从 ridge 到轻量 torch MLP~~ ✅ 已实现并跑通 CV 选参 + 多 seed 评估（`train_per_class_head_mlp.py`），结论：n=208 时 MLP 泛化不如 ridge（held-out MAE 6.13 vs 4.20），**ridge (v0) 继续作生产头**，详见 `outputs/phase-c2.3b-mlp-head-experiment.md`
-4. **下一步**：直接启动 C2.4，在 Chroma 仓开 `feature/regional-smart-color-head` 分支做 Smart Color v2 嫁接
+3c. ~~排查并修复 teacher 的过冲光晕瑕疵~~ ✅ Web Demo 肉眼验证发现 `color_reference_transfer.py` medium/strong 档在羽化边界上有不自然的光晕（根因：`cs>1` 过冲设计，跟分割精度无关），已按局部方差自适应抑制过冲修复；因为 C2 伪标签的老师就是这套 medium 档，**重跑了 C2.1→C2.3 全流程**，新 held-out MAE=4.02（略优于修复前的 4.20），详见 `outputs/phase-teacher-overshoot-halo-fix.md`
+4. **下一步**：直接启动 C2.4，在 Chroma 仓开 `feature/regional-smart-color-head` 分支做 Smart Color v2 嫁接（teacher 已修复，数据已用新版重新生成）
 5. C1 继续 API易 双图测试，结果只写入 `gpt_residual/`，不阻塞 C2.1
 
 ---

@@ -37,8 +37,8 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "sky": {
-      "tgt_frac": 0.3541,
+    "skin": {
+      "tgt_frac": 0.0141,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -47,8 +47,8 @@
       "ref_frac": 0.2077,
       "matched": false
     },
-    "skin": {
-      "tgt_frac": 0.0141,
+    "sky": {
+      "tgt_frac": 0.3541,
       "ref_frac": 0.0,
       "matched": false
     }

@@ -27,8 +27,8 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "stage backdrop floor": {
-      "tgt_frac": 0.122,
+    "skin": {
+      "tgt_frac": 0.0005,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -37,8 +37,8 @@
       "ref_frac": 0.2077,
       "matched": false
     },
-    "skin": {
-      "tgt_frac": 0.0005,
+    "stage backdrop floor": {
+      "tgt_frac": 0.122,
       "ref_frac": 0.0,
       "matched": false
     }

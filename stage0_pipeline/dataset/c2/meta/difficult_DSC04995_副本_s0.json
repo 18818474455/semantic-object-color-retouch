@@ -22,24 +22,24 @@
       "ref_frac": 0.7911,
       "matched": true
     },
-    "floor": {
-      "tgt_frac": 0.0906,
+    "clothing": {
+      "tgt_frac": 0.1269,
       "ref_frac": 0.0,
       "matched": false
     },
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
-    "clothing": {
-      "tgt_frac": 0.1269,
+    "floor": {
+      "tgt_frac": 0.0906,
       "ref_frac": 0.0,
       "matched": false
     },
     "skin": {
       "tgt_frac": 0.0092,
       "ref_frac": 0.0,
+      "matched": false
+    },
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
       "matched": false
     }
   },

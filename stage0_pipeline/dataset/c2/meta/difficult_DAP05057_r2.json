@@ -17,27 +17,12 @@
     "neutral"
   ],
   "matched_info": {
-    "wall": {
-      "tgt_frac": 0.0022,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
     "neutral": {
       "tgt_frac": 0.6583,
       "ref_frac": 0.7911,
       "matched": true
     },
     "building": {
-      "tgt_frac": 0.0005,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "sky": {
-      "tgt_frac": 0.3248,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "spotlight": {
       "tgt_frac": 0.0005,
       "ref_frac": 0.0,
       "matched": false
@@ -49,6 +34,21 @@
     },
     "skin": {
       "tgt_frac": 0.0023,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "wall": {
+      "tgt_frac": 0.0022,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.3248,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "spotlight": {
+      "tgt_frac": 0.0005,
       "ref_frac": 0.0,
       "matched": false
     }

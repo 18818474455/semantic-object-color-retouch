@@ -6,17 +6,17 @@
       "frac": 0.0133,
       "pixels": 9303,
       "lab_affine": {
-        "L_scale": 2.527,
+        "L_scale": 2.4093,
         "L_shift": -60.0,
         "a_scale": 6.0,
-        "a_shift": -8.534,
-        "b_scale": 4.1611,
-        "b_shift": 38.584
+        "a_shift": -8.472,
+        "b_scale": 3.9826,
+        "b_shift": 35.616
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": -0.4266961634159088,
+        "tint": -0.42358041405677793,
         "temperature": 1.0,
         "saturation": 1.0,
         "vibrance": 0.6
@@ -26,57 +26,57 @@
       "frac": 0.2309,
       "pixels": 161238,
       "lab_affine": {
-        "L_scale": 0.7444,
-        "L_shift": -2.967,
-        "a_scale": 0.343,
-        "a_shift": -9.344,
-        "b_scale": 0.5969,
-        "b_shift": -11.877
+        "L_scale": 0.8044,
+        "L_shift": -3.483,
+        "a_scale": 0.3218,
+        "a_shift": -6.192,
+        "b_scale": 0.7901,
+        "b_shift": -11.967
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": -0.4672241511942203,
-        "temperature": -0.5938638888257828,
-        "saturation": -0.5300491196232666,
-        "vibrance": -0.318
+        "tint": -0.30958763965646907,
+        "temperature": -0.5983642597892145,
+        "saturation": -0.4440299522286172,
+        "vibrance": -0.2664
       }
     },
     "neutral": {
       "frac": 0.3932,
       "pixels": 274589,
       "lab_affine": {
-        "L_scale": 1.0869,
-        "L_shift": -0.048,
-        "a_scale": 0.737,
-        "a_shift": -3.938,
-        "b_scale": 0.9372,
-        "b_shift": -3.074
+        "L_scale": 1.0855,
+        "L_shift": 0.361,
+        "a_scale": 0.7619,
+        "a_shift": -3.201,
+        "b_scale": 0.9492,
+        "b_shift": -2.657
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": -0.1968750782365131,
-        "temperature": -0.15371106404496,
-        "saturation": -0.16288446105408338,
-        "vibrance": -0.0977
+        "tint": -0.16004787564955344,
+        "temperature": -0.13283266755036688,
+        "saturation": -0.1444425190672508,
+        "vibrance": -0.0867
       }
     },
     "sky": {
       "frac": 0.3111,
       "pixels": 217295,
       "lab_affine": {
-        "L_scale": 1.6963,
-        "L_shift": -60.0,
-        "a_scale": 5.4621,
-        "a_shift": -4.104,
-        "b_scale": 1.0862,
-        "b_shift": -28.703
+        "L_scale": 1.2956,
+        "L_shift": -41.799,
+        "a_scale": 4.5211,
+        "a_shift": -6.516,
+        "b_scale": 1.1484,
+        "b_shift": -27.096
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": -0.2051806109764837,
+        "tint": -0.3257954610352251,
         "temperature": -1.0,
         "saturation": 1.0,
         "vibrance": 0.6
@@ -86,20 +86,20 @@
       "frac": 0.0323,
       "pixels": 22582,
       "lab_affine": {
-        "L_scale": 1.4969,
-        "L_shift": -7.803,
-        "a_scale": 0.4531,
-        "a_shift": 0.574,
-        "b_scale": 0.3537,
-        "b_shift": 4.266
+        "L_scale": 1.4777,
+        "L_shift": -6.996,
+        "a_scale": 0.384,
+        "a_shift": 0.128,
+        "b_scale": 0.3953,
+        "b_shift": 4.368
       },
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": 0.02871505383587436,
-        "temperature": 0.21328729686424844,
-        "saturation": -0.5966212154266026,
-        "vibrance": -0.358
+        "tint": 0.00642048199459907,
+        "temperature": 0.21839008726564066,
+        "saturation": -0.6103694610365604,
+        "vibrance": -0.3662
       }
     }
   }
