@@ -55,12 +55,20 @@ B_NORM = 20.0
 
 # Denominator guard for the scale = std(edited)/std(orig) ratio. Found via
 # the first full-dataset run (2026-07-09): one "sky" class in the
-# person_event bucket is a false-positive detection (no real sky in that
-# event photo — same family of bug as the project's documented "LED墙误判
-# 天空" issue, resurfacing in the training pipeline instead of the render
-# preview) with an almost perfectly flat original mask (std L/a/b =
-# 0.15/0.10/0.26). Dividing by that near-zero std blew the scale up to 68x
-# with a shift of -6719 — pure numerical noise, not a color-grading signal.
+# person_event bucket (person_event_058A1518) has an almost perfectly flat
+# original mask (std L/a/b = 0.15/0.10/0.26). Dividing by that near-zero std
+# blew the scale up to 68x with a shift of -6719 — pure numerical noise, not
+# a color-grading signal.
+#
+# 2026-07-09 correction (Phase C1c VLM check, see
+# outputs/phase-c1c-vlm-sky-gate-results.md): this was NOT a semantic
+# false-positive like the project's documented "LED墙误判天空" issue. Manual
+# inspection of the source photo confirms it is a genuine outdoor event
+# photo with real open sky above it — the sky is just extremely overexposed
+# to near-blank white, which is exactly why its std is near zero. The
+# region_provider_v2._sky_plausible() label was correct; the bug is purely
+# that a std-ratio estimator is ill-posed on a (correctly-labeled) region
+# with almost no variance to measure a "spread change" from.
 #
 # First attempted fix (drop the whole class whenever std < 1.5) was too
 # aggressive: legitimate clear-sky regions are *inherently* low-variance

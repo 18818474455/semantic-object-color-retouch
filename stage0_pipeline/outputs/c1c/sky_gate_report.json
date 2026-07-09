@@ -1,0 +1,424 @@
+[
+  {
+    "sample_id": "outdoor_sky_058A1494_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1494.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region above the poster shows a uniform, gradient blue expanse with no texture, edges, or artificial features, consistent with clear daytime sky.",
+    "mask_frac": 0.3905,
+    "std_lab": [
+      2.466,
+      0.573,
+      2.261
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_058A1889_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1889.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform, gradient-free pale blue expanse with no texture, edges, or artificial features, consistent with clear daytime sky.",
+    "mask_frac": 0.3804,
+    "std_lab": [
+      3.86,
+      0.978,
+      4.169
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_058A1908_r2",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1908.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform, gradient-free pale blue expanse with no texture, seams, or artificial features, consistent with clear daytime sky above a landscape.",
+    "mask_frac": 0.3664,
+    "std_lab": [
+      4.757,
+      0.441,
+      2.975
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_058A1932_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1932.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient, lack of texture or artificial edges, and presence of a distant tree and fence against it confirm open sky.",
+    "mask_frac": 0.3419,
+    "std_lab": [
+      4.473,
+      0.447,
+      2.784
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_058A1933_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1933.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform, gradient-free pale blue expanse with no texture, seams, or artificial features, consistent with clear daytime sky above a landscape.",
+    "mask_frac": 0.3419,
+    "std_lab": [
+      4.483,
+      0.449,
+      2.783
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_058A1935_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1935.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform, gradient-free pale blue expanse with no texture, seams, or artificial features, consistent with clear daytime sky above a distant horizon.",
+    "mask_frac": 0.3538,
+    "std_lab": [
+      5.339,
+      0.514,
+      3.19
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_058A1940_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1940.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform, gradient-free pale blue expanse with no texture, seams, or artificial features, consistent with clear daytime sky above a landscape.",
+    "mask_frac": 0.3363,
+    "std_lab": [
+      5.077,
+      0.498,
+      3.123
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_058A1953_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1953.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform, gradient-free pale blue expanse with no texture, seams, or artificial features, consistent with clear open sky above a landscape.",
+    "mask_frac": 0.3521,
+    "std_lab": [
+      4.455,
+      0.427,
+      2.756
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_058A1958_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1958.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient, lack of texture or edges, and presence of a distant tree and fence against it confirm it is open sky.",
+    "mask_frac": 0.301,
+    "std_lab": [
+      4.041,
+      0.443,
+      2.657
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DAP09154_2_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DAP09154 2.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform pale-blue gradient with no texture, edges, or artifacts indicative of man-made surfaces, and power lines are visibly suspended against it.",
+    "mask_frac": 0.4892,
+    "std_lab": [
+      4.321,
+      1.065,
+      6.367
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DAP09284_2_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DAP09284 2.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient with subtle luminance variation and no texture or edges indicates open sky, not a man-made surface.",
+    "mask_frac": 0.6389,
+    "std_lab": [
+      1.432,
+      0.993,
+      3.146
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC040851",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC04085(1).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient with no texture, edges, or artificial features indicates open sky, not a surface or overexposed object.",
+    "mask_frac": 0.4239,
+    "std_lab": [
+      3.107,
+      0.723,
+      3.08
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC042371_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC04237(1).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform pale-blue gradient with no texture, edges, or artificial features, consistent with an overcast or hazy sky above a sports field.",
+    "mask_frac": 0.3111,
+    "std_lab": [
+      3.628,
+      0.775,
+      2.919
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC043431_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC04343(1).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient, lack of texture or artificial edges, and presence of distant buildings/haze through atmospheric perspective confirm it is open sky.",
+    "mask_frac": 0.2634,
+    "std_lab": [
+      1.681,
+      0.642,
+      1.519
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC044221_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC04422(1).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient with no texture, edges, or artificial features indicates open sky, consistent with the outdoor setting in Image 1.",
+    "mask_frac": 0.3219,
+    "std_lab": [
+      3.136,
+      0.642,
+      2.667
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC048151_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC04815(1).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient, absence of texture or artificial edges, and presence of distant trees and a stadium light against it confirm open sky.",
+    "mask_frac": 0.3257,
+    "std_lab": [
+      3.271,
+      0.667,
+      2.775
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC051692_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC05169(2).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The background is a uniform, gradient-free pale blue with no texture, edges, or artifacts, consistent with open daylight sky above an outdoor field.",
+    "mask_frac": 0.4797,
+    "std_lab": [
+      2.838,
+      0.946,
+      3.207
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC052131_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC05213(1).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient with no texture, edges, or artificial features indicates clear open sky, consistent with the wider scene’s outdoor daylight setting.",
+    "mask_frac": 0.2846,
+    "std_lab": [
+      4.444,
+      0.813,
+      3.056
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC053351_s0",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC05335(1).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient, lack of texture or artificial edges, and presence of distant buildings/foliage beneath it confirm it is overcast sky, not a man-made surface.",
+    "mask_frac": 0.2865,
+    "std_lab": [
+      2.32,
+      0.705,
+      1.955
+    ]
+  },
+  {
+    "sample_id": "outdoor_sky_DSC053601",
+    "bucket": "outdoor_sky",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC05360(1).JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale-blue gradient, lack of texture or artificial edges, and presence of distant buildings/haze beneath it confirm it is open sky.",
+    "mask_frac": 0.4158,
+    "std_lab": [
+      3.391,
+      0.779,
+      2.993
+    ]
+  },
+  {
+    "sample_id": "person_event_058A1429_s0",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1429.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform, featureless pale-white expanse with no texture, edges, or objects—consistent with overexposed bright daylight sky, not a solid surface or artificial backdrop.",
+    "mask_frac": 0.335,
+    "std_lab": [
+      1.337,
+      0.532,
+      1.473
+    ]
+  },
+  {
+    "sample_id": "person_event_058A1518",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1518.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "ERROR_PERSISTENT",
+    "vlm_reason": "Remote end closed / read timeout on all 5 attempts (1 initial + 4 retries); manually inspected instead (see write-up).",
+    "mask_frac": 0.222,
+    "std_lab": [
+      0.154,
+      0.1,
+      0.258
+    ],
+    "manual_inspection": "Genuine outdoor event photo (Hufflepuff-themed group photo under a decorative arch); the sky region is real open air, just extremely overexposed to near-blank white. Not a screen/LED wall. The original bug-narrative in fit_region_params.py mischaracterized this as a semantic false-detection; it is a numerical degeneracy (near-zero variance breaks the std-ratio affine fit), not a labeling error."
+  },
+  {
+    "sample_id": "person_event_058A1550_s0",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1550.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient with no texture, seams, or artificial edges—plus visible treetops silhouetted against it—confirms open sky.",
+    "mask_frac": 0.1164,
+    "std_lab": [
+      2.513,
+      0.778,
+      3.01
+    ]
+  },
+  {
+    "sample_id": "person_event_058A1553_s0",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1553.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale blue gradient with no texture, edges, or artificial features indicates open sky, and tree foliage at the bottom confirms an outdoor scene.",
+    "mask_frac": 0.1088,
+    "std_lab": [
+      2.601,
+      0.756,
+      3.135
+    ]
+  },
+  {
+    "sample_id": "person_event_058A1568_r2",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1568.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The pale blue gradient with no texture or artificial edges, plus visible treetops against it, confirms open sky.",
+    "mask_frac": 0.1159,
+    "std_lab": [
+      2.175,
+      0.567,
+      3.592
+    ]
+  },
+  {
+    "sample_id": "person_event_058A1974_s0",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/058A1974.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The region shows a uniform, gradient-free pale blue expanse with no texture, seams, or artificial features, consistent with clear daytime sky above a landscape.",
+    "mask_frac": 0.2758,
+    "std_lab": [
+      3.415,
+      0.396,
+      2.321
+    ]
+  },
+  {
+    "sample_id": "person_event_DSC01605_s0",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC01605.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale-gray, featureless expanse above the tree canopy shows no texture, edges, or artifacts indicative of man-made surfaces—consistent with an overcast sky.",
+    "mask_frac": 0.1532,
+    "std_lab": [
+      2.12,
+      1.933,
+      3.061
+    ],
+    "note": "retried after initial network ERROR; succeeded on retry"
+  },
+  {
+    "sample_id": "person_event_DSC01689_s0",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC01689.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale-gray, featureless expanse above the trees and stage structure is consistent with an overcast sky, lacking edges, texture, or artifacts of man-made surfaces.",
+    "mask_frac": 0.2165,
+    "std_lab": [
+      0.573,
+      0.702,
+      0.8
+    ]
+  },
+  {
+    "sample_id": "person_event_DSC04559_s0",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC04559.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale-gray, featureless expanse above the roofline and trees shows no texture, edges, or artifacts of man-made surfaces, consistent with an overcast sky.",
+    "mask_frac": 0.1547,
+    "std_lab": [
+      1.211,
+      0.39,
+      1.767
+    ]
+  },
+  {
+    "sample_id": "person_event_DSC04819_r2",
+    "bucket": "person_event",
+    "target_path": "/Volumes/未命名/大模型/原图1/DSC04819.JPG",
+    "heuristic_verdict": "SKY",
+    "vlm_verdict": "SKY",
+    "vlm_reason": "The uniform pale-gray, textureless expanse above the pavilion and flags shows no structural edges, seams, or artificial features, consistent with an overcast sky.",
+    "mask_frac": 0.4536,
+    "std_lab": [
+      1.879,
+      1.037,
+      2.094
+    ]
+  }
+]

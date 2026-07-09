@@ -121,7 +121,9 @@ manifest 示例：
 | 人脸/皮肤 | BeautySDK 现有资产 + 阿里云人脸结果 | 人脸、皮肤区域优先使用现成高可信资产 |
 | 色彩指标 | OpenCV / Pillow / scikit-image | 计算全图和 mask 内客观指标 |
 
-> **2026-07-09 更新（VLM 选型落地 + 当前实现差距）**：本节 §4.2 从方案定稿起就要求"VLM 认为该物体在图中存在"作为交叉验证门槛之一，但 `scripts_m2/region_provider_v2.py` 实际实现至今只有**启发式规则**（纹理+饱和度双指标判断"天空合理性"），没有接入任何真实 VLM——这正是 2026-07-09 在 C2 训练数据里复现的"person_event 照片假天空检测"bug 的根因（近乎纯色的小块区域被规则误判成天空，见 `phase-c2-reference-self-distill-design.md` §7）。ModelScope 图文多模态盘点（`09-行业方案与知识库/App/2026-07-09-ModelScope图文多模态VLM模型盘点.md`）核实了 Qwen3-VL 全系列（2B~32B，含 Instruct/Thinking）License 为 **Apache-2.0，完全商用无门槛**，建议的落地路径：先用 **Qwen3-VL-8B-Instruct** 在现有 20 图跨场景回归集上做一次"能不能替代/简化现有启发式天空合理性规则"的小实验（详见 §12.0 C1c）。
+> **2026-07-09 更新（VLM 选型落地）**：本节 §4.2 从方案定稿起就要求"VLM 认为该物体在图中存在"作为交叉验证门槛之一，但 `scripts_m2/region_provider_v2.py` 实际实现至今只有**启发式规则**（纹理+饱和度双指标判断"天空合理性"），没有接入任何真实 VLM。ModelScope 图文多模态盘点（`09-行业方案与知识库/App/2026-07-09-ModelScope图文多模态VLM模型盘点.md`）核实了 Qwen3-VL 全系列（2B~32B，含 Instruct/Thinking）License 为 **Apache-2.0，完全商用无门槛**，于是做了 C1c 小实验：用托管的 `qwen3-vl-plus`（通过 API易，本机 16GB 内存跑不动自部署的 8B 权重）复核了 C2 数据集里全部 30 个"启发式认定合理"的天空样本。
+>
+> **实验结论（详见 `phase-c1c-vlm-sky-gate-results.md`）**：Qwen3-VL 与启发式规则 100% 一致（0 个语义假阳性），包括最初被怀疑是"假天空检测"的 bug 案例——人工复核确认那其实是真实过曝天空，bug 是数值拟合层面的，不是感知层的语义误判。**C1c 原本"替代启发式规则"的动机没有得到数据支持，优先级下调**；§12.0 C1c 状态已更新。
 
 ### 4.2 交叉验证原则
 
@@ -653,17 +655,17 @@ dataset/
 > **V3.1（2026-07-09）**：本节被双轨 Phase C 扩展。C2 Reference 自蒸馏为主路径，不依赖 GPT API。  
 > 详见 `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` 与 `phase-c2-reference-self-distill-design.md`。
 
-### 12.0 Phase C 三轨概览（2026-07-09 新增 C1c）
+### 12.0 Phase C 三轨概览（2026-07-09 新增 C1c，同日完成小实验并下调优先级）
 
 | 轨道 | 名称 | 依赖 | 产出 |
 |------|------|------|------|
 | **C1** | GPT teacher 量化 | API易 `gpt-image-2-all` | per-class Lab 残差（hard-case 标注） |
-| **C1c**（新增） | 本地 VLM 语义门控/critic | Qwen3-VL-8B-Instruct（Apache-2.0，自部署） | 替代/校验启发式天空合理性规则；可选：本地 plan/critic，缓解 C1 的 API 依赖 |
+| **C1c**（实验已完成，优先级下调） | 本地/托管 VLM 语义门控/critic | Qwen3-VL（API易代理的 `qwen3-vl-plus`，本机 16GB 内存跑不动自部署 8B） | 30 样本对比实验：0 语义假阳性，见 `phase-c1c-vlm-sky-gate-results.md` |
 | **C2** | Reference 自蒸馏 ★ | 本地 pseudo-target + Smart Color v2 | RegionalParamHead 权重 |
 
 C2 teacher v0 = `color_reference_transfer.py` medium 档；数据从 20 图回归集 bootstrap。
 
-**C1c 动机**：§4.2 感知层设计从一开始就要求"VLM 认为该物体在图中存在"作为交叉验证门槛，但实现至今是纯启发式规则，这正是 C2 数据管线里复现的"假天空检测"bug 的根因。C1c 不是另起一个新蒸馏轨道，而是用一个**license 已确认可商用、可本地部署、没有 GPT API 那种超时/内容错位风险**的 VLM，去补齐 §4.2 一直缺失的那一格，同时顺带给 C1 提供一个不依赖第三方 API 的本地 teacher/critic 备选。
+**C1c 结论（2026-07-09 更新）**：最初动机是"§4.2 一直要求 VLM 交叉验证但只有启发式规则实现，怀疑这是 C2 训练数据里那个'假天空'bug 的根因"。用 `qwen3-vl-plus` 对 C2 数据集里全部 30 个"启发式认定合理"的 sky 样本做了对比实验，**结果 100% 一致，0 个语义假阳性**——包括最初怀疑的 bug 案例，人工复核确认那其实是真实过曝天空（数值拟合问题，不是语义识别问题）。**结论：当前数据集下启发式规则可靠，C1c"替代规则"的动机不成立，优先级下调为次要备选**（仍可作为"不依赖 GPT API 的本地/托管 teacher"选项保留，但同一次实验也观察到 `qwen3-vl-plus` 对同一张图 5 次请求全部超时/断连，说明它也不是绝对可靠，这个附带价值也没有被验证）。
 
 ---
 

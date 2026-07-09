@@ -99,12 +99,12 @@ Do not train pixel generation in V1.
 
 ---
 
-## Phase C 三轨（V3.1，2026-07-09 新增 C1c）
+## Phase C 三轨（V3.1，2026-07-09 新增 C1c，同日完成实验并下调优先级）
 
 | 轨道 | 文档 | 状态 |
 |------|------|------|
 | **C2 Reference 自蒸馏（主路径）** | `outputs/phase-c2-reference-self-distill-design.md` | ✅ C2.1/C2.2/C2.3 扩样跑通（97 样本/208 class-rows），held-out MAE=4.20 < 基线 6.31 |
-| **C1c 本地 VLM 语义门控（新增）** | `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` §2 | Qwen3-VL-8B-Instruct（Apache-2.0）核实可商用；待排期实验，替代/校验现有启发式天空合理性规则 |
+| **C1c 本地/托管 VLM 语义门控（实验完成，优先级下调）** | `outputs/phase-c1c-vlm-sky-gate-results.md` | ✅ `qwen3-vl-plus` 对比 30 个 sky 样本，100% 认同启发式规则（0 语义假阳性）；"替代规则"动机不成立 |
 | **C1 GPT teacher 量化（辅助）** | `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` | API 已切 API易；待双图冒烟 |
 
 C2 teacher v0 = `color_reference_transfer.py` medium 伪标签 → RegionalParamHead → Smart Color v2。
@@ -118,7 +118,7 @@ cd stage0_pipeline
 ../.venv-m2/bin/python scripts_c2/train_per_class_head.py       # held-out MAE=4.20
 ```
 
-样本量从 41 扩到 208 后，held-out MAE / 基线 的降幅比例几乎不变（34.3% → 33.4%），说明规则教师信号稳定可泛化。过程中顺带修复了 `fit_region_params.py` 里一个真 bug：一张 person_event 照片假天空检测（原图近乎纯色）导致 Lab-affine scale 除以近零方差爆炸到 68 倍，改为方差过低时 scale 退化为 1.0 + 只用均值差算 shift（详见设计稿 §7）。
+样本量从 41 扩到 208 后，held-out MAE / 基线 的降幅比例几乎不变（34.3% → 33.4%），说明规则教师信号稳定可泛化。过程中顺带修复了 `fit_region_params.py` 里一个真 bug：一张 person_event 照片的天空区域原图近乎纯色，导致 Lab-affine scale 除以近零方差爆炸到 68 倍，改为方差过低时 scale 退化为 1.0 + 只用均值差算 shift（详见设计稿 §7）。**这个 bug 最初被误判为"假天空检测"（语义问题），C1c 实验用 Qwen3-VL 复核 + 人工看原图后确认那其实是真实过曝天空——bug 纯粹是数值拟合问题，见 `outputs/phase-c1c-vlm-sky-gate-results.md`。**
 
 ---
 

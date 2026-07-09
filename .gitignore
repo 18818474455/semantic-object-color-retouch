@@ -28,3 +28,6 @@ __pycache__/
 # C2 bootstrap dataset (large images; keep manifest/params/profiles in git)
 **/dataset/c2/edited/
 **/dataset/c2/masks/
+
+# C1c VLM experiment crops (large images; keep the JSON report in git)
+**/outputs/c1c/crops/
