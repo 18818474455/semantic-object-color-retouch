@@ -1,0 +1,64 @@
+{
+  "sample_id": "difficult_058A1760_r2",
+  "bucket": "difficult",
+  "tag": "_r2",
+  "reference_path": "/Volumes/未命名/大模型/原图1/DSC04902.JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/058A1760.JPG",
+  "pseudo_target_path": "dataset/c2/edited/difficult_058A1760_r2_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/difficult_058A1760_r2.json",
+  "compat": {
+    "jaccard": 0.333,
+    "explainable_tgt_frac": 0.041,
+    "shared_classes": [
+      "wall"
+    ],
+    "suitable": false
+  },
+  "matched_classes": [
+    "neutral"
+  ],
+  "matched_info": {
+    "grass": {
+      "tgt_frac": 0.012,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "spotlight": {
+      "tgt_frac": 0.0016,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.4829,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "skin": {
+      "tgt_frac": 0.016,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "tree": {
+      "tgt_frac": 0.0019,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.1377,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "wall": {
+      "tgt_frac": 0.0414,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.307,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}

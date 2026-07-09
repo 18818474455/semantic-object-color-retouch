@@ -1,0 +1,84 @@
+{
+  "sample_id": "person_event_DSC04819_r2",
+  "bucket": "person_event",
+  "tag": "_r2",
+  "reference_path": "/Volumes/未命名/大模型/原图1/058A1824.JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/DSC04819.JPG",
+  "pseudo_target_path": "dataset/c2/edited/person_event_DSC04819_r2_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/person_event_DSC04819_r2.json",
+  "compat": {
+    "jaccard": 0.444,
+    "explainable_tgt_frac": 0.522,
+    "shared_classes": [
+      "building",
+      "skin",
+      "sky"
+    ],
+    "suitable": true
+  },
+  "matched_classes": [
+    "building",
+    "neutral",
+    "skin",
+    "sky"
+  ],
+  "matched_info": {
+    "wall backdrop": {
+      "tgt_frac": 0.0833,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "grass": {
+      "tgt_frac": 0.0293,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "spotlight": {
+      "tgt_frac": 0.0019,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.1764,
+      "ref_frac": 0.7631,
+      "matched": true
+    },
+    "skin": {
+      "tgt_frac": 0.0239,
+      "ref_frac": 0.1084,
+      "matched": true
+    },
+    "tree": {
+      "tgt_frac": 0.0268,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0231,
+      "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.0442,
+      "ref_frac": 0.0156,
+      "matched": true
+    },
+    "flag": {
+      "tgt_frac": 0.0082,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.1822,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.4536,
+      "ref_frac": 0.0813,
+      "matched": true
+    }
+  },
+  "split": "train"
+}

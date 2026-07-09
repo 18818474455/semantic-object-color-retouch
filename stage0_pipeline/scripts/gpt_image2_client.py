@@ -1,7 +1,9 @@
-"""GPT Image 2 client for the funai / newapi OpenAI-compatible endpoint.
+"""GPT Image 2 client for API易 (apiyi.com) OpenAI-compatible endpoints.
 
 Stdlib only (urllib) so no extra deps. The API key is read from
 secrets/api.local.json (gitignored) or env vars; it is never logged.
+
+Docs: https://docs.apiyi.com/api-capabilities/gpt-image-2-all/image-edit
 
 Capabilities:
   list_models()                    -> connectivity + available models
@@ -32,9 +34,10 @@ def load_secrets() -> dict:
         with open(SECRETS, "r", encoding="utf-8") as f:
             return json.load(f)
     return {
-        "base_url": os.environ.get("FUNAI_BASE_URL", "https://api.funai.works"),
-        "api_key": os.environ.get("FUNAI_API_KEY", ""),
-        "image_model": os.environ.get("FUNAI_IMAGE_MODEL", "gpt-image-2"),
+        "base_url": os.environ.get("APIYI_BASE_URL", os.environ.get("FUNAI_BASE_URL", "https://api.apiyi.com")),
+        "api_key": os.environ.get("APIYI_API_KEY", os.environ.get("FUNAI_API_KEY", "")),
+        "image_model": os.environ.get("APIYI_IMAGE_MODEL", os.environ.get("FUNAI_IMAGE_MODEL", "gpt-image-2-all")),
+        "response_format": os.environ.get("APIYI_RESPONSE_FORMAT", "url"),
     }
 
 
@@ -53,7 +56,7 @@ def _req(url: str, headers: dict, data: bytes | None = None, method: str = "GET"
     headers = {"User-Agent": _BROWSER_UA, "Accept": "application/json", **headers}
     req = urllib.request.Request(url, data=data, headers=headers, method=method)
     try:
-        with urllib.request.urlopen(req, context=ctx, timeout=180) as resp:
+        with urllib.request.urlopen(req, context=ctx, timeout=300) as resp:
             return resp.status, resp.read()
     except urllib.error.HTTPError as e:
         return e.code, e.read()
@@ -88,6 +91,14 @@ def _multipart(fields: dict[str, str], files: list[tuple[str, str, bytes]]) -> t
     return bytes(out), boundary
 
 
+def _decode_b64_json(raw: str) -> bytes:
+    """API易 b64_json may include a data:image/...;base64, prefix."""
+    if raw.startswith("data:"):
+        _, _, payload = raw.partition(",")
+        raw = payload or raw
+    return base64.b64decode(raw)
+
+
 def _decode_image_response(body: bytes) -> bytes | None:
     """Handle OpenAI images response (b64_json or url) or chat markdown image."""
     try:
@@ -98,18 +109,30 @@ def _decode_image_response(body: bytes) -> bytes | None:
     if isinstance(data, list) and data:
         item = data[0]
         if item.get("b64_json"):
-            return base64.b64decode(item["b64_json"])
+            return _decode_b64_json(item["b64_json"])
         if item.get("url"):
             status, img = _req(item["url"], {})
             return img if status == 200 else None
     return None
 
 
+def _edit_fields(cfg: dict, prompt: str, model: str | None = None) -> dict[str, str]:
+    fields = {
+        "model": model or cfg.get("image_model", "gpt-image-2-all"),
+        "prompt": prompt,
+        "n": "1",
+    }
+    response_format = cfg.get("response_format")
+    if response_format:
+        fields["response_format"] = response_format
+    return fields
+
+
 def edit_image_via_images_edits(cfg: dict, image_path: str, prompt: str, model: str | None = None) -> bytes | None:
     url = cfg["base_url"].rstrip("/") + "/v1/images/edits"
     with open(image_path, "rb") as f:
         img_bytes = f.read()
-    fields = {"model": model or cfg.get("image_model", "gpt-image-2"), "prompt": prompt, "n": "1"}
+    fields = _edit_fields(cfg, prompt, model)
     body, boundary = _multipart(fields, [("image", Path(image_path).name, img_bytes)])
     headers = {
         "Authorization": f"Bearer {cfg['api_key']}",
@@ -124,18 +147,26 @@ def edit_image_via_images_edits(cfg: dict, image_path: str, prompt: str, model: 
     return img
 
 
+_COLOR_REF_PROMPT = (
+    "修改图1，把图1的整体色调和色彩风格对齐到图2的参考风格。"
+    "保持图1的人物结构、构图、皮肤质感和所有文字/logo完全不变，"
+    "只调整颜色、曝光和局部对比，不要改变画面内容。"
+)
+
+
 def edit_with_reference(cfg: dict, target_path: str, reference_path: str, prompt: str,
                         model: str | None = None) -> bytes | None:
-    """Regrade target using reference as a color look. Sends both images."""
+    """Regrade target (图1) using reference look (图2). Sends both images."""
     url = cfg["base_url"].rstrip("/") + "/v1/images/edits"
     with open(target_path, "rb") as f:
         tgt = f.read()
     with open(reference_path, "rb") as f:
         ref = f.read()
-    fields = {"model": model or cfg.get("image_model", "gpt-image-2"), "prompt": prompt, "n": "1"}
+    fields = _edit_fields(cfg, prompt or _COLOR_REF_PROMPT, model)
+    # API易: repeat the same `image` field for multi-image fusion (图1/图2 order).
     files = [
-        ("image[]", "target_" + Path(target_path).name, tgt),
-        ("image[]", "reference_" + Path(reference_path).name, ref),
+        ("image", Path(target_path).name, tgt),
+        ("image", Path(reference_path).name, ref),
     ]
     body, boundary = _multipart(fields, files)
     headers = {

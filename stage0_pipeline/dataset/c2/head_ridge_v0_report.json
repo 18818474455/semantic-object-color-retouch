@@ -1,0 +1,223 @@
+{
+  "n_rows": 41,
+  "feature_dim": 27,
+  "target_keys": [
+    "lab_L_scale",
+    "lab_L_shift",
+    "lab_a_scale",
+    "lab_a_shift",
+    "lab_b_scale",
+    "lab_b_shift"
+  ],
+  "in_sample_mae": 1.80729,
+  "predict_mean_baseline_mae": 5.82866,
+  "note": "in-sample only; upgrade to held-out split once class diversity grows.",
+  "rows": [
+    {
+      "sample_id": "outdoor_sky_DSC040851",
+      "class": "building",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC040851",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC040851",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC053601",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC053601",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "person_event_DSC01549",
+      "class": "building",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01549",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01549",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1518",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1518",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1518",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "stage_led_mixed_DSC04541",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP05979",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "difficult_DAP05876",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "difficult_DAP09915_2",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP031701_r2",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP031701_r2",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP031701_r2",
+      "class": "screen",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1908_r2",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1908_r2",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1908_r2",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1908_r2",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP06898_r2",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "person_event_DSC01533_r2",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01533_r2",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1568_r2",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1568_r2",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1568_r2",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC04819_r2",
+      "class": "building",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC04819_r2",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC04819_r2",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC04819_r2",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "stage_led_mixed_DSC04543_r2",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP08349_r2",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP02394_2_r2",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "difficult_DSC03839_r2",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "difficult_058A1760_r2",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "difficult_DAP05057_r2",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "smoke_tgt_small",
+      "class": "building",
+      "bucket": "smoke"
+    },
+    {
+      "sample_id": "smoke_tgt_small",
+      "class": "neutral",
+      "bucket": "smoke"
+    },
+    {
+      "sample_id": "smoke_tgt_small",
+      "class": "sky",
+      "bucket": "smoke"
+    }
+  ],
+  "held_out_mae": 3.83224
+}

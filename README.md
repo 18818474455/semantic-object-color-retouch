@@ -2,16 +2,15 @@
 
 独立预研项目：识别照片中的语义区域（天空、人脸、皮肤、服装、草地、建筑等），判断各区域是否应调色及如何调色，并通过本地 Chroma 引擎或 GPT Image 2 执行。
 
-**当前状态（2026-07-07）**：Stage 0 骨架与仿色功能（真语义分割 + 产品化）已完成；Phase C（GPT 老师蒸馏量化）因 API 不稳定被阻塞。
+**当前状态（2026-07-09）**：Stage 0 + 仿色产品化已完成；**C2 Reference 自蒸馏为主开发线**；C1 GPT 量化为辅助轨（API易已配置）。
 
 ## 目录结构
 
 ```
-outputs/                    开发方案 v1/v2/v3 + 启动清单 + Stage 0 数据集元数据
-stage0_pipeline/            可运行管线（Stage 0 骨架 + M2 真模型 + 仿色正式版）
-work/data_audit/            数据集审计脚本
-.venv/                      主链路 Python 环境（numpy + Pillow）
-.venv-m2/                   M2 真模型环境（torch + transformers + Grounding DINO/SAM）
+outputs/                    开发方案 v1/v2/v3 + v3.1 + C2 设计稿
+stage0_pipeline/
+  scripts_m2/               仿色正式版 color_reference_transfer.py
+  scripts_c2/               C2 bootstrap 导出与后续训练脚本
 ```
 
 ## 快速开始
@@ -33,21 +32,26 @@ cd stage0_pipeline
 
 | 文档 | 路径 |
 |------|------|
-| 最终执行方案（841 行） | `outputs/semantic-object-color-retouch-dev-plan-v3.md` |
+| 最终执行方案（841 行 + V3.1 增补） | `outputs/semantic-object-color-retouch-dev-plan-v3.md` + `v3.1-c2-addendum.md` |
+| C2 Reference 自蒸馏设计稿 | `outputs/phase-c2-reference-self-distill-design.md` |
+| C2.1 Bootstrap 导出脚本 | `stage0_pipeline/scripts_c2/export_bootstrap_dataset.py` |
 | 开发启动清单 | `outputs/development-start-checklist.md` |
 | Stage 0 管线说明 | `stage0_pipeline/README.md` |
 | 接手指南（Obsidian） | 云享传知识库 `02-需求与规划/语义物体调色专家-项目现状与接手指南.md` |
 
-## GPT Image 2 API 配置
+## GPT Image 2 API 配置（[API易](https://docs.apiyi.com/)）
 
 复制模板并填入密钥（**不要提交**）：
 
 ```bash
 cp stage0_pipeline/secrets/api.local.json.example stage0_pipeline/secrets/api.local.json
+# 编辑 api.local.json：base_url=https://api.apiyi.com，model=gpt-image-2-all
 ```
 
 ## 建议下一步
 
-1. Phase C：重试 `scripts_m2/distill_vs_gpt.py`，积累 teacher 残差数据
-2. 基于 `color_reference_transfer.py` 做轻量 Web Demo（参考图 + 目标图 + 强度滑杆）
-3. Phase 3：蒸馏学生规划模型（见 development-start-checklist.md）
+1. ~~**C2.1/C2.2/C2.3** 全量导出 + 拟合 + 训练~~ ✅ —— 外置盘挂载后跑通：21 样本 / 41 class-rows，held-out MAE=3.83（明显低于预测均值基线 5.83，说明信号可泛化）。过程中发现并修复了一个假天空检测导致 Lab-affine scale 数值爆炸的 bug（详见设计稿 §7）
+2. **扩样**：把 Stage 0 100 张验证集也导入 C2.1，n_rows 从 41 提升到 ≥100，为升级 torch MLP 做准备
+3. **M3.7**：Chroma 仓开 `feature/regional-smart-color-head` 分支，启动 C2.4 Smart Color v2 嫁接（数据门槛已达标）
+4. **C1** API易 双图冒烟（并行，不阻塞 C2）
+5. Web Demo：参考图 + 目标图 + 强度滑杆

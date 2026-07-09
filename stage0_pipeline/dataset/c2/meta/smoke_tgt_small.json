@@ -1,0 +1,87 @@
+{
+  "sample_id": "smoke_tgt_small",
+  "bucket": "smoke",
+  "tag": "full",
+  "reference_path": "/Users/mac/Documents/Codex/2026-07-05/gpt-image-2/stage0_pipeline/outputs/color_reference_transfer/gpt_teacher/ref_small.jpg",
+  "target_path": "/Users/mac/Documents/Codex/2026-07-05/gpt-image-2/stage0_pipeline/outputs/color_reference_transfer/gpt_teacher/tgt_small.jpg",
+  "pseudo_target_path": "dataset/c2/edited/smoke_tgt_small_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/smoke_tgt_small.json",
+  "compat": {
+    "jaccard": 0.333,
+    "explainable_tgt_frac": 0.447,
+    "shared_classes": [
+      "building",
+      "sky"
+    ],
+    "suitable": true
+  },
+  "matched_classes": [
+    "building",
+    "neutral",
+    "sky"
+  ],
+  "matched_info": {
+    "spotlight": {
+      "tgt_frac": 0.0048,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.2025,
+      "ref_frac": 0.0393,
+      "matched": true
+    },
+    "skin": {
+      "tgt_frac": 0.0015,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "screen": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.5427,
+      "matched": false
+    },
+    "clothing": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0322,
+      "matched": false
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.175,
+      "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.0243,
+      "ref_frac": 0.9144,
+      "matched": true
+    },
+    "flag": {
+      "tgt_frac": 0.0016,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0164,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.423,
+      "ref_frac": 0.0986,
+      "matched": true
+    },
+    "wall": {
+      "tgt_frac": 0.0333,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "grass floor": {
+      "tgt_frac": 0.309,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}

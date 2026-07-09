@@ -1,0 +1,26 @@
+{
+  "sample_id": "stage_led_mixed_DSC04541",
+  "bucket": "stage_led_mixed",
+  "classes": {
+    "neutral": {
+      "frac": 0.6992,
+      "pixels": 488278,
+      "lab_affine": {
+        "L_scale": 1.1402,
+        "L_shift": 2.087,
+        "a_scale": 0.9481,
+        "a_shift": 4.895,
+        "b_scale": 0.9312,
+        "b_shift": 9.638
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.2447269387014243,
+        "temperature": 0.48189547078647943,
+        "saturation": -0.06030959825860949,
+        "vibrance": -0.0362
+      }
+    }
+  }
+}

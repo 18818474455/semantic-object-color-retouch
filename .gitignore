@@ -25,6 +25,6 @@ __pycache__/
 .vscode/
 *.swp
 
-# Large generated datasets (reproducible from scripts + external source photos)
-outputs/stage0/manifest_clean.jsonl
-outputs/stage0/image_metrics.jsonl
+# C2 bootstrap dataset (large images; keep manifest/params/profiles in git)
+**/dataset/c2/edited/
+**/dataset/c2/masks/

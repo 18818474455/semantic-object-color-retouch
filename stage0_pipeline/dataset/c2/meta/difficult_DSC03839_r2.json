@@ -1,0 +1,49 @@
+{
+  "sample_id": "difficult_DSC03839_r2",
+  "bucket": "difficult",
+  "tag": "_r2",
+  "reference_path": "/Volumes/未命名/大模型/原图1/DSC04902.JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/DSC03839.JPG",
+  "pseudo_target_path": "dataset/c2/edited/difficult_DSC03839_r2_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/difficult_DSC03839_r2.json",
+  "compat": {
+    "jaccard": 0.5,
+    "explainable_tgt_frac": 0.033,
+    "shared_classes": [
+      "wall"
+    ],
+    "suitable": false
+  },
+  "matched_classes": [
+    "neutral"
+  ],
+  "matched_info": {
+    "building": {
+      "tgt_frac": 0.7931,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "stage floor": {
+      "tgt_frac": 0.107,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "wall": {
+      "tgt_frac": 0.0332,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.0887,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "skin": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}

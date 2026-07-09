@@ -1,0 +1,67 @@
+{
+  "sample_id": "person_event_DSC01549",
+  "bucket": "person_event",
+  "tag": "full",
+  "reference_path": "/Volumes/未命名/大模型/原图1/058A1824.JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/DSC01549.JPG",
+  "pseudo_target_path": "dataset/c2/edited/person_event_DSC01549_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/person_event_DSC01549.json",
+  "compat": {
+    "jaccard": 0.375,
+    "explainable_tgt_frac": 0.407,
+    "shared_classes": [
+      "building",
+      "skin"
+    ],
+    "suitable": true
+  },
+  "matched_classes": [
+    "building",
+    "neutral",
+    "skin"
+  ],
+  "matched_info": {
+    "water": {
+      "tgt_frac": 0.1454,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.3769,
+      "ref_frac": 0.7631,
+      "matched": true
+    },
+    "skin": {
+      "tgt_frac": 0.0538,
+      "ref_frac": 0.1084,
+      "matched": true
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0231,
+      "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.3532,
+      "ref_frac": 0.0156,
+      "matched": true
+    },
+    "flag": {
+      "tgt_frac": 0.0632,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0813,
+      "matched": false
+    },
+    "clothing": {
+      "tgt_frac": 0.0705,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}

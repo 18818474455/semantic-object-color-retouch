@@ -1,6 +1,10 @@
 # 语义物体调色专家 · 开发方案 V3（执行版）
 
 > 本文档基于 `semantic-object-color-retouch-dev-plan-v2.md` 重新整理。V3 的目标是把方案从“能力设想”收束为“可开发、可验收、可蒸馏”的服务端工程方案。
+>
+> **2026-07-09 更新**：Phase C 拆为 C1（GPT 量化）∥ C2（Reference 自蒸馏，主路径）。请同时阅读：  
+> - `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md`  
+> - `phase-c2-reference-self-distill-design.md`
 
 ---
 
@@ -644,7 +648,19 @@ dataset/
 
 ## 12. 蒸馏路线
 
-### Stage 0：零训练基线
+> **V3.1（2026-07-09）**：本节被双轨 Phase C 扩展。C2 Reference 自蒸馏为主路径，不依赖 GPT API。  
+> 详见 `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` 与 `phase-c2-reference-self-distill-design.md`。
+
+### 12.0 Phase C 双轨概览
+
+| 轨道 | 名称 | 依赖 | 产出 |
+|------|------|------|------|
+| **C1** | GPT teacher 量化 | API易 `gpt-image-2-all` | per-class Lab 残差（hard-case 标注） |
+| **C2** | Reference 自蒸馏 ★ | 本地 pseudo-target + Smart Color v2 | RegionalParamHead 权重 |
+
+C2 teacher v0 = `color_reference_transfer.py` medium 档；数据从 20 图回归集 bootstrap。
+
+---
 
 规模：100 张。
 

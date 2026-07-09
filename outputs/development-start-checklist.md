@@ -97,6 +97,30 @@ Grounding DINO + SAM2
 
 Do not train pixel generation in V1.
 
+---
+
+## Phase C 双轨（V3.1，2026-07-09）
+
+| 轨道 | 文档 | 状态 |
+|------|------|------|
+| **C2 Reference 自蒸馏（主路径）** | `outputs/phase-c2-reference-self-distill-design.md` | ✅ C2.1/C2.2/C2.3 全量跑通（21 样本/41 class-rows），held-out MAE=3.83 < 基线 5.83 |
+| **C1 GPT teacher 量化（辅助）** | `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` | API 已切 API易；待双图冒烟 |
+
+C2 teacher v0 = `color_reference_transfer.py` medium 伪标签 → RegionalParamHead → Smart Color v2。
+
+**2026-07-09 外置盘挂载后已跑通**（不再是 smoke-only）：
+
+```bash
+cd stage0_pipeline
+../.venv-m2/bin/python scripts_c2/export_bootstrap_dataset.py   # 21 样本
+../.venv-m2/bin/python scripts_c2/fit_region_params.py          # 41 class-rows
+../.venv-m2/bin/python scripts_c2/train_per_class_head.py       # held-out MAE=3.83
+```
+
+顺带修复了 `fit_region_params.py` 里一个真 bug：一张 person_event 照片假天空检测（原图近乎纯色）导致 Lab-affine scale 除以近零方差爆炸到 68 倍，改为方差过低时 scale 退化为 1.0 + 只用均值差算 shift，41 条样本全部保留不再产生数值噪声（详见设计稿 §7）。
+
+---
+
 ## What The User Needs To Prepare
 
 Required:

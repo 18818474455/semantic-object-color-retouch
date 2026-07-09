@@ -1,0 +1,66 @@
+{
+  "sample_id": "smoke_tgt_small",
+  "bucket": "smoke",
+  "classes": {
+    "building": {
+      "frac": 0.0243,
+      "pixels": 16950,
+      "lab_affine": {
+        "L_scale": 0.8865,
+        "L_shift": 39.647,
+        "a_scale": 3.4328,
+        "a_shift": -7.591,
+        "b_scale": 1.957,
+        "b_shift": -16.296
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.37953784632345133,
+        "temperature": -0.8147798073404047,
+        "saturation": 1.0,
+        "vibrance": 0.6
+      }
+    },
+    "neutral": {
+      "frac": 0.2025,
+      "pixels": 141431,
+      "lab_affine": {
+        "L_scale": 1.1476,
+        "L_shift": -7.931,
+        "a_scale": 1.1237,
+        "a_shift": -0.098,
+        "b_scale": 1.3181,
+        "b_shift": 0.308
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.004896234703464024,
+        "temperature": 0.015379639234946651,
+        "saturation": 0.22090429751595453,
+        "vibrance": 0.1325
+      }
+    },
+    "sky": {
+      "frac": 0.423,
+      "pixels": 295395,
+      "lab_affine": {
+        "L_scale": 1.8581,
+        "L_shift": -60.0,
+        "a_scale": 5.0929,
+        "a_shift": -11.848,
+        "b_scale": 1.043,
+        "b_shift": -17.794
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.5923868977289439,
+        "temperature": -0.8896916609026796,
+        "saturation": 1.0,
+        "vibrance": 0.6
+      }
+    }
+  }
+}

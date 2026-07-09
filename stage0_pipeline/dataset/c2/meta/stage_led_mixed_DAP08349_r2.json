@@ -1,0 +1,62 @@
+{
+  "sample_id": "stage_led_mixed_DAP08349_r2",
+  "bucket": "stage_led_mixed",
+  "tag": "_r2",
+  "reference_path": "/Volumes/未命名/大模型/原图1/DSC06040.JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/DAP08349.JPG",
+  "pseudo_target_path": "dataset/c2/edited/stage_led_mixed_DAP08349_r2_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/stage_led_mixed_DAP08349_r2.json",
+  "compat": {
+    "jaccard": 0.143,
+    "explainable_tgt_frac": 0,
+    "shared_classes": [],
+    "suitable": false
+  },
+  "matched_classes": [
+    "neutral"
+  ],
+  "matched_info": {
+    "wall backdrop": {
+      "tgt_frac": 0.6213,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.2214,
+      "ref_frac": 0.0154,
+      "matched": true
+    },
+    "skin": {
+      "tgt_frac": 0.0368,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "screen": {
+      "tgt_frac": 0.0022,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "tree": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.3239,
+      "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0165,
+      "matched": false
+    },
+    "clothing": {
+      "tgt_frac": 0.1262,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.7677,
+      "matched": false
+    }
+  },
+  "split": "train"
+}

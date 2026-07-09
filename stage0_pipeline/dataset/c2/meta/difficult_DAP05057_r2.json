@@ -1,0 +1,57 @@
+{
+  "sample_id": "difficult_DAP05057_r2",
+  "bucket": "difficult",
+  "tag": "_r2",
+  "reference_path": "/Volumes/未命名/大模型/原图1/DSC04902.JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/DAP05057.JPG",
+  "pseudo_target_path": "dataset/c2/edited/difficult_DAP05057_r2_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/difficult_DAP05057_r2.json",
+  "compat": {
+    "jaccard": 0.25,
+    "explainable_tgt_frac": 0,
+    "shared_classes": [],
+    "suitable": false
+  },
+  "matched_classes": [
+    "neutral"
+  ],
+  "matched_info": {
+    "building": {
+      "tgt_frac": 0.0005,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "wall": {
+      "tgt_frac": 0.0022,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.3248,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "spotlight": {
+      "tgt_frac": 0.0005,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.6583,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "skin": {
+      "tgt_frac": 0.0023,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "clothing": {
+      "tgt_frac": 0.0114,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}
