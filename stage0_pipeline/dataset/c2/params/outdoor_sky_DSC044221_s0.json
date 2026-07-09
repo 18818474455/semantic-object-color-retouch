@@ -16,9 +16,9 @@
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": -0.06534001264479099,
-        "temperature": 0.10107659985369022,
-        "saturation": 0.17929646990837833,
+        "tint": -0.06534022816665665,
+        "temperature": 0.10107665299802067,
+        "saturation": 0.17929633580951587,
         "vibrance": 0.1076
       }
     },
@@ -36,8 +36,8 @@
       "chroma_proxy": {
         "_approx": true,
         "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
-        "tint": -0.5667287417098883,
-        "temperature": -0.5850162471686629,
+        "tint": -0.5667290035224577,
+        "temperature": -0.585012115384645,
         "saturation": 1.0,
         "vibrance": 0.6
       }

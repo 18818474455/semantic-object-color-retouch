@@ -191,6 +191,45 @@ def _grade_neutral_additive(tgt_lab: np.ndarray, tm: np.ndarray, ref_stats: dict
     return out
 
 
+def _class_pair_confidence(ref_stats: dict, tgt_lab: np.ndarray, tm: np.ndarray) -> float:
+    """Scalar confidence in [0,1]: does the reference's class actually look
+    like a plausible target for THIS class as a whole, in absolute Lab terms?
+
+    `_class_outlier_confidence` catches pixels atypical of their OWN class
+    (a few stray leaves inside a "sky" mask) — it does nothing when EVERY
+    target pixel is perfectly typical of the target's own class, but the
+    target's class as a WHOLE looks nothing like the reference's same-named
+    class. Found via a real case (2026-07-10): an open-vocab "building" query
+    matches both a brightly-lit white mall ceiling (reference) and a dim
+    grey/warm steel roof truss under mixed lighting (target) — same text
+    label, physically very different things. Force-matching statistics at
+    full/overshoot strength blew the truss out into an unnaturally bright
+    cyan slab that visually "disconnected" from the barely-touched
+    (correctly conservative) neutral crowd beneath it.
+
+    Measures the raw absolute-Lab gap between the reference class's mean and
+    the target class's OWN mean (i.e. before any grading) — deliberately NOT
+    normalized by either class's internal spread, because a same-labeled
+    class with a huge internal spread (e.g. "building" lumping bright
+    ceiling + dark structural beams together) is itself a sign the label is
+    unreliable, not a license to tolerate a bigger gap.
+    """
+    t_sel = tm > 0.5
+    if t_sel.sum() < 20:
+        return 1.0
+    t_mean_L = float(tgt_lab[..., 0][t_sel].mean())
+    t_mean_ab = tgt_lab[t_sel][:, 1:3].mean(axis=0)
+    d_L = abs(ref_stats["l_mean"] - t_mean_L)
+    d_ab = float(np.hypot(ref_stats["mean_ab"][0] - t_mean_ab[0], ref_stats["mean_ab"][1] - t_mean_ab[1]))
+    # Calibrated against real photo pairs (see phase-teacher-class-mismatch-fix.md):
+    # below ~15 Lab units the two same-labeled regions still plausibly read as
+    # "the same kind of thing under different lighting"; past ~30 they're
+    # probably different materials that only happen to share a text label.
+    Z_FULL, Z_ZERO = 15.0, 30.0
+    z = max(d_L, d_ab)
+    return float(np.clip(1.0 - (z - Z_FULL) / (Z_ZERO - Z_FULL), 0.0, 1.0))
+
+
 def _class_outlier_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> np.ndarray:
     """Per-pixel confidence in [0,1]: how well does THIS pixel's own Lab value
     match the (mean, std) of the class's own masked pixels? 1.0 = solidly
@@ -266,6 +305,7 @@ def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> 
     matched_info = {}
     graded_by_class = {}
     confidence_by_class = {}
+    class_confidence = {}
     for c in class_names:
         tm = tgt_cls.get(c)
         ref_stats = profile["classes"].get(c)
@@ -282,12 +322,19 @@ def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> 
         else:
             graded_by_class[c] = _grade_class_from_stats(c, tgt_lab, tm, ref_stats)
         confidence_by_class[c] = _class_outlier_confidence(tgt_lab, tm) if matched else None
+        # "neutral"/"skin" already have their own dedicated, deliberately-gentle
+        # treatment (additive shift / hue-lock) — the class-pair mismatch guard
+        # is specifically about detected-object classes (sky/building/floor/...)
+        # whose reference stats can come from a same-labeled but physically
+        # unrelated region.
+        class_confidence[c] = (_class_pair_confidence(ref_stats, tgt_lab, tm)
+                                if matched and c not in ("neutral", "skin") else 1.0)
 
     return {
         "tgt_rgb": tgt_rgb, "tgt_lab": tgt_lab, "tgt_cls": tgt_cls, "compat": compat,
         "class_names": class_names, "weights": weights,
         "matched_info": matched_info, "graded_by_class": graded_by_class,
-        "confidence_by_class": confidence_by_class,
+        "confidence_by_class": confidence_by_class, "class_confidence": class_confidence,
     }
 
 
@@ -315,7 +362,7 @@ def render_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.
         if info["matched"]:
             cs_base = preset["skin"] if c == "skin" else (preset["neutral"] if c == "neutral" else preset["default"])
             if cs_base > 1.0:
-                confidence = analysis["confidence_by_class"][c]
+                confidence = analysis["confidence_by_class"][c] * analysis["class_confidence"][c]
                 cs = 1.0 + (cs_base - 1.0) * confidence  # array, per-pixel damped overshoot
             else:
                 cs = cs_base  # <=1 is a plain undershoot/no-op blend, nothing to damp

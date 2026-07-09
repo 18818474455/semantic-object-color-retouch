@@ -19,33 +19,8 @@
     "neutral"
   ],
   "matched_info": {
-    "wall": {
-      "tgt_frac": 0.0258,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
-    "grass": {
-      "tgt_frac": 0.0446,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "clothing": {
-      "tgt_frac": 0.1489,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "sky": {
-      "tgt_frac": 0.318,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "neutral": {
-      "tgt_frac": 0.3754,
-      "ref_frac": 0.7911,
-      "matched": true
-    },
-    "tree": {
-      "tgt_frac": 0.0306,
+    "screen": {
+      "tgt_frac": 0.0061,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -54,8 +29,33 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "screen": {
-      "tgt_frac": 0.0061,
+    "neutral": {
+      "tgt_frac": 0.3754,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "wall": {
+      "tgt_frac": 0.0258,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "clothing": {
+      "tgt_frac": 0.1489,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "tree": {
+      "tgt_frac": 0.0306,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "grass": {
+      "tgt_frac": 0.0446,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.318,
       "ref_frac": 0.0,
       "matched": false
     }

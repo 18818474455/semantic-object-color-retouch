@@ -20,10 +20,10 @@
     "neutral"
   ],
   "matched_info": {
-    "neutral": {
-      "tgt_frac": 0.3301,
-      "ref_frac": 0.0154,
-      "matched": true
+    "screen": {
+      "tgt_frac": 0.0261,
+      "ref_frac": 0.0,
+      "matched": false
     },
     "sky backdrop": {
       "tgt_frac": 0.0,
@@ -33,11 +33,6 @@
     "tree": {
       "tgt_frac": 0.0,
       "ref_frac": 0.3239,
-      "matched": false
-    },
-    "floor": {
-      "tgt_frac": 0.1772,
-      "ref_frac": 0.0,
       "matched": false
     },
     "skin": {
@@ -50,8 +45,13 @@
       "ref_frac": 0.0165,
       "matched": true
     },
-    "screen": {
-      "tgt_frac": 0.0261,
+    "neutral": {
+      "tgt_frac": 0.3301,
+      "ref_frac": 0.0154,
+      "matched": true
+    },
+    "floor": {
+      "tgt_frac": 0.1772,
       "ref_frac": 0.0,
       "matched": false
     }

@@ -19,18 +19,13 @@
     "neutral"
   ],
   "matched_info": {
-    "wall": {
-      "tgt_frac": 0.1366,
-      "ref_frac": 0.2077,
+    "screen": {
+      "tgt_frac": 0.0027,
+      "ref_frac": 0.0,
       "matched": false
     },
-    "neutral": {
-      "tgt_frac": 0.5109,
-      "ref_frac": 0.7911,
-      "matched": true
-    },
-    "spotlight": {
-      "tgt_frac": 0.0002,
+    "sky": {
+      "tgt_frac": 0.2783,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -44,13 +39,18 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "screen": {
-      "tgt_frac": 0.0027,
-      "ref_frac": 0.0,
+    "neutral": {
+      "tgt_frac": 0.5109,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "wall": {
+      "tgt_frac": 0.1366,
+      "ref_frac": 0.2077,
       "matched": false
     },
-    "sky": {
-      "tgt_frac": 0.2783,
+    "spotlight": {
+      "tgt_frac": 0.0002,
       "ref_frac": 0.0,
       "matched": false
     }

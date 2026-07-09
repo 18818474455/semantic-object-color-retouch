@@ -22,34 +22,34 @@
     "skin"
   ],
   "matched_info": {
-    "neutral": {
-      "tgt_frac": 0.4769,
-      "ref_frac": 0.7631,
-      "matched": true
-    },
     "skin": {
       "tgt_frac": 0.0218,
       "ref_frac": 0.1084,
       "matched": true
-    },
-    "floor": {
-      "tgt_frac": 0.2517,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "stage backdrop": {
-      "tgt_frac": 0.006,
-      "ref_frac": 0.0231,
-      "matched": false
     },
     "building": {
       "tgt_frac": 0.2438,
       "ref_frac": 0.0156,
       "matched": true
     },
+    "neutral": {
+      "tgt_frac": 0.4769,
+      "ref_frac": 0.7631,
+      "matched": true
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.006,
+      "ref_frac": 0.0231,
+      "matched": false
+    },
     "sky": {
       "tgt_frac": 0.0,
       "ref_frac": 0.0813,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.2517,
+      "ref_frac": 0.0,
       "matched": false
     }
   },

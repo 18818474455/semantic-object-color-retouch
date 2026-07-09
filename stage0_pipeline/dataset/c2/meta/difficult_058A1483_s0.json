@@ -17,9 +17,14 @@
     "neutral"
   ],
   "matched_info": {
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
+    "screen": {
+      "tgt_frac": 0.0024,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "skin": {
+      "tgt_frac": 0.0342,
+      "ref_frac": 0.0,
       "matched": false
     },
     "neutral": {
@@ -27,14 +32,9 @@
       "ref_frac": 0.7911,
       "matched": true
     },
-    "skin": {
-      "tgt_frac": 0.0342,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "screen": {
-      "tgt_frac": 0.0024,
-      "ref_frac": 0.0,
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
       "matched": false
     }
   },

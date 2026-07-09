@@ -20,11 +20,6 @@
     "neutral"
   ],
   "matched_info": {
-    "neutral": {
-      "tgt_frac": 0.2644,
-      "ref_frac": 0.0154,
-      "matched": true
-    },
     "sky backdrop": {
       "tgt_frac": 0.0,
       "ref_frac": 0.7677,
@@ -40,20 +35,25 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "floor": {
-      "tgt_frac": 0.1491,
-      "ref_frac": 0.0,
-      "matched": false
+    "building": {
+      "tgt_frac": 0.6442,
+      "ref_frac": 0.0165,
+      "matched": true
+    },
+    "neutral": {
+      "tgt_frac": 0.2644,
+      "ref_frac": 0.0154,
+      "matched": true
     },
     "stage backdrop": {
       "tgt_frac": 0.2252,
       "ref_frac": 0.0,
       "matched": false
     },
-    "building": {
-      "tgt_frac": 0.6442,
-      "ref_frac": 0.0165,
-      "matched": true
+    "floor": {
+      "tgt_frac": 0.1491,
+      "ref_frac": 0.0,
+      "matched": false
     }
   },
   "split": "train"

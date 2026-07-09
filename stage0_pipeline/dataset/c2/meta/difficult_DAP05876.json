@@ -17,18 +17,8 @@
     "neutral"
   ],
   "matched_info": {
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
-    "neutral": {
-      "tgt_frac": 0.2586,
-      "ref_frac": 0.7911,
-      "matched": true
-    },
-    "floor": {
-      "tgt_frac": 0.1373,
+    "screen": {
+      "tgt_frac": 0.0098,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -42,13 +32,23 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "screen": {
-      "tgt_frac": 0.0098,
-      "ref_frac": 0.0,
+    "neutral": {
+      "tgt_frac": 0.2586,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
       "matched": false
     },
     "sky": {
       "tgt_frac": 0.3541,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.1373,
       "ref_frac": 0.0,
       "matched": false
     }

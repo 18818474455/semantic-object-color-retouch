@@ -17,8 +17,8 @@
     "neutral"
   ],
   "matched_info": {
-    "wall": {
-      "tgt_frac": 0.4791,
+    "screen": {
+      "tgt_frac": 0.0057,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -27,14 +27,9 @@
       "ref_frac": 0.7677,
       "matched": false
     },
-    "floor": {
-      "tgt_frac": 0.2801,
+    "skin": {
+      "tgt_frac": 0.0211,
       "ref_frac": 0.0,
-      "matched": false
-    },
-    "building": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.0165,
       "matched": false
     },
     "neutral": {
@@ -42,18 +37,23 @@
       "ref_frac": 0.0154,
       "matched": true
     },
+    "wall": {
+      "tgt_frac": 0.4791,
+      "ref_frac": 0.0,
+      "matched": false
+    },
     "tree": {
       "tgt_frac": 0.0,
       "ref_frac": 0.3239,
       "matched": false
     },
-    "skin": {
-      "tgt_frac": 0.0211,
-      "ref_frac": 0.0,
+    "building": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0165,
       "matched": false
     },
-    "screen": {
-      "tgt_frac": 0.0057,
+    "floor": {
+      "tgt_frac": 0.2801,
       "ref_frac": 0.0,
       "matched": false
     }

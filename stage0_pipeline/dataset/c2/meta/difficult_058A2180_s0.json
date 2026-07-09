@@ -17,9 +17,19 @@
     "neutral"
   ],
   "matched_info": {
-    "wall": {
-      "tgt_frac": 0.0049,
-      "ref_frac": 0.2077,
+    "tree": {
+      "tgt_frac": 0.0068,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "spotlight": {
+      "tgt_frac": 0.0021,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "skin": {
+      "tgt_frac": 0.0311,
+      "ref_frac": 0.0,
       "matched": false
     },
     "neutral": {
@@ -27,19 +37,9 @@
       "ref_frac": 0.7911,
       "matched": true
     },
-    "spotlight": {
-      "tgt_frac": 0.0021,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "tree": {
-      "tgt_frac": 0.0068,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "skin": {
-      "tgt_frac": 0.0311,
-      "ref_frac": 0.0,
+    "wall": {
+      "tgt_frac": 0.0049,
+      "ref_frac": 0.2077,
       "matched": false
     },
     "water": {

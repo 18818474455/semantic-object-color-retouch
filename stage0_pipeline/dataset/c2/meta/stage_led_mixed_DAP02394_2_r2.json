@@ -17,20 +17,10 @@
     "neutral"
   ],
   "matched_info": {
-    "grass": {
-      "tgt_frac": 0.0097,
-      "ref_frac": 0.0,
-      "matched": false
-    },
     "sky backdrop": {
       "tgt_frac": 0.0,
       "ref_frac": 0.7677,
       "matched": false
-    },
-    "neutral": {
-      "tgt_frac": 0.9694,
-      "ref_frac": 0.0154,
-      "matched": true
     },
     "tree": {
       "tgt_frac": 0.0046,
@@ -41,6 +31,16 @@
       "tgt_frac": 0.0163,
       "ref_frac": 0.0,
       "matched": false
+    },
+    "grass": {
+      "tgt_frac": 0.0097,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.9694,
+      "ref_frac": 0.0154,
+      "matched": true
     },
     "building": {
       "tgt_frac": 0.0,

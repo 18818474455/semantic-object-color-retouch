@@ -22,45 +22,15 @@
     "sky"
   ],
   "matched_info": {
-    "clothing skin": {
-      "tgt_frac": 0.036,
+    "screen": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.5433,
+      "matched": false
+    },
+    "skin": {
+      "tgt_frac": 0.0002,
       "ref_frac": 0.0,
       "matched": false
-    },
-    "floor": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.0165,
-      "matched": false
-    },
-    "stage backdrop": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.175,
-      "matched": false
-    },
-    "wall stage backdrop": {
-      "tgt_frac": 0.1193,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "water": {
-      "tgt_frac": 0.01,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "building": {
-      "tgt_frac": 0.4801,
-      "ref_frac": 0.8945,
-      "matched": true
-    },
-    "clothing": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.0324,
-      "matched": false
-    },
-    "sky": {
-      "tgt_frac": 0.3905,
-      "ref_frac": 0.0987,
-      "matched": true
     },
     "neutral": {
       "tgt_frac": 0.0777,
@@ -72,24 +42,54 @@
       "ref_frac": 0.0,
       "matched": false
     },
+    "floor": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0165,
+      "matched": false
+    },
+    "water": {
+      "tgt_frac": 0.01,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "clothing": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0324,
+      "matched": false
+    },
     "tree": {
       "tgt_frac": 0.0467,
       "ref_frac": 0.0,
       "matched": false
     },
-    "skin": {
-      "tgt_frac": 0.0002,
+    "wall stage backdrop": {
+      "tgt_frac": 0.1193,
       "ref_frac": 0.0,
       "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.4801,
+      "ref_frac": 0.8945,
+      "matched": true
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.175,
+      "matched": false
+    },
+    "clothing skin": {
+      "tgt_frac": 0.036,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.3905,
+      "ref_frac": 0.0987,
+      "matched": true
     },
     "led screen": {
       "tgt_frac": 0.1681,
       "ref_frac": 0.0,
-      "matched": false
-    },
-    "screen": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.5433,
       "matched": false
     }
   },

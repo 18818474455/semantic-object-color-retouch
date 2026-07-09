@@ -43,6 +43,7 @@ cd stage0_pipeline
 | C2.3b ridge→MLP 升级实验结果 | `outputs/phase-c2.3b-mlp-head-experiment.md` |
 | 过冲光晕瑕疵：根因+修复+C2重跑 | `outputs/phase-teacher-overshoot-halo-fix.md` |
 | neutral 加法mood-cast（前景/人群多样性保留）+C2重跑 | `outputs/phase-teacher-neutral-mood-cast.md` |
+| 同标签类别外观差过大压制强度（背景/前景脱节）+C2重跑 | `outputs/phase-teacher-class-mismatch-fix.md` |
 | 仿色 Web Demo（参考图+目标图+强度滑杆） | `stage0_pipeline/webdemo/` |
 | 开发启动清单 | `outputs/development-start-checklist.md` |
 | Stage 0 管线说明 | `stage0_pipeline/README.md` |
@@ -66,5 +67,6 @@ cp stage0_pipeline/secrets/api.local.json.example stage0_pipeline/secrets/api.lo
 5. ~~**Web Demo**：参考图 + 目标图 + 强度滑杆~~ ✅ —— `stage0_pipeline/webdemo/`，本地 Flask，分析一次（跑分割）+ 滑杆秒级重渲染。用真实回归图肉眼验证时发现一个此前只看 Lab 数值指标没发现的瑕疵：`outdoor_sky` 桶天空过饱和 + 树冠边缘青色光晕
 6. ~~**排查并修复过冲光晕瑕疵**~~ ✅ —— 根因是 `STRENGTH_PRESETS` 里 `cs>1` 过冲设计在羽化边界上失控（跟分割精度/BSHM无关），已按局部方差自适应抑制过冲修复，20图回归验证通过，**C2 训练数据用修复后 teacher 重新生成**（held-out MAE 4.20→4.02，小幅改善）。建筑立面整片过冲偏色是另一机制，留作后续（详见 `outputs/phase-teacher-overshoot-halo-fix.md`）
 7. ~~**"前景没反应"问题：neutral 改用加法 mood-cast**~~ ✅ —— 密集人群没被检测器识别、掉进 neutral 兜底类，重缩放式分级会洗掉人群衣服的颜色多样性；改成固定加法偏移后人群色彩多样性保留、整体氛围仍有柔和偏移，20图回归验证通过，**C2 训练数据再次重新生成**（held-out MAE 4.02→4.07，噪声级波动，信号稳定）（详见 `outputs/phase-teacher-neutral-mood-cast.md`）
-8. **M3.7**：Chroma 仓开 `feature/regional-smart-color-head` 分支，启动 C2.4 Smart Color v2 嫁接（数据门槛已达标，teacher 已修复）——**当前主线**
-9. **C1** API易 双图冒烟（并行，不阻塞 C2）
+8. ~~**"背景跟前景脱节"问题：同标签类别外观差过大压制强度**~~ ✅ —— 开放词汇标签把两种物理上完全不同的东西（商场白吊顶 vs 钢架顶棚）都标成"building"强行统计匹配，新增类别配对置信度按绝对 Lab 差距压制过冲，20图回归验证通过（顺带修好一张过曝背景模糊的图），**C2 训练数据再次重新生成**（held-out MAE 4.07→3.74，真实改善）（详见 `outputs/phase-teacher-class-mismatch-fix.md`）
+9. **M3.7**：Chroma 仓开 `feature/regional-smart-color-head` 分支，启动 C2.4 Smart Color v2 嫁接（数据门槛已达标，teacher 已修复）——**当前主线**
+10. **C1** API易 双图冒烟（并行，不阻塞 C2）

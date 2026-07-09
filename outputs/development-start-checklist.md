@@ -105,7 +105,8 @@ Do not train pixel generation in V1.
 |------|------|------|
 | **C2 Reference 自蒸馏（主路径）** | `outputs/phase-c2-reference-self-distill-design.md` | ✅ C2.1/C2.2/C2.3 扩样跑通（97 样本/208 class-rows），修复过冲光晕后重跑 held-out MAE=4.02 < 基线 6.08 |
 | **过冲光晕瑕疵：根因+修复+重跑** | `outputs/phase-teacher-overshoot-halo-fix.md` | ✅ Web Demo 肉眼验证发现，跟分割精度/BSHM无关，已修复并重跑 C2 全流程 |
-| **neutral 加法mood-cast（人群/前景多样性保留）+重跑（新增）** | `outputs/phase-teacher-neutral-mood-cast.md` | ✅ 密集人群没被检测器识别落进neutral兜底，重缩放式分级洗掉衣服色彩多样性，改用固定加法偏移后修复，重跑 C2 全流程 |
+| **neutral 加法mood-cast（人群/前景多样性保留）+重跑** | `outputs/phase-teacher-neutral-mood-cast.md` | ✅ 密集人群没被检测器识别落进neutral兜底，重缩放式分级洗掉衣服色彩多样性，改用固定加法偏移后修复，重跑 C2 全流程 |
+| **同标签类别外观差过大压制强度（背景/前景脱节）+重跑（新增）** | `outputs/phase-teacher-class-mismatch-fix.md` | ✅ 开放词汇标签把两种物理不同的东西都标成同一类别强行统计匹配（商场白吊顶 vs 钢架顶棚"building"），新增类别配对置信度修复，重跑 C2 全流程，MAE 4.07→3.74（真实改善） |
 | **C1c 本地/托管 VLM 语义门控（实验完成，优先级下调）** | `outputs/phase-c1c-vlm-sky-gate-results.md` | ✅ `qwen3-vl-plus` 对比 30 个 sky 样本，100% 认同启发式规则（0 语义假阳性）；"替代规则"动机不成立 |
 | **C1 GPT teacher 量化（辅助）** | `semantic-object-color-retouch-dev-plan-v3.1-c2-addendum.md` | API 已切 API易；待双图冒烟 |
 
@@ -127,6 +128,8 @@ cd stage0_pipeline
 **过冲光晕瑕疵修复 + C2 重跑（2026-07-10）**：Web Demo 肉眼验证真实回归图时发现天空/树冠边界有不自然的光晕，排查后确认跟分割精度（BSHM 之类的抠图模型）无关，根因是 `STRENGTH_PRESETS` 里 `cs>1` 的"过冲"设计在羽化边界/材质混杂区域上失控。已实现按局部方差自适应抑制过冲的修复（`_class_outlier_confidence`），20 图回归验证门槛决策不变、视觉瑕疵明显改善；因为 C2 伪标签的老师就是这套 medium 档，重跑了 C2.1→C2.3 全流程，新 held-out MAE=4.02（略优于修复前 4.20）。详见 `outputs/phase-teacher-overshoot-halo-fix.md`。
 
 **neutral 改用加法 mood-cast + C2 再次重跑（同日）**：用户拿一张密集人群商超照片测试，反馈"只模仿了背景，前景没反应"。排查发现人群没被 Grounding DINO 识别成 `clothing`，掉进保守的 `neutral` 兜底类；试着单独给"人群"开类别用重缩放式分级，结果把所有人的不同颜色衣服洗成同一种色调，比不处理还差。改成 `_grade_neutral_additive()`——对 neutral 区域做固定加法偏移而不是重缩放，保留每个像素跟邻居的相对色差（衣服多样性），只把整片区域的重心朝参考图挪一点。20 图回归验证通过，重跑 C2.1→C2.3，新 held-out MAE=4.07（跟上一版 4.02 基本持平，噪声级波动）。详见 `outputs/phase-teacher-neutral-mood-cast.md`。
+
+**同标签类别外观差过大压制强度 + C2 第三次重跑（同日）**：用户拿商场/机场密集人群照片测试，反馈"背景跟前面人物严重脱节"，质疑要不要退回整图仿色，并要求回顾昨天 Polarr 仿色分析的结论。查文档确认整图仿色是早就踩坑退回来的旧方案（会串色）。实测发现根因是开放词汇标签"building"同时框住了参考图"商场白色吊顶"（L=78）和目标图"钢架顶棚"（L=49）这两种物理上完全不同的东西，ΔL≈29.4 还叠加过冲系数，硬拉出了不自然的青蓝色块。新增 `_class_pair_confidence()`——按类别整体统计量的绝对 Lab 差距（不做内部方差归一化）压制过冲，跟已有的像素级 outlier confidence 相乘一起生效。20 图回归验证通过，顺带修好另一张过曝背景模糊的图。重跑 C2.1→C2.3，新 held-out MAE=3.74（上一版 4.07，这次是真实改善而非噪声）。详见 `outputs/phase-teacher-class-mismatch-fix.md`。
 
 ---
 

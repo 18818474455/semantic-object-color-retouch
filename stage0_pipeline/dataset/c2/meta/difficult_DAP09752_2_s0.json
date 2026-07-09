@@ -17,18 +17,8 @@
     "neutral"
   ],
   "matched_info": {
-    "wall": {
-      "tgt_frac": 0.0,
-      "ref_frac": 0.2077,
-      "matched": false
-    },
-    "neutral": {
-      "tgt_frac": 0.7086,
-      "ref_frac": 0.7911,
-      "matched": true
-    },
-    "floor": {
-      "tgt_frac": 0.2642,
+    "screen": {
+      "tgt_frac": 0.0017,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -37,9 +27,14 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "water": {
-      "tgt_frac": 0.0207,
-      "ref_frac": 0.0,
+    "neutral": {
+      "tgt_frac": 0.7086,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
       "matched": false
     },
     "led screen": {
@@ -47,8 +42,13 @@
       "ref_frac": 0.0,
       "matched": false
     },
-    "screen": {
-      "tgt_frac": 0.0017,
+    "water": {
+      "tgt_frac": 0.0207,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.2642,
       "ref_frac": 0.0,
       "matched": false
     }
