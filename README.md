@@ -4,6 +4,15 @@
 
 **当前状态（2026-07-10）**：Stage 0 + 仿色产品化已完成；**C2 Reference 自蒸馏为主开发线**；C1 GPT 量化为辅助轨（API易已配置）。Web Demo 肉眼验证发现并修复了 teacher 的过冲光晕瑕疵，C2 训练数据已用修复后版本重新生成。
 
+**本目录即代码基地**：本项目已从 `/Users/mac/Documents/Codex/2026-07-05/gpt-image-2/` 迁移到 `/Users/mac/Desktop/整体代码1.0/仿色模型/` 作为唯一持续开发位置（`.git`/远程仓库随迁移保留）。虚拟环境 `.venv`/`.venv-m2` 太大（合计约1GB）未一起迁移，重建方式：
+
+```bash
+python3.14 -m venv .venv && .venv/bin/pip install -r stage0_pipeline/requirements-venv.txt
+python3.13 -m venv .venv-m2 && .venv-m2/bin/pip install -r stage0_pipeline/requirements-venv-m2.txt
+```
+
+项目级 Cursor skill：`.cursor/skills/semantic-color-retouch/SKILL.md`（新会话可直接读取快速接手）。
+
 ## 目录结构
 
 ```
