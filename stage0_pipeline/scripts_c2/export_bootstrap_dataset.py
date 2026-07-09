@@ -1,7 +1,9 @@
 """C2.1 — Export bootstrap training manifest from regression case specs.
 
-Reads FULL_CASES / EXPANDED_CASES (semantic_transfer_v2), runs the current
-rule-based teacher (color_reference_transfer medium), and writes:
+Reads FULL_CASES / EXPANDED_CASES (semantic_transfer_v2) plus the Stage 0
+100-image validation set (outputs/stage0/image_metrics.jsonl, bucketed by
+build_region_metrics.py's heuristic classifier), runs the current rule-based
+teacher (color_reference_transfer medium), and writes:
   dataset/c2/manifest.jsonl
   dataset/c2/profiles/<sample_id>.json
   dataset/c2/edited/<sample_id>_medium.jpg
@@ -14,6 +16,7 @@ Run (.venv-m2 for detection inside apply_profile):
   cd stage0_pipeline
   ../.venv-m2/bin/python scripts_c2/export_bootstrap_dataset.py
   ../.venv-m2/bin/python scripts_c2/export_bootstrap_dataset.py --smoke-only
+  ../.venv-m2/bin/python scripts_c2/export_bootstrap_dataset.py --no-stage0
 """
 from __future__ import annotations
 
@@ -31,6 +34,7 @@ from semantic_transfer_v2 import FULL_CASES, EXPANDED_CASES
 
 PIPELINE_ROOT = Path(__file__).resolve().parents[1]
 OUT_ROOT = PIPELINE_ROOT / "dataset" / "c2"
+STAGE0_METRICS = PIPELINE_ROOT.parent / "outputs" / "stage0" / "image_metrics.jsonl"
 LOCAL_SMOKE = (
     PIPELINE_ROOT / "outputs" / "color_reference_transfer" / "gpt_teacher" / "ref_small.jpg",
     PIPELINE_ROOT / "outputs" / "color_reference_transfer" / "gpt_teacher" / "tgt_small.jpg",
@@ -49,6 +53,32 @@ def _iter_cases(include_expanded: bool) -> list[tuple[str, str, str, str]]:
             ref = spec["ref"]
             for tgt in spec["targets"]:
                 rows.append((bucket, "_r2", ref, tgt))
+    return rows
+
+
+def _iter_stage0_cases(existing_targets: set[str]) -> list[tuple[str, str, str, str]]:
+    """Yield (bucket, '_s0', ref_path, tgt_path) for the Stage 0 100-image
+    validation set (bucketed by build_region_metrics.py's heuristic
+    classifier), reusing the same fixed per-bucket reference as
+    FULL_CASES/EXPANDED_CASES so results stay comparable. Skips images
+    already used as a target or as a bucket reference."""
+    if not STAGE0_METRICS.is_file():
+        return []
+    refs = {b: spec["ref"] for b, spec in FULL_CASES.items()}
+    seen = set(existing_targets) | set(refs.values())
+    rows: list[tuple[str, str, str, str]] = []
+    with STAGE0_METRICS.open() as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            d = json.loads(line)
+            bucket = d.get("stage0_bucket")
+            path = d.get("source_path")
+            if not bucket or not path or bucket not in refs or path in seen:
+                continue
+            seen.add(path)
+            rows.append((bucket, "_s0", refs[bucket], path))
     return rows
 
 
@@ -120,6 +150,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--smoke-only", action="store_true", help="only export local ref_small/tgt_small")
     ap.add_argument("--no-expanded", action="store_true", help="skip EXPANDED_CASES (_r2)")
+    ap.add_argument("--no-stage0", action="store_true", help="skip the Stage 0 100-image validation set (_s0)")
     ap.add_argument("--strength", default="medium", choices=["light", "medium", "strong"])
     args = ap.parse_args()
 
@@ -133,13 +164,24 @@ def main() -> int:
         if row:
             rows.append(row)
     else:
-        for bucket, tag, ref, tgt in _iter_cases(include_expanded=not args.no_expanded):
+        base_cases = _iter_cases(include_expanded=not args.no_expanded)
+        for bucket, tag, ref, tgt in base_cases:
             row = _export_one(bucket, tag, ref, tgt, strength=args.strength)
             if row:
                 rows.append(row)
                 print(f"OK  {row['sample_id']} suitable={row['compat']['suitable']}")
             else:
                 skipped += 1
+
+        if not args.no_stage0:
+            existing_targets = {tgt for _, _, _, tgt in base_cases}
+            for bucket, tag, ref, tgt in _iter_stage0_cases(existing_targets):
+                row = _export_one(bucket, tag, ref, tgt, strength=args.strength)
+                if row:
+                    rows.append(row)
+                    print(f"OK  {row['sample_id']} suitable={row['compat']['suitable']}")
+                else:
+                    skipped += 1
 
         smoke = _export_smoke(args.strength)
         if smoke and smoke["sample_id"] not in {r["sample_id"] for r in rows}:

@@ -1,0 +1,106 @@
+{
+  "sample_id": "outdoor_sky_DAP031011_s0",
+  "bucket": "outdoor_sky",
+  "classes": {
+    "building": {
+      "frac": 0.7847,
+      "pixels": 548010,
+      "lab_affine": {
+        "L_scale": 0.4758,
+        "L_shift": 60.0,
+        "a_scale": 0.8274,
+        "a_shift": -4.165,
+        "b_scale": 0.5228,
+        "b_shift": 0.74
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.20826821104148913,
+        "temperature": 0.036985909102563407,
+        "saturation": -0.3249268535623697,
+        "vibrance": -0.195
+      }
+    },
+    "clothing": {
+      "frac": 0.0454,
+      "pixels": 31696,
+      "lab_affine": {
+        "L_scale": 1.4618,
+        "L_shift": 60.0,
+        "a_scale": 1.4351,
+        "a_shift": 1.772,
+        "b_scale": 0.2681,
+        "b_shift": 0.276
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.0886055642967563,
+        "temperature": 0.013813324528375415,
+        "saturation": -0.1484199851741751,
+        "vibrance": -0.0891
+      }
+    },
+    "floor": {
+      "frac": 0.0925,
+      "pixels": 64625,
+      "lab_affine": {
+        "L_scale": 1.5395,
+        "L_shift": -27.168,
+        "a_scale": 2.1459,
+        "a_shift": -0.157,
+        "b_scale": 0.3265,
+        "b_shift": -6.89
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.007857241666934555,
+        "temperature": -0.3444901088147003,
+        "saturation": 0.23622318290471767,
+        "vibrance": 0.1417
+      }
+    },
+    "neutral": {
+      "frac": 0.0667,
+      "pixels": 46587,
+      "lab_affine": {
+        "L_scale": 1.1442,
+        "L_shift": 16.938,
+        "a_scale": 1.1108,
+        "a_shift": 0.584,
+        "b_scale": 0.9811,
+        "b_shift": 2.094
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.029221656202460488,
+        "temperature": 0.10470142276247518,
+        "saturation": 0.04593214456833539,
+        "vibrance": 0.0276
+      }
+    },
+    "screen": {
+      "frac": 0.5365,
+      "pixels": 374678,
+      "lab_affine": {
+        "L_scale": 0.3761,
+        "L_shift": 60.0,
+        "a_scale": 0.7183,
+        "a_shift": -7.395,
+        "b_scale": 0.5786,
+        "b_shift": 5.028
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.36976844430420636,
+        "temperature": 0.2514133556644677,
+        "saturation": -0.35159707858869427,
+        "vibrance": -0.211
+      }
+    }
+  }
+}

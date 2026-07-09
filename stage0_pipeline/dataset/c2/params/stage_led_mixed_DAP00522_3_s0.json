@@ -1,0 +1,46 @@
+{
+  "sample_id": "stage_led_mixed_DAP00522_3_s0",
+  "bucket": "stage_led_mixed",
+  "classes": {
+    "building": {
+      "frac": 0.6442,
+      "pixels": 449909,
+      "lab_affine": {
+        "L_scale": 1.1703,
+        "L_shift": 46.59,
+        "a_scale": 1.098,
+        "a_shift": -30.631,
+        "b_scale": 1.1214,
+        "b_shift": 40.0
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -1.0,
+        "temperature": 1.0,
+        "saturation": 0.10974059151022564,
+        "vibrance": 0.0658
+      }
+    },
+    "neutral": {
+      "frac": 0.2644,
+      "pixels": 184620,
+      "lab_affine": {
+        "L_scale": 1.1441,
+        "L_shift": 14.456,
+        "a_scale": 0.962,
+        "a_shift": 4.463,
+        "b_scale": 1.2439,
+        "b_shift": 24.282
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.223128614382032,
+        "temperature": 1.0,
+        "saturation": 0.10297587865473412,
+        "vibrance": 0.0618
+      }
+    }
+  }
+}

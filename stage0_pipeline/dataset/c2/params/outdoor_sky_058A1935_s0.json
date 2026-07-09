@@ -1,0 +1,66 @@
+{
+  "sample_id": "outdoor_sky_058A1935_s0",
+  "bucket": "outdoor_sky",
+  "classes": {
+    "floor": {
+      "frac": 0.1848,
+      "pixels": 129272,
+      "lab_affine": {
+        "L_scale": 0.4051,
+        "L_shift": -19.979,
+        "a_scale": 0.4891,
+        "a_shift": 6.585,
+        "b_scale": 0.7579,
+        "b_shift": -30.337
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.32926453116409465,
+        "temperature": -1.0,
+        "saturation": -0.37647145517226654,
+        "vibrance": -0.2259
+      }
+    },
+    "neutral": {
+      "frac": 0.3997,
+      "pixels": 279554,
+      "lab_affine": {
+        "L_scale": 1.0481,
+        "L_shift": -0.422,
+        "a_scale": 0.9269,
+        "a_shift": -1.638,
+        "b_scale": 0.9558,
+        "b_shift": -2.838
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.08189436983877094,
+        "temperature": -0.14191250841748643,
+        "saturation": -0.05862241649115574,
+        "vibrance": -0.0352
+      }
+    },
+    "sky": {
+      "frac": 0.3538,
+      "pixels": 247475,
+      "lab_affine": {
+        "L_scale": 1.0196,
+        "L_shift": 5.444,
+        "a_scale": 1.0,
+        "a_shift": -19.375,
+        "b_scale": 1.7858,
+        "b_shift": 6.069
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.9687431335449219,
+        "temperature": 0.3034360641536171,
+        "saturation": 0.39290200913470685,
+        "vibrance": 0.2357
+      }
+    }
+  }
+}

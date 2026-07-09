@@ -1,5 +1,5 @@
 {
-  "n_rows": 41,
+  "n_rows": 208,
   "feature_dim": 27,
   "target_keys": [
     "lab_L_scale",
@@ -9,8 +9,8 @@
     "lab_b_scale",
     "lab_b_shift"
   ],
-  "in_sample_mae": 1.80729,
-  "predict_mean_baseline_mae": 5.82866,
+  "in_sample_mae": 3.16759,
+  "predict_mean_baseline_mae": 6.3066,
   "note": "in-sample only; upgrade to held-out split once class diversity grows.",
   "rows": [
     {
@@ -204,6 +204,841 @@
       "bucket": "difficult"
     },
     {
+      "sample_id": "person_event_058A1537_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1537_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1953_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1953_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1953_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "person_event_058A1544_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1544_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1587_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1587_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1534_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1534_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC05059_s0",
+      "class": "building",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC05059_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC05059_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "difficult_058A2194_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "person_event_AAA04078_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_AAA04078_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1525_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1525_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1538_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1538_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1935_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1935_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1935_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "person_event_058A1553_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1553_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1553_s0",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1889_s0",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1889_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1889_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1889_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "difficult_058A1483_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "person_event_DSC04559_s0",
+      "class": "building",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC04559_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC04559_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC04559_s0",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1541_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1541_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1578_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1578_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1974_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1974_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1974_s0",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1940_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1940_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1940_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "person_event_AAA04329_s0",
+      "class": "building",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_AAA04329_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_AAA04329_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1933_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1933_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1933_s0",
+      "class": "screen",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1933_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "person_event_DSC01689_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01689_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01689_s0",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1429_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1429_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1429_s0",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01605_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01605_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01605_s0",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1585_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1585_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "difficult_058A2180_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "person_event_058A1524_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1524_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1533_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1533_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1550_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1550_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1550_s0",
+      "class": "sky",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "difficult_058A2151_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1958_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1958_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1958_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC01283_s0",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC01283_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC01283_s0",
+      "class": "screen",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "person_event_058A1808_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1808_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "difficult_058A1765_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1932_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1932_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1932_s0",
+      "class": "screen",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1932_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "person_event_DSC01555_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_DSC01555_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1590_s0",
+      "class": "neutral",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "person_event_058A1590_s0",
+      "class": "skin",
+      "bucket": "person_event"
+    },
+    {
+      "sample_id": "difficult_058A1772_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP00522_3_s0",
+      "class": "building",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP00522_3_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP00526_3_s0",
+      "class": "building",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP00526_3_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "difficult_DSC05771_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC048151_s0",
+      "class": "building",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC048151_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC048151_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "difficult_DSC05341_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP031011_s0",
+      "class": "building",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP031011_s0",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP031011_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP031011_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP031011_s0",
+      "class": "screen",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "difficult_DAP09935_2_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC052131_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC052131_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC044221_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC044221_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP09154_2_s0",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP09154_2_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP09154_2_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "difficult_DAP09752_2_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP020521_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP020521_s0",
+      "class": "screen",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP020571_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP020571_s0",
+      "class": "screen",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP09204_s0",
+      "class": "building",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP09204_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "difficult_DSC05071_副本_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC042371_s0",
+      "class": "building",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC042371_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC042371_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC042371_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC042371_s0",
+      "class": "stage backdrop",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP01393_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP09284_2_s0",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP09284_2_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP09284_2_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP09284_2_s0",
+      "class": "stage backdrop",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC051692_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC051692_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC051692_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC053351_s0",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC053351_s0",
+      "class": "floor",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC053351_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC053351_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP02446_s0",
+      "class": "building",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP02446_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "difficult_DAP05058_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP00524_3_s0",
+      "class": "building",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP00524_3_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "difficult_DSC04995_副本_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_DAP06896_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC047471_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP09524_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC016151_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC016151_s0",
+      "class": "screen",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "stage_led_mixed_DSC04530_副本_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP04580_s0",
+      "class": "building",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP04580_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "difficult_DSC051761_s0",
+      "class": "neutral",
+      "bucket": "difficult"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1494_s0",
+      "class": "building",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1494_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_058A1494_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP01226_2_s0",
+      "class": "building",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP01226_2_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP09424_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DSC04568_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC043431_s0",
+      "class": "building",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC043431_s0",
+      "class": "clothing",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC043431_s0",
+      "class": "neutral",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC043431_s0",
+      "class": "sky",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "outdoor_sky_DSC043431_s0",
+      "class": "stage backdrop",
+      "bucket": "outdoor_sky"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP05434_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
+      "sample_id": "stage_led_mixed_DAP09378_s0",
+      "class": "neutral",
+      "bucket": "stage_led_mixed"
+    },
+    {
       "sample_id": "smoke_tgt_small",
       "class": "building",
       "bucket": "smoke"
@@ -219,5 +1054,5 @@
       "bucket": "smoke"
     }
   ],
-  "held_out_mae": 3.83224
+  "held_out_mae": 4.20292
 }

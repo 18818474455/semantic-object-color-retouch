@@ -17,8 +17,18 @@
     "neutral"
   ],
   "matched_info": {
+    "neutral": {
+      "tgt_frac": 0.2586,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
     "building": {
       "tgt_frac": 0.2382,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "screen": {
+      "tgt_frac": 0.0098,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -37,18 +47,8 @@
       "ref_frac": 0.2077,
       "matched": false
     },
-    "neutral": {
-      "tgt_frac": 0.2586,
-      "ref_frac": 0.7911,
-      "matched": true
-    },
     "skin": {
       "tgt_frac": 0.0141,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "screen": {
-      "tgt_frac": 0.0098,
       "ref_frac": 0.0,
       "matched": false
     }

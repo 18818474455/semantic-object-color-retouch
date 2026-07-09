@@ -1,0 +1,46 @@
+{
+  "sample_id": "outdoor_sky_DSC052131_s0",
+  "bucket": "outdoor_sky",
+  "classes": {
+    "neutral": {
+      "frac": 0.6632,
+      "pixels": 463142,
+      "lab_affine": {
+        "L_scale": 1.1034,
+        "L_shift": -1.93,
+        "a_scale": 1.1285,
+        "a_shift": -0.95,
+        "b_scale": 1.2137,
+        "b_shift": 1.39
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.04751171141654793,
+        "temperature": 0.06950371761045089,
+        "saturation": 0.17110232836170125,
+        "vibrance": 0.1027
+      }
+    },
+    "sky": {
+      "frac": 0.2846,
+      "pixels": 198742,
+      "lab_affine": {
+        "L_scale": 1.2796,
+        "L_shift": -21.089,
+        "a_scale": 5.3967,
+        "a_shift": -13.048,
+        "b_scale": 1.401,
+        "b_shift": -10.705
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.652387819041585,
+        "temperature": -0.5352308626734052,
+        "saturation": 1.0,
+        "vibrance": 0.6
+      }
+    }
+  }
+}

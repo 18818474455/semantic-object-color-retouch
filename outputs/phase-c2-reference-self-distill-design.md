@@ -226,24 +226,31 @@ stage0_pipeline/
 | 阶段 | 交付物 | 验收 | 状态 |
 |------|--------|------|------|
 | **C2.0 设计冻结** | 本文档 + v3.1 addendum | 团队对齐 Smart Color 嫁接边界 | ✅ |
-| **C2.1 Bootstrap 导出** | `export_bootstrap_dataset.py` + manifest ≥40 样本 | 每条 suitable=true，mask 可加载 | ✅ 外置盘挂载后全量导出：**21 样本**（9 条 suitable=true，其余按内容匹配门槛正确拦截） |
-| **C2.2 Param 反拟合** | `fit_region_params.py` → 每样本 Lab-affine + chroma proxy | Python 渲染 repro ΔE < 3 vs pseudo | ✅ 全量跑通，**41 class-rows**（发现并修复退化样本 bug，见下） |
-| **C2.3 Per-class Head v1** | `train_per_class_head.py`（ridge baseline） | 20 图回归：≥90% 样本 ΔE 不劣于 baseline | ✅ **n=41，held-out MAE=3.83 < 预测均值基线 5.83**，规则回归学到跨场景可泛化信号 |
-| **C2.4 Smart Color 嫁接** | 训练脚本迁入 SCv2 仓，parity 报告 | C++ vs Python max ΔE < 1.0 | ⏸️ 可启动（数据量已达门槛） |
+| **C2.1 Bootstrap 导出** | `export_bootstrap_dataset.py` + manifest ≥40 样本 | 每条 suitable=true，mask 可加载 | ✅ 已扩样到 **97 样本**（20 图回归集 21 条 + Stage 0 100 张验证集补充 76 条，47 条 suitable=true） |
+| **C2.2 Param 反拟合** | `fit_region_params.py` → 每样本 Lab-affine + chroma proxy | Python 渲染 repro ΔE < 3 vs pseudo | ✅ 全量跑通，**208 class-rows**（修复了退化样本 bug，见下） |
+| **C2.3 Per-class Head v1** | `train_per_class_head.py`（ridge baseline） | 20 图回归：≥90% 样本 ΔE 不劣于 baseline | ✅ **n=208，held-out MAE=4.20 < 预测均值基线 6.31**，泛化比例与 n=41 时基本一致（误差降幅约 34%），信号稳定 |
+| **C2.4 Smart Color 嫁接** | 训练脚本迁入 SCv2 仓，parity 报告 | C++ vs Python max ΔE < 1.0 | ⏸️ 可启动（数据量已达门槛，且已验证跨样本量稳定） |
 | **C2.5 产品接口** | `color_reference_transfer --learned` 开关 | CLI/Web Demo 可切换 rule / learned | ⏸️ 未开始 |
 
-**2026-07-09 全量结果**（外置盘 `/Volumes/未命名/大模型/原图1/` 已挂载）：
+**2026-07-09 扩样结果**（外置盘 `/Volumes/未命名/大模型/原图1/` 已挂载，C2.1 新增读取 Stage 0 `outputs/stage0/image_metrics.jsonl` 里已按 bucket 分类的 100 张验证图，每类复用 `FULL_CASES` 里固定的同 bucket 参考图，跳过已用过的目标图/参考图本身）：
 
 ```bash
 cd stage0_pipeline
-../.venv-m2/bin/python scripts_c2/export_bootstrap_dataset.py   # 21 样本，9 suitable
-../.venv-m2/bin/python scripts_c2/fit_region_params.py          # 41 class-rows
-../.venv-m2/bin/python scripts_c2/train_per_class_head.py       # held-out MAE=3.83
+../.venv-m2/bin/python scripts_c2/export_bootstrap_dataset.py   # 97 样本（21 回归集 + 76 Stage0 补充），47 suitable
+../.venv-m2/bin/python scripts_c2/fit_region_params.py          # 208 class-rows
+../.venv-m2/bin/python scripts_c2/train_per_class_head.py       # held-out MAE=4.20 (baseline 6.31)
 ```
 
-**过程中发现并修复的 bug**（`fit_region_params.py`）：`person_event` 桶一张人物照被误检出一块几乎纯色的「天空」区域（原图 mask 内 std L/a/b = 0.15/0.10/0.26），最小二乘 `scale = std(edited)/std(orig)` 除以近零方差直接爆炸到 68 倍、shift=-6719——与项目历史上「LED墙误判天空/串色」是同一类假天空检测问题，只是从渲染预览端复现到了训练数据管线端。第一版修复（std 低于阈值就整类丢弃）又太激进：真实晴空本身就是低方差区域（std 1.9–4.9 很常见），会连带丢掉有效样本。最终修复：std 低于 `MIN_STD=0.6`（远低于任何观测到的真实晴空样本）时，`scale` 退化为 1.0、只用均值差算 `shift`（对近乎纯色区域，"缩放" 本就没有良定义的意义，均值差才是唯一可靠的信号），`SCALE_CLAMP=(0.15, 6.0)` 兜底处理中间态噪声。修复后 41 条样本全部保留，held-out MAE 从（错误版本的）105 降到 3.83。
+| 样本量 | held-out MAE | 预测均值基线 | 降幅 |
+|---|---|---|---|
+| n=41（20图回归集） | 3.83 | 5.83 | 34.3% |
+| n=208（+Stage0 100图） | 4.20 | 6.31 | 33.4% |
 
-n_rows ≥ 8 已触发训练脚本的留出集评估分支；后续继续扩样（比如把 100 张验证集也导进来）到 ≥100 后，建议按设计升级为 torch MLP（`.venv-m2` 已含 torch）。
+两次样本量下降幅几乎一致，说明规则教师的信号是稳定、可泛化的，不是小样本运气；MAE 绝对值略升是因为新增的 Stage 0 图片场景更杂（bucket 分类是启发式打分，不如手选的回归集干净）。
+
+**过程中发现并修复的 bug**（`fit_region_params.py`）：`person_event` 桶一张人物照被误检出一块几乎纯色的「天空」区域（原图 mask 内 std L/a/b = 0.15/0.10/0.26），最小二乘 `scale = std(edited)/std(orig)` 除以近零方差直接爆炸到 68 倍、shift=-6719——与项目历史上「LED墙误判天空/串色」是同一类假天空检测问题，只是从渲染预览端复现到了训练数据管线端。第一版修复（std 低于阈值就整类丢弃）又太激进：真实晴空本身就是低方差区域（std 1.9–4.9 很常见），会连带丢掉有效样本。最终修复：std 低于 `MIN_STD=0.6`（远低于任何观测到的真实晴空样本）时，`scale` 退化为 1.0、只用均值差算 `shift`（对近乎纯色区域，"缩放" 本就没有良定义的意义，均值差才是唯一可靠的信号），`SCALE_CLAMP=(0.15, 6.0)` 兜底处理中间态噪声。扩样到 208 条后复查，数值全部落在钳制范围内，没有再出现类似爆炸。
+
+n_rows 已远超 ridge baseline 的最低门槛，下一步可以考虑升级为 torch MLP（`.venv-m2` 已含 torch）；也可以先直接进入 C2.4 Smart Color v2 嫁接。
 
 **C1 并行**：API易 GPT 双图冒烟通过后，仅对 C2.3 残差最大的 10% 类补 GPT label，写入 `dataset/c2/gpt_residual/`。
 
@@ -286,12 +293,11 @@ Phase B ✅  →  Phase A 产品化 ✅
 
 ## 10. 立即下一步（工程）
 
-1. ~~实现 `scripts_c2/export_bootstrap_dataset.py`~~ ✅ 已实现并跑通（21 条样本，外置盘全量）
-2. ~~实现 `scripts_c2/fit_region_params.py`（C2.2）~~ ✅ 已实现并跑通（41 条 class-row，修复了假天空检测导致的退化 scale 数值 bug）
-3. ~~实现 `scripts_c2/train_per_class_head.py`（C2.3 ridge baseline）~~ ✅ 已实现并跑通，held-out MAE=3.83 < 基线 5.83
-4. **下一步**：把 Stage 0 的 100 张验证集也导入 C2.1（当前只用了 20 图回归集），把 n_rows 从 41 提升到 ≥100，为升级 torch MLP 做准备
-5. 在 Chroma 仓开 issue/分支：`feature/regional-smart-color-head`（M3.7，暂未开始）——数据门槛已达标，可以启动
-6. C1 继续 API易 双图测试，结果只写入 `gpt_residual/`，不阻塞 C2.1
+1. ~~实现 `scripts_c2/export_bootstrap_dataset.py`~~ ✅ 已实现并跑通（97 条样本：20 图回归集 + Stage 0 100 张验证集）
+2. ~~实现 `scripts_c2/fit_region_params.py`（C2.2）~~ ✅ 已实现并跑通（208 条 class-row，修复了假天空检测导致的退化 scale 数值 bug）
+3. ~~实现 `scripts_c2/train_per_class_head.py`（C2.3 ridge baseline）~~ ✅ 已实现并跑通，n=208 held-out MAE=4.20 < 基线 6.31，与 n=41 时的泛化比例一致
+4. **下一步（二选一/都做）**：a) 升级 `train_per_class_head.py` 从 ridge 到轻量 torch MLP；b) 直接启动 C2.4，在 Chroma 仓开 `feature/regional-smart-color-head` 分支做 Smart Color v2 嫁接
+5. C1 继续 API易 双图测试，结果只写入 `gpt_residual/`，不阻塞 C2.1
 
 ---
 

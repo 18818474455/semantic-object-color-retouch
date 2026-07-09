@@ -1,0 +1,26 @@
+{
+  "sample_id": "outdoor_sky_DAP06896_s0",
+  "bucket": "outdoor_sky",
+  "classes": {
+    "neutral": {
+      "frac": 0.9561,
+      "pixels": 667726,
+      "lab_affine": {
+        "L_scale": 1.1657,
+        "L_shift": -8.742,
+        "a_scale": 1.1401,
+        "a_shift": -3.452,
+        "b_scale": 1.0307,
+        "b_shift": -1.157
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": -0.17259139714006758,
+        "temperature": -0.057835997434898624,
+        "saturation": 0.0853977726218309,
+        "vibrance": 0.0512
+      }
+    }
+  }
+}

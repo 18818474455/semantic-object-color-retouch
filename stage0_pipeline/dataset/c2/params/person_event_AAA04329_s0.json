@@ -1,0 +1,66 @@
+{
+  "sample_id": "person_event_AAA04329_s0",
+  "bucket": "person_event",
+  "classes": {
+    "building": {
+      "frac": 0.3862,
+      "pixels": 269725,
+      "lab_affine": {
+        "L_scale": 1.0878,
+        "L_shift": -8.6,
+        "a_scale": 1.3314,
+        "a_shift": 2.426,
+        "b_scale": 4.9829,
+        "b_shift": -20.299
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.12128284841194008,
+        "temperature": -1.0,
+        "saturation": 1.0,
+        "vibrance": 0.6
+      }
+    },
+    "neutral": {
+      "frac": 0.4996,
+      "pixels": 348894,
+      "lab_affine": {
+        "L_scale": 1.1658,
+        "L_shift": -12.234,
+        "a_scale": 1.2105,
+        "a_shift": 0.604,
+        "b_scale": 1.7375,
+        "b_shift": -4.116
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.030203894001594,
+        "temperature": -0.20580197401918765,
+        "saturation": 0.473999437103674,
+        "vibrance": 0.2844
+      }
+    },
+    "skin": {
+      "frac": 0.0876,
+      "pixels": 61150,
+      "lab_affine": {
+        "L_scale": 1.2402,
+        "L_shift": -16.308,
+        "a_scale": 0.6976,
+        "a_shift": 2.351,
+        "b_scale": 0.9217,
+        "b_shift": -5.334
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.11753290284826257,
+        "temperature": -0.26669161645194384,
+        "saturation": -0.19038319233437329,
+        "vibrance": -0.1142
+      }
+    }
+  }
+}

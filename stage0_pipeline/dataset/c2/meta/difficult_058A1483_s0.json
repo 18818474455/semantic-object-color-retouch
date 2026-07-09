@@ -1,0 +1,42 @@
+{
+  "sample_id": "difficult_058A1483_s0",
+  "bucket": "difficult",
+  "tag": "_s0",
+  "reference_path": "/Volumes/未命名/大模型/原图1/DSC04902.JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/058A1483.JPG",
+  "pseudo_target_path": "dataset/c2/edited/difficult_058A1483_s0_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/difficult_058A1483_s0.json",
+  "compat": {
+    "jaccard": 0.333,
+    "explainable_tgt_frac": 0,
+    "shared_classes": [],
+    "suitable": false
+  },
+  "matched_classes": [
+    "neutral"
+  ],
+  "matched_info": {
+    "neutral": {
+      "tgt_frac": 0.9634,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "screen": {
+      "tgt_frac": 0.0024,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "wall": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "skin": {
+      "tgt_frac": 0.0342,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}

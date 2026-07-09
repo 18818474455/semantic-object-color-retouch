@@ -1,0 +1,97 @@
+{
+  "sample_id": "outdoor_sky_058A1494_s0",
+  "bucket": "outdoor_sky",
+  "tag": "_s0",
+  "reference_path": "/Volumes/未命名/大模型/原图1/DAP02456(1).JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/058A1494.JPG",
+  "pseudo_target_path": "dataset/c2/edited/outdoor_sky_058A1494_s0_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/outdoor_sky_058A1494_s0.json",
+  "compat": {
+    "jaccard": 0.25,
+    "explainable_tgt_frac": 0.871,
+    "shared_classes": [
+      "building",
+      "sky"
+    ],
+    "suitable": true
+  },
+  "matched_classes": [
+    "building",
+    "neutral",
+    "sky"
+  ],
+  "matched_info": {
+    "neutral": {
+      "tgt_frac": 0.0777,
+      "ref_frac": 0.0585,
+      "matched": true
+    },
+    "building": {
+      "tgt_frac": 0.4801,
+      "ref_frac": 0.8945,
+      "matched": true
+    },
+    "screen": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.5433,
+      "matched": false
+    },
+    "wall stage backdrop": {
+      "tgt_frac": 0.1193,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.3905,
+      "ref_frac": 0.0987,
+      "matched": true
+    },
+    "flag": {
+      "tgt_frac": 0.0035,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "clothing": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0324,
+      "matched": false
+    },
+    "skin": {
+      "tgt_frac": 0.0002,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "clothing skin": {
+      "tgt_frac": 0.036,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.175,
+      "matched": false
+    },
+    "tree": {
+      "tgt_frac": 0.0467,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.0165,
+      "matched": false
+    },
+    "water": {
+      "tgt_frac": 0.01,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "led screen": {
+      "tgt_frac": 0.1681,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}

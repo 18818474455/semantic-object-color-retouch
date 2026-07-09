@@ -1,0 +1,26 @@
+{
+  "sample_id": "difficult_DSC05341_s0",
+  "bucket": "difficult",
+  "classes": {
+    "neutral": {
+      "frac": 0.9476,
+      "pixels": 661762,
+      "lab_affine": {
+        "L_scale": 1.0739,
+        "L_shift": -2.314,
+        "a_scale": 1.0604,
+        "a_shift": 0.216,
+        "b_scale": 1.1179,
+        "b_shift": 0.058
+      },
+      "chroma_proxy": {
+        "_approx": true,
+        "_note": "heuristic Lab->slider projection, not validated against real Chroma renderer",
+        "tint": 0.010787869038097942,
+        "temperature": 0.00291342275329054,
+        "saturation": 0.08916918005610164,
+        "vibrance": 0.0535
+      }
+    }
+  }
+}

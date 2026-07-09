@@ -1,0 +1,79 @@
+{
+  "sample_id": "outdoor_sky_058A1889_s0",
+  "bucket": "outdoor_sky",
+  "tag": "_s0",
+  "reference_path": "/Volumes/未命名/大模型/原图1/DAP02456(1).JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/058A1889.JPG",
+  "pseudo_target_path": "dataset/c2/edited/outdoor_sky_058A1889_s0_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/outdoor_sky_058A1889_s0.json",
+  "compat": {
+    "jaccard": 0.444,
+    "explainable_tgt_frac": 0.709,
+    "shared_classes": [
+      "clothing",
+      "floor",
+      "sky"
+    ],
+    "suitable": true
+  },
+  "matched_classes": [
+    "clothing",
+    "floor",
+    "neutral",
+    "sky"
+  ],
+  "matched_info": {
+    "neutral": {
+      "tgt_frac": 0.2476,
+      "ref_frac": 0.0585,
+      "matched": true
+    },
+    "screen": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.5433,
+      "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.8945,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.3804,
+      "ref_frac": 0.0987,
+      "matched": true
+    },
+    "clothing": {
+      "tgt_frac": 0.0867,
+      "ref_frac": 0.0324,
+      "matched": true
+    },
+    "skin": {
+      "tgt_frac": 0.0124,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "stage backdrop": {
+      "tgt_frac": 0.0,
+      "ref_frac": 0.175,
+      "matched": false
+    },
+    "tree": {
+      "tgt_frac": 0.0246,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "floor": {
+      "tgt_frac": 0.2418,
+      "ref_frac": 0.0165,
+      "matched": true
+    },
+    "wall": {
+      "tgt_frac": 0.0067,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}

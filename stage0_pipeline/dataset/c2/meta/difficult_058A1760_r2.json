@@ -19,8 +19,13 @@
     "neutral"
   ],
   "matched_info": {
-    "grass": {
-      "tgt_frac": 0.012,
+    "neutral": {
+      "tgt_frac": 0.4829,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "sky": {
+      "tgt_frac": 0.307,
       "ref_frac": 0.0,
       "matched": false
     },
@@ -28,11 +33,6 @@
       "tgt_frac": 0.0016,
       "ref_frac": 0.0,
       "matched": false
-    },
-    "neutral": {
-      "tgt_frac": 0.4829,
-      "ref_frac": 0.7911,
-      "matched": true
     },
     "skin": {
       "tgt_frac": 0.016,
@@ -44,6 +44,11 @@
       "ref_frac": 0.0,
       "matched": false
     },
+    "grass": {
+      "tgt_frac": 0.012,
+      "ref_frac": 0.0,
+      "matched": false
+    },
     "floor": {
       "tgt_frac": 0.1377,
       "ref_frac": 0.0,
@@ -52,11 +57,6 @@
     "wall": {
       "tgt_frac": 0.0414,
       "ref_frac": 0.2077,
-      "matched": false
-    },
-    "sky": {
-      "tgt_frac": 0.307,
-      "ref_frac": 0.0,
       "matched": false
     }
   },

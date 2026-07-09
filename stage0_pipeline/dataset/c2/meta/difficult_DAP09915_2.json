@@ -17,6 +17,16 @@
     "neutral"
   ],
   "matched_info": {
+    "neutral": {
+      "tgt_frac": 0.2307,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "screen": {
+      "tgt_frac": 0.4859,
+      "ref_frac": 0.0,
+      "matched": false
+    },
     "floor": {
       "tgt_frac": 0.2395,
       "ref_frac": 0.0,
@@ -36,16 +46,6 @@
       "tgt_frac": 0.0022,
       "ref_frac": 0.0,
       "matched": false
-    },
-    "screen": {
-      "tgt_frac": 0.4859,
-      "ref_frac": 0.0,
-      "matched": false
-    },
-    "neutral": {
-      "tgt_frac": 0.2307,
-      "ref_frac": 0.7911,
-      "matched": true
     }
   },
   "split": "train"

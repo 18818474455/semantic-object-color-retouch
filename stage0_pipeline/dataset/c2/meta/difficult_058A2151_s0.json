@@ -1,0 +1,59 @@
+{
+  "sample_id": "difficult_058A2151_s0",
+  "bucket": "difficult",
+  "tag": "_s0",
+  "reference_path": "/Volumes/未命名/大模型/原图1/DSC04902.JPG",
+  "target_path": "/Volumes/未命名/大模型/原图1/058A2151.JPG",
+  "pseudo_target_path": "dataset/c2/edited/difficult_058A2151_s0_medium.jpg",
+  "strength": "medium",
+  "style_profile_path": "dataset/c2/profiles/difficult_058A2151_s0.json",
+  "compat": {
+    "jaccard": 0.5,
+    "explainable_tgt_frac": 0.137,
+    "shared_classes": [
+      "wall"
+    ],
+    "suitable": false
+  },
+  "matched_classes": [
+    "neutral"
+  ],
+  "matched_info": {
+    "wall": {
+      "tgt_frac": 0.1366,
+      "ref_frac": 0.2077,
+      "matched": false
+    },
+    "neutral": {
+      "tgt_frac": 0.5109,
+      "ref_frac": 0.7911,
+      "matched": true
+    },
+    "screen": {
+      "tgt_frac": 0.0027,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "building": {
+      "tgt_frac": 0.0046,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "sky": {
+      "tgt_frac": 0.2783,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "spotlight": {
+      "tgt_frac": 0.0002,
+      "ref_frac": 0.0,
+      "matched": false
+    },
+    "skin": {
+      "tgt_frac": 0.0666,
+      "ref_frac": 0.0,
+      "matched": false
+    }
+  },
+  "split": "train"
+}
