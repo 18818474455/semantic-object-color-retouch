@@ -76,6 +76,28 @@ outputs/<id>/
 
 自动指标只是异常门禁/参考证据，**不能代替下面的人工评分**——`review.json` 里的字段要由人对着 `outputs/<id>/review_sheet.jpg`（reference/target/legacy_v0/coherence_v1 四联对比图，也可以分开看同目录下的4张单图）实际打分后回填。
 
+## 打分网页（推荐用这个，不用手改JSON）
+
+```bash
+cd stage0_pipeline/eval/fg_bg_coord_v1
+../../../.venv-m2/bin/python review_app.py
+# 打开 http://127.0.0.1:5058
+```
+
+一次只跑纯Python/Flask，不加载任何模型，秒开。功能：
+
+- 首页自动跳到第一个还没打分的样本
+- 每页显示 `review_sheet.jpg`（4联对比图）+ 风险标签 + 内容匹配gate状态 + 自动指标flag提示
+- 7项1~5分打分（点数字按钮）、3项严重问题勾选、更喜欢哪一版单选、备注
+- "保存并下一组/上一组"、"仅保存"三个按钮，顶部有已打分/总数进度条
+- `/summary` 路由直接看聚合结果（等价于命令行的`--score-summary`）
+
+打完全部30组后，可以继续用网页的`/summary`，也可以用命令行：
+
+```bash
+.venv-m2/bin/python stage0_pipeline/scripts_m2/eval_harmony.py --score-summary --out-root stage0_pipeline/eval/fg_bg_coord_v1/outputs
+```
+
 ## 如何汇总人工评分（评分完成后）
 
 ```bash

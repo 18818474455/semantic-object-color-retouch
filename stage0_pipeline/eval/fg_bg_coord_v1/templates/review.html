@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>FG-BG-Coord-v1 评审 — {{ sample.id }}</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    margin: 0; background: #f4f5f7; color: #1d1f23;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: #1d1f23; color: #fff; padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  header .title { font-size: 15px; font-weight: 600; }
+  header .meta { font-size: 12px; color: #b8bcc4; }
+  .progress-bar { background: #33363d; border-radius: 6px; height: 8px; width: 220px; overflow: hidden; }
+  .progress-fill { background: #4caf7d; height: 100%; }
+  main { max-width: 1200px; margin: 0 auto; padding: 20px 24px 80px; }
+  .card { background: #fff; border-radius: 10px; padding: 18px 20px; margin-bottom: 16px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .review-img { width: 100%; border-radius: 6px; display: block; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+  .tag { background: #eef0f3; color: #555; font-size: 12px; padding: 3px 8px; border-radius: 12px; }
+  .tag.flag { background: #fdecea; color: #b3261e; }
+  .tag.suitable-true { background: #e6f4ea; color: #1e7e34; }
+  .tag.suitable-false { background: #fff4e5; color: #a15c00; }
+  fieldset { border: none; padding: 0; margin: 0 0 18px; }
+  legend { font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+  .score-row { display: flex; align-items: center; justify-content: space-between;
+               padding: 8px 0; border-bottom: 1px solid #f0f1f3; gap: 12px; }
+  .score-row:last-child { border-bottom: none; }
+  .score-label { font-size: 13px; flex: 1; }
+  .score-opts { display: flex; gap: 6px; }
+  .score-opts label { display: inline-flex; align-items: center; justify-content: center;
+                       width: 30px; height: 30px; border-radius: 6px; background: #eef0f3;
+                       cursor: pointer; font-size: 13px; user-select: none; }
+  .score-opts input { display: none; }
+  .score-opts input:checked + span { color: #fff; }
+  .score-opts label:has(input:checked) { background: #2f6fed; color: #fff; }
+  .severe-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; }
+  .preferred-opts { display: flex; gap: 10px; }
+  .preferred-opts label { display: flex; align-items: center; gap: 6px; padding: 8px 14px;
+                           border-radius: 8px; background: #eef0f3; cursor: pointer; font-size: 13px; }
+  .preferred-opts label:has(input:checked) { background: #2f6fed; color: #fff; }
+  textarea { width: 100%; min-height: 60px; border-radius: 6px; border: 1px solid #dcdfe4;
+             padding: 8px; font-size: 13px; font-family: inherit; }
+  .actions { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  button { border: none; border-radius: 8px; padding: 10px 18px; font-size: 14px; cursor: pointer; }
+  .btn-primary { background: #2f6fed; color: #fff; }
+  .btn-secondary { background: #eef0f3; color: #333; }
+  .btn-nav { background: #fff; color: #333; border: 1px solid #dcdfe4; }
+  a.navlink { color: inherit; text-decoration: none; }
+  .thumbs { display: flex; gap: 10px; margin-top: 10px; }
+  .thumbs img { width: 100%; border-radius: 6px; border: 1px solid #eee; }
+  .thumbs .col { flex: 1; text-align: center; font-size: 12px; color: #777; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="title">{{ sample.id }}　<span style="color:#8fa1c7">[{{ sample.bucket }}]</span></div>
+    <div class="meta">第 {{ idx + 1 }} / {{ total }} 组</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="meta">已打分 {{ scored_count }} / {{ total }}</div>
+    <div class="progress-bar"><div class="progress-fill" style="width: {{ (scored_count / total * 100) if total else 0 }}%;"></div></div>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <div class="tags">
+      {% for t in sample.get("risk_tags", []) %}<span class="tag">{{ t }}</span>{% endfor %}
+      {% if compat is not none %}
+        <span class="tag suitable-{{ compat.suitable | lower }}">
+          {{ "内容匹配通过" if compat.suitable else "内容匹配未通过(gate拦截)" }}
+        </span>
+      {% endif %}
+      {% for f in flags %}<span class="tag flag">{{ f }}</span>{% endfor %}
+    </div>
+    <img class="review-img" src="{{ url_for('serve_image', sample_id=sample.id, filename='review_sheet.jpg') }}"
+         alt="reference / target / legacy_v0 / coherence_v1"
+         onerror="this.style.display='none'; document.getElementById('fallback-thumbs').style.display='flex';">
+    <div class="thumbs" id="fallback-thumbs" style="display:none;">
+      <div class="col"><img src="{{ url_for('serve_image', sample_id=sample.id, filename='reference.jpg') }}">reference</div>
+      <div class="col"><img src="{{ url_for('serve_image', sample_id=sample.id, filename='target.jpg') }}">target</div>
+      <div class="col"><img src="{{ url_for('serve_image', sample_id=sample.id, filename='legacy_v0.jpg') }}">legacy_v0</div>
+      <div class="col"><img src="{{ url_for('serve_image', sample_id=sample.id, filename='coherence_v1.jpg') }}">coherence_v1</div>
+    </div>
+  </div>
+
+  <form method="post" action="{{ url_for('save_review', sample_id=sample.id) }}">
+    <div class="card">
+      <fieldset>
+        <legend>1~5 分评分（对着上面 coherence_v1 那一版打分，legacy_v0 只作对照）</legend>
+        {% for key, label in score_fields %}
+        <div class="score-row">
+          <div class="score-label">{{ label }}</div>
+          <div class="score-opts">
+            {% for v in [1,2,3,4,5] %}
+            <label>
+              <input type="radio" name="score_{{ key }}" value="{{ v }}"
+                     {% if review.scores.get(key) == v %}checked{% endif %}>
+              <span>{{ v }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </fieldset>
+
+      <fieldset>
+        <legend>严重问题（任意勾选即视为不可接受）</legend>
+        {% for key, label in severe_fields %}
+        <div class="severe-row">
+          <label style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" name="severe_{{ key }}"
+                   {% if review.severe.get(key) %}checked{% endif %}>
+            {{ label }}
+          </label>
+        </div>
+        {% endfor %}
+      </fieldset>
+
+      <fieldset>
+        <legend>更喜欢哪一版</legend>
+        <div class="preferred-opts">
+          <label><input type="radio" name="preferred" value="legacy_v0" {% if review.preferred == 'legacy_v0' %}checked{% endif %}> legacy_v0</label>
+          <label><input type="radio" name="preferred" value="coherence_v1" {% if review.preferred == 'coherence_v1' %}checked{% endif %}> coherence_v1</label>
+          <label><input type="radio" name="preferred" value="tie" {% if review.preferred == 'tie' %}checked{% endif %}> tie（差不多）</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>备注（可选）</legend>
+        <textarea name="notes">{{ review.notes or "" }}</textarea>
+      </fieldset>
+
+      <div class="actions">
+        {% if prev_id %}<button class="btn-nav" type="submit" name="action" value="prev">← 保存并上一组</button>{% endif %}
+        <button class="btn-primary" type="submit" name="action" value="next">保存并下一组 →</button>
+        <button class="btn-secondary" type="submit" name="action" value="stay">仅保存</button>
+      </div>
+    </div>
+  </form>
+</main>
+
+</body>
+</html>
