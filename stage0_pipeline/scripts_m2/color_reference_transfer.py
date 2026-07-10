@@ -34,7 +34,7 @@ import common
 import face_detect
 from semantic_color_transfer import _percentile_stats, _vibrance_contrast_sharpen, SKIN_HUE_LOCK
 from region_provider_v2 import detect_classes
-from coherence_controller import compute_global_mood, apply_global_base
+from coherence_controller import compute_global_mood, apply_global_base, edge_aware_weights
 
 MIN_FRAC = 0.01
 
@@ -305,10 +305,45 @@ def _class_outlier_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> np.ndarray
     return np.clip(1.0 - (z - Z_FULL) / (Z_ZERO - Z_FULL), 0.0, 1.0).astype(np.float32)
 
 
+def _region_texture_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> float:
+    """C3-3: scalar confidence in [0,1] from edge/texture density, added
+    alongside C3-2's pure Lab-variance homogeneity term.
+
+    Rationale (仿色一致性升级方案 §三·阶段四 lists "纹理强度、边缘密度" as
+    additional low-cost material-reliability signals beyond raw Lab
+    mean/std): two different materials can average out to a plausible
+    single Lab mean/std pair (mid-tone ceiling + mid-tone truss can share a
+    mean without either looking anything alike), but the boundary between
+    them almost always shows up as a spike in local gradient magnitude that
+    a pure statistical-moment check can miss. Scene-relative (normalized by
+    the WHOLE photo's own average edge density) rather than an absolute
+    threshold, so it doesn't misfire on an unusually sharp or unusually soft
+    photo overall.
+    """
+    t_sel = tm > 0.5
+    if t_sel.sum() < 20:
+        return 1.0
+    import cv2
+    L = tgt_lab[..., 0].astype(np.float32)
+    gx = cv2.Sobel(L, cv2.CV_32F, 1, 0, ksize=3)
+    gy = cv2.Sobel(L, cv2.CV_32F, 0, 1, ksize=3)
+    edge_mag = np.hypot(gx, gy)
+    region_edge = float(edge_mag[t_sel].mean())
+    whole_edge = float(edge_mag.mean()) + 1e-3
+    ratio = region_edge / whole_edge
+    # A genuinely uniform material's own edge density sits AT OR BELOW the
+    # photo's overall average (which is inflated by real object boundaries
+    # elsewhere in frame); a region whose average is itself well above 1x
+    # the whole-photo average is internally busy/mixed.
+    FULL, ZERO = 1.0, 2.5
+    return float(np.clip(1.0 - (ratio - FULL) / (ZERO - FULL), 0.0, 1.0))
+
+
 def _region_homogeneity_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> float:
-    """C3-2: scalar confidence in [0,1] — how visually uniform is this region
-    ON ITS OWN, independent of how well it happens to line up with the
-    reference? A region whose own pixels vary wildly in Lab (an open-vocab
+    """C3-2/C3-3: scalar confidence in [0,1] — how visually uniform is this
+    region ON ITS OWN, independent of how well it happens to line up with
+    the reference? A region whose own pixels vary wildly in Lab, or whose
+    edge density is well above the photo's own average (an open-vocab
     "building" mask that swept up a bright wall AND a dark support beam) is
     itself evidence the label lumped together different materials, and
     shouldn't be trusted with a single mean/std statistical match no matter
@@ -333,7 +368,9 @@ def _region_homogeneity_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> float
     # sits comfortably under 10; a region straddling two different
     # materials routinely exceeds 20.
     FULL, ZERO = 10.0, 22.0
-    return float(np.clip(1.0 - (spread - FULL) / (ZERO - FULL), 0.0, 1.0))
+    variance_conf = float(np.clip(1.0 - (spread - FULL) / (ZERO - FULL), 0.0, 1.0))
+    texture_conf = _region_texture_confidence(tgt_lab, tm)
+    return variance_conf * texture_conf
 
 
 def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> dict:
@@ -485,6 +522,13 @@ def _render_coherence_from_analysis(analysis: dict, strength: str | dict = "medi
     target means the residual only has to cover what the global step didn't
     already close, instead of re-deriving the reference's absolute stats
     from scratch and double-counting the mood shift.
+
+    C3-3: blends each class's residual using `coherence_controller.
+    edge_aware_weights` (guided by the target's own L channel) instead of
+    `analyze_target`'s Gaussian-feathered `weights` — the blend boundary now
+    snaps toward the photo's own real edges rather than a fixed-radius
+    blur, still recomputed here (not cached in `analyze_target`) since it's
+    cheap and is itself part of the render, not the expensive segmentation.
     """
     preset = STRENGTH_PRESETS[strength] if isinstance(strength, str) else strength
     tgt_lab = analysis["tgt_lab"]
@@ -492,6 +536,10 @@ def _render_coherence_from_analysis(analysis: dict, strength: str | dict = "medi
 
     mood = compute_global_mood(profile, tgt_lab, analysis["compat"], preset.get("global_base", 0.0))
     base_lab = apply_global_base(tgt_lab, mood, analysis["tgt_cls"].get("skin"))
+
+    class_masks = {c: analysis["tgt_cls"].get(c, np.zeros(tgt_lab.shape[:2], dtype=np.float32))
+                  for c in analysis["class_names"]}
+    weights = edge_aware_weights(tgt_lab[..., 0], class_masks)
 
     scene_confidence = float(np.clip(analysis["compat"].get("explainable_tgt_frac", 0.0), 0.0, 1.0))
     acc_delta = np.zeros_like(base_lab)
@@ -536,7 +584,7 @@ def _render_coherence_from_analysis(analysis: dict, strength: str | dict = "medi
             # shouldn't get the reference's cast forced onto it.
             region_strength = region_strength * (max(0.0, 1.0 - (info["tgt_frac"] - 0.5) / 0.5) ** 2)
 
-        w = analysis["weights"][c]
+        w = weights[c]
         acc_delta += delta * (region_strength * w)[..., None]
 
     out_lab = base_lab + acc_delta

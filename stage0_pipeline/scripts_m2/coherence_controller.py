@@ -1,21 +1,26 @@
-"""C3-1: global mood base — the shared, low-order "same light, same photo"
-correction that runs BEFORE any per-region residual grading (C3-2+ will add
-the residual layer on top of this).
+"""Shared "coherence pipeline" architecture pieces from 仿色一致性升级方案:
 
-Deliberately restricted to a bounded whole-image ADDITIVE Lab shift, not the
-discredited global Reinhard mean/std RESCALE (`scripts/color_transfer.py`)
-that was already proven to bleed a reference's strong colors across
-unrelated content. A capped additive shift cannot amplify variance or smear
-a strong colored light source over the whole photo — it can only nudge the
-whole image's average brightness/color a bounded amount toward the
-reference's average, which is exactly the "same white balance and exposure"
-effect a real photographer would apply before touching any specific region.
+- C3-1 (`compute_global_mood`/`apply_global_base`): the shared, low-order
+  "same light, same photo" correction that runs BEFORE any per-region
+  residual grading. Deliberately restricted to a bounded whole-image
+  ADDITIVE Lab shift, not the discredited global Reinhard mean/std RESCALE
+  (`scripts/color_transfer.py`) already proven to bleed a reference's
+  strong colors across unrelated content. A capped additive shift cannot
+  amplify variance or smear a strong colored light source over the whole
+  photo — it can only nudge the whole image's average brightness/color a
+  bounded amount toward the reference's average, the "same white balance
+  and exposure" effect a real photographer would apply before touching any
+  specific region.
+- C3-3 (`edge_aware_weights`/`guided_filter`): replaces
+  `common.feather_mask`'s content-agnostic fixed-radius Gaussian blur with
+  a guided filter for the coherence pipeline's per-class blend weights, so
+  a mask boundary "snaps" toward the target photo's own real edges (a
+  treeline, a building silhouette) instead of smearing a fixed number of
+  pixels across it regardless of what's actually there.
 
-This is intentionally the ENTIRE C3-1 deliverable: no per-region residual
-logic lives here yet. `render_from_analysis(..., pipeline="coherence")` in
-`color_reference_transfer.py` currently applies ONLY this global base (see
-outputs/phase-c3-1-global-mood-base.md) so the effect can be visually judged
-in isolation before C3-2 adds trust-controlled regional residuals on top.
+`color_reference_transfer.py`'s `_render_coherence_from_analysis` composes
+these; region-residual trust math (C3-2) lives there, not here, since it
+needs per-class reference stats this module has no reason to know about.
 """
 from __future__ import annotations
 
@@ -97,3 +102,56 @@ def apply_global_base(tgt_lab: np.ndarray, mood: dict,
     out[..., 1] = out[..., 1] + mood["delta_a"] * factor
     out[..., 2] = out[..., 2] + mood["delta_b"] * factor
     return out
+
+
+# ------------------------------------------------------------- C3-3: edge-aware blend weights
+
+GUIDE_RADIUS = 8
+GUIDE_EPS = 1e-2
+
+
+def _box_filter(img: np.ndarray, radius: int) -> np.ndarray:
+    """The O(1)-per-pixel box-filter primitive a guided filter is built
+    from (He, Sun & Tang 2013). cv2 imported lazily to match the project's
+    existing lazy-cv2-import convention (see scripts/face_detect.py)."""
+    import cv2
+    k = 2 * radius + 1
+    return cv2.boxFilter(img.astype(np.float32), -1, (k, k), borderType=cv2.BORDER_REFLECT)
+
+
+def guided_filter(guide: np.ndarray, src: np.ndarray, radius: int = GUIDE_RADIUS,
+                  eps: float = GUIDE_EPS) -> np.ndarray:
+    """Single-channel guided filter: edge-aware smoothing of `src`, guided by
+    `guide` (both float, same H×W shape, `guide` normalized roughly to
+    [0,1]). Where `guide` is locally flat, this behaves like a plain box
+    blur; where `guide` has a sharp edge, the filtered `src` snaps toward
+    following that edge instead of smearing across it — exactly the "羽化
+    残差图，用原图亮度作引导" behavior 仿色一致性升级方案 §三·阶段五 asks
+    for, using the cheap linear-time box-filter formulation rather than
+    Matting Laplacian.
+    """
+    mean_g = _box_filter(guide, radius)
+    mean_s = _box_filter(src, radius)
+    mean_gs = _box_filter(guide * src, radius)
+    cov_gs = mean_gs - mean_g * mean_s
+    var_g = _box_filter(guide * guide, radius) - mean_g * mean_g
+    a = cov_gs / (var_g + eps)
+    b = mean_s - a * mean_g
+    mean_a = _box_filter(a, radius)
+    mean_b = _box_filter(b, radius)
+    return mean_a * guide + mean_b
+
+
+def edge_aware_weights(guide_l: np.ndarray, class_masks: dict[str, np.ndarray],
+                       radius: int = GUIDE_RADIUS, eps: float = GUIDE_EPS) -> dict[str, np.ndarray]:
+    """Coherence-pipeline replacement for analyze_target's Gaussian-feathered
+    per-class `weights`: guided-filter each raw soft class mask using the
+    target's own L channel (`guide_l`, Lab lightness in its native 0-100
+    range) as the edge guide, then renormalize so every pixel's weights
+    across classes still sum to ~1, same contract as the legacy weights.
+    """
+    guide = (guide_l / 100.0).astype(np.float32)
+    smoothed = {c: np.clip(guided_filter(guide, m.astype(np.float32), radius=radius, eps=eps), 0.0, 1.0)
+                for c, m in class_masks.items()}
+    denom = sum(smoothed.values()) + 1e-6
+    return {c: smoothed[c] / denom for c in smoothed}
