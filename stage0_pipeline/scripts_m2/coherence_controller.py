@@ -30,13 +30,18 @@ import numpy as np
 # a global base is meant to be felt, not to repaint the photo — keep both
 # caps well inside what a single feathered-boundary overshoot bug used to
 # produce (that bug moved ΔL by ~29 on its own before this fix existed).
-MAX_DELTA_L = 10.0
+MAX_DELTA_L = 12.0
 MAX_DELTA_AB = 9.0
-# Faces get at most half the global shift: skin already has its own
-# dedicated hue-locked grading path (see SKIN_HUE_LOCK in
-# semantic_color_transfer.py) and shouldn't also inherit an off-tone cast
-# just because the rest of the photo needs a bigger correction.
-SKIN_DAMPING = 0.5
+MAX_FG_LUMA_LIFT = 8.0
+
+FG_CLASSES = frozenset({"skin", "clothing", "neutral"})
+BG_CLASSES = frozenset({"sky", "grass", "tree", "water", "led screen", "led wall",
+                        "stage backdrop", "spotlight", "building", "floor", "flag"})
+# Faces get at most half the global *color* shift on skin: skin already has its
+# dedicated hue-locked grading path. Luminance is NOT damped on skin — user
+# review (2026-07-10) flagged "前景的人物没有提亮" when L and ab were both
+# halved together.
+SKIN_AB_DAMPING = 0.5
 
 ZERO_MOOD = {"delta_L": 0.0, "delta_a": 0.0, "delta_b": 0.0}
 
@@ -92,16 +97,105 @@ def compute_global_mood(profile: dict, tgt_lab: np.ndarray, compat: dict,
 
 def apply_global_base(tgt_lab: np.ndarray, mood: dict,
                        skin_mask: np.ndarray | None = None) -> np.ndarray:
-    """Add the already-bounded-and-scaled mood shift to every pixel, halving
-    it inside skin regions (see SKIN_DAMPING)."""
+    """Add the already-bounded-and-scaled mood shift to every pixel.
+
+    L channel applies at full strength everywhere (including skin) so
+    foreground people can brighten with the rest of the photo. Only the
+    a/b color axes are damped inside skin regions."""
     out = tgt_lab.copy()
     if mood["delta_L"] == 0.0 and mood["delta_a"] == 0.0 and mood["delta_b"] == 0.0:
         return out
-    factor = 1.0 - SKIN_DAMPING * skin_mask if skin_mask is not None else 1.0
-    out[..., 0] = out[..., 0] + mood["delta_L"] * factor
-    out[..., 1] = out[..., 1] + mood["delta_a"] * factor
-    out[..., 2] = out[..., 2] + mood["delta_b"] * factor
+    out[..., 0] = out[..., 0] + mood["delta_L"]
+    if skin_mask is not None:
+        ab_factor = 1.0 - SKIN_AB_DAMPING * skin_mask
+        out[..., 1] = out[..., 1] + mood["delta_a"] * ab_factor
+        out[..., 2] = out[..., 2] + mood["delta_b"] * ab_factor
+    else:
+        out[..., 1] = out[..., 1] + mood["delta_a"]
+        out[..., 2] = out[..., 2] + mood["delta_b"]
     return out
+
+
+def _combine_masks(class_masks: dict[str, np.ndarray], names) -> np.ndarray | None:
+    out = None
+    for c in names:
+        m = class_masks.get(c)
+        if m is None:
+            continue
+        out = m if out is None else np.maximum(out, m)
+    return out
+
+
+def compute_foreground_luma_lift(profile: dict, base_lab: np.ndarray,
+                                 class_masks: dict[str, np.ndarray],
+                                 class_names, fg_luma_lift_strength: float,
+                                 compat: dict) -> float:
+    """Scalar additive L to apply on foreground pixels only.
+
+    Closes the gap between target fg-vs-bg brightness and the reference's
+    fg-vs-bg brightness — directly addresses user review "亮度不统一 /
+    前景没有提亮" when the global base lifted background (sky/building)
+    more than people (neutral/clothing fall into weak residual caps).
+    """
+    if fg_luma_lift_strength <= 0.0 or not compat.get("suitable", False):
+        return 0.0
+    fg_present = [c for c in class_names if c in FG_CLASSES and class_masks.get(c) is not None
+                  and (class_masks[c] > 0.5).sum() >= 20]
+    bg_present = [c for c in class_names if c in BG_CLASSES and class_masks.get(c) is not None
+                  and (class_masks[c] > 0.5).sum() >= 20]
+    if not fg_present or not bg_present:
+        return 0.0
+
+    fg_mask = _combine_masks(class_masks, fg_present)
+    bg_mask = _combine_masks(class_masks, bg_present)
+    fg_sel, bg_sel = fg_mask > 0.5, bg_mask > 0.5
+    if fg_sel.sum() < 20 or bg_sel.sum() < 20:
+        return 0.0
+
+    gap_tgt = float(base_lab[..., 0][bg_sel].mean() - base_lab[..., 0][fg_sel].mean())
+    ref_fg = [profile["classes"][c]["l_mean"] for c in fg_present if c in profile.get("classes", {})]
+    ref_bg = [profile["classes"][c]["l_mean"] for c in bg_present if c in profile.get("classes", {})]
+    if not ref_fg or not ref_bg:
+        return 0.0
+    gap_ref = float(np.mean(ref_bg)) - float(np.mean(ref_fg))
+
+    # Target fg is darker relative to bg than reference → positive lift on fg.
+    raw = (gap_tgt - gap_ref) * fg_luma_lift_strength
+    confidence = float(np.clip(compat.get("explainable_tgt_frac", 0.0), 0.0, 1.0))
+    return float(np.clip(raw * confidence, -MAX_FG_LUMA_LIFT, MAX_FG_LUMA_LIFT))
+
+
+def apply_foreground_luma_lift(base_lab: np.ndarray, lift: float,
+                               fg_mask: np.ndarray,
+                               skin_mask: np.ndarray | None = None) -> np.ndarray:
+    if abs(lift) < 1e-3:
+        return base_lab
+    sel = fg_mask > 0.5
+    if sel.sum() < 20:
+        return base_lab
+    out = base_lab.copy()
+    factor = np.ones(base_lab.shape[:2], dtype=np.float32)
+    if skin_mask is not None:
+        factor = np.where(skin_mask > 0.5, 0.85, factor)
+    out[..., 0][sel] = out[..., 0][sel] + lift * factor[sel]
+    return out
+
+
+def boundary_residual_damp(weights: dict[str, np.ndarray]) -> np.ndarray:
+    """Per-pixel [0,1] damp on regional residuals at mask boundaries — user
+    review flagged persistent halos ("边界还是明显") even after guided filter."""
+    import cv2
+    grad_total = None
+    for w in weights.values():
+        gx = cv2.Sobel(w.astype(np.float32), cv2.CV_32F, 1, 0, ksize=3)
+        gy = cv2.Sobel(w.astype(np.float32), cv2.CV_32F, 0, 1, ksize=3)
+        mag = np.hypot(gx, gy)
+        grad_total = mag if grad_total is None else grad_total + mag
+    if grad_total is None or float(grad_total.max()) < 1e-6:
+        h, w = next(iter(weights.values())).shape
+        return np.ones((h, w), dtype=np.float32)
+    thresh = max(float(np.percentile(grad_total, 85)), 1e-3)
+    return (1.0 - np.clip(grad_total / (thresh * 2.5), 0.0, 0.70)).astype(np.float32)
 
 
 # ------------------------------------------------------------- C3-3: edge-aware blend weights

@@ -33,18 +33,18 @@
     "highlight_clip_frac>5% (高光裁剪偏多)"
   ],
   "coherence_v1": {
-    "fg_bg_luma_change_diff": 0.16077375411987305,
-    "fg_bg_tone_direction_cos": 0.9857378602027893,
-    "neutral_vs_bg_change_ratio": 0.18268742542048505,
-    "boundary_delta_e_p95": 14.557333946228027,
-    "boundary_delta_e_p99": 19.60694694519043,
-    "skin_hue_drift_deg": 6.12137508392334,
-    "highlight_clip_frac": 0.24405614232038123,
-    "shadow_clip_frac": 0.018806703629032258,
+    "fg_bg_luma_change_diff": 1.6401848793029785,
+    "fg_bg_tone_direction_cos": 0.9868377447128296,
+    "neutral_vs_bg_change_ratio": 0.2209819574106884,
+    "boundary_delta_e_p95": 15.558719635009766,
+    "boundary_delta_e_p99": 20.355926513671875,
+    "skin_hue_drift_deg": 6.714814186096191,
+    "highlight_clip_frac": 0.3021200856854839,
+    "shadow_clip_frac": 0.01310483870967742,
     "region_max_delta_e_p95": {
-      "neutral": 14.250612258911133,
-      "sky": 14.166092872619629,
-      "building": 13.61967658996582
+      "neutral": 15.509674072265625,
+      "sky": 14.0855073928833,
+      "building": 14.118709564208984
     },
     "region_pair_confidence": {
       "sky": 1.0,

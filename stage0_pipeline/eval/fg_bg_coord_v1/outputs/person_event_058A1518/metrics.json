@@ -19,9 +19,9 @@
     "highlight_clip_frac": 0.26071931048682284,
     "shadow_clip_frac": 0.2379638314421669,
     "region_max_delta_e_p95": {
-      "skin": 16.0488338470459,
       "neutral": 20.619932174682617,
-      "sky": 1.0665735006332397
+      "sky": 1.0665735006332397,
+      "skin": 16.0488338470459
     },
     "region_pair_confidence": {
       "sky": 1.0
@@ -33,24 +33,25 @@
     "highlight_clip_frac>5% (高光裁剪偏多)"
   ],
   "coherence_v1": {
-    "fg_bg_luma_change_diff": 1.2960656881332397,
-    "fg_bg_tone_direction_cos": 0.09616903215646744,
-    "neutral_vs_bg_change_ratio": 4.737564009132953,
-    "boundary_delta_e_p95": 16.141786575317383,
-    "boundary_delta_e_p99": 19.723543167114258,
-    "skin_hue_drift_deg": 4.4163498878479,
-    "highlight_clip_frac": 0.2911714746522694,
-    "shadow_clip_frac": 0.11670136346998536,
+    "fg_bg_luma_change_diff": 2.2213780879974365,
+    "fg_bg_tone_direction_cos": -0.02373136393725872,
+    "neutral_vs_bg_change_ratio": 4.815467662028947,
+    "boundary_delta_e_p95": 16.01896858215332,
+    "boundary_delta_e_p99": 19.805383682250977,
+    "skin_hue_drift_deg": 4.47356653213501,
+    "highlight_clip_frac": 0.27990311584919475,
+    "shadow_clip_frac": 0.13455973188140558,
     "region_max_delta_e_p95": {
-      "skin": 12.846966743469238,
-      "neutral": 16.129783630371094,
-      "sky": 0.35614675283432007
+      "neutral": 16.11410140991211,
+      "sky": 0.35614675283432007,
+      "skin": 13.437860488891602
     },
     "region_pair_confidence": {
       "sky": 1.0
     }
   },
   "coherence_v1_flags": [
+    "fg_bg_tone_direction_cos<0 (前后景色调朝相反方向变化)",
     "highlight_clip_frac>5% (高光裁剪偏多)"
   ]
 }

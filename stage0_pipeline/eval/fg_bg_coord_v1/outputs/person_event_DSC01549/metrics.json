@@ -19,8 +19,8 @@
     "highlight_clip_frac": 0.08278586647727272,
     "shadow_clip_frac": 0.09828056268328446,
     "region_max_delta_e_p95": {
-      "skin": 16.095321655273438,
       "neutral": 16.174327850341797,
+      "skin": 16.095321655273438,
       "building": 48.11445236206055
     },
     "region_pair_confidence": {
@@ -33,18 +33,18 @@
     "highlight_clip_frac>5% (高光裁剪偏多)"
   ],
   "coherence_v1": {
-    "fg_bg_luma_change_diff": 1.6034119129180908,
-    "fg_bg_tone_direction_cos": 0.7180193066596985,
-    "neutral_vs_bg_change_ratio": 0.712423926789096,
-    "boundary_delta_e_p95": 15.085732460021973,
-    "boundary_delta_e_p99": 19.74892807006836,
-    "skin_hue_drift_deg": 4.047301769256592,
-    "highlight_clip_frac": 0.01808931680718475,
-    "shadow_clip_frac": 0.10480004811217009,
+    "fg_bg_luma_change_diff": 3.5668301582336426,
+    "fg_bg_tone_direction_cos": 0.877809464931488,
+    "neutral_vs_bg_change_ratio": 0.767599367760448,
+    "boundary_delta_e_p95": 16.456737518310547,
+    "boundary_delta_e_p99": 20.569555282592773,
+    "skin_hue_drift_deg": 4.13526725769043,
+    "highlight_clip_frac": 0.005541491019061584,
+    "shadow_clip_frac": 0.1590637028042522,
     "region_max_delta_e_p95": {
-      "skin": 13.892004013061523,
-      "neutral": 13.998152732849121,
-      "building": 10.009060859680176
+      "neutral": 16.170602798461914,
+      "skin": 16.260114669799805,
+      "building": 10.237967491149902
     },
     "region_pair_confidence": {
       "building": 0.0

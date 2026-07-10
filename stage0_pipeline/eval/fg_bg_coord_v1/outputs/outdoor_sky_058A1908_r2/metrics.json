@@ -37,19 +37,19 @@
     "highlight_clip_frac>5% (高光裁剪偏多)"
   ],
   "coherence_v1": {
-    "fg_bg_luma_change_diff": 0.3411095142364502,
-    "fg_bg_tone_direction_cos": 0.3304963707923889,
-    "neutral_vs_bg_change_ratio": 0.17853364509802483,
-    "boundary_delta_e_p95": 15.1809663772583,
-    "boundary_delta_e_p99": 18.429494857788086,
-    "skin_hue_drift_deg": 4.943149566650391,
-    "highlight_clip_frac": 0.2452258533125915,
-    "shadow_clip_frac": 0.03364207769033675,
+    "fg_bg_luma_change_diff": 5.652608871459961,
+    "fg_bg_tone_direction_cos": 0.7469364404678345,
+    "neutral_vs_bg_change_ratio": 0.21616255152469635,
+    "boundary_delta_e_p95": 21.30573844909668,
+    "boundary_delta_e_p99": 24.80746841430664,
+    "skin_hue_drift_deg": 6.63917875289917,
+    "highlight_clip_frac": 0.28845196971083453,
+    "shadow_clip_frac": 0.005085845991947291,
     "region_max_delta_e_p95": {
-      "neutral": 14.436037063598633,
-      "sky": 19.920549392700195,
-      "floor": 12.855674743652344,
-      "clothing": 12.78490161895752
+      "neutral": 20.491498947143555,
+      "sky": 19.206424713134766,
+      "floor": 12.863818168640137,
+      "clothing": 18.019107818603516
     },
     "region_pair_confidence": {
       "sky": 1.0,

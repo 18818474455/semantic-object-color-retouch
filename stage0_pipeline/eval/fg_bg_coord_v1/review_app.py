@@ -20,7 +20,8 @@ from pathlib import Path
 from flask import Flask, jsonify, redirect, render_template, request, send_file, url_for
 
 HERE = Path(__file__).resolve().parent
-MANIFEST_PATH = HERE / "manifest.jsonl"
+DEFAULT_MANIFEST = HERE / "manifest_focus_v1.jsonl"
+FALLBACK_MANIFEST = HERE / "manifest.jsonl"
 OUTPUTS_ROOT = HERE / "outputs"
 
 sys.path.insert(0, str(HERE.parent.parent / "scripts_m2"))
@@ -44,11 +45,19 @@ SEVERE_FIELDS = [
 app = Flask(__name__)
 
 
+def _manifest_path() -> Path:
+    p = app.config.get("MANIFEST_PATH")
+    if p:
+        return Path(p)
+    return DEFAULT_MANIFEST if DEFAULT_MANIFEST.exists() else FALLBACK_MANIFEST
+
+
 def _load_manifest() -> list[dict]:
-    if not MANIFEST_PATH.exists():
+    manifest_path = _manifest_path()
+    if not manifest_path.exists():
         return []
     recs = []
-    for line in MANIFEST_PATH.read_text().splitlines():
+    for line in manifest_path.read_text().splitlines():
         if line.strip():
             recs.append(json.loads(line))
     return recs
@@ -162,10 +171,67 @@ def serve_image(sample_id: str, filename: str):
 
 @app.route("/summary")
 def summary():
-    return jsonify(score_summary(OUTPUTS_ROOT))
+    # Only aggregate samples currently listed in the active manifest
+    # (focus set of 13, not the full 30), so unfinished/out-of-scope
+    # samples don't dilute the acceptance ratios.
+    ids = {r["id"] for r in _load_manifest()}
+    full = score_summary(OUTPUTS_ROOT)
+    if not ids:
+        return jsonify(full)
+    unscored = [i for i in full.get("unscored_ids", []) if i in ids]
+    # Recompute from focus samples only
+    scored, unscored_ids = [], []
+    for sid in sorted(ids):
+        review = _load_review(sid)
+        if review.get("preferred") is None:
+            unscored_ids.append(sid)
+        else:
+            review = dict(review)
+            review["_id"] = sid
+            scored.append(review)
+    n = len(scored)
+    severe_fg_bg = sum(1 for r in scored if r.get("severe", {}).get("severe_fg_bg_disconnect"))
+    severe_halo = sum(1 for r in scored if r.get("severe", {}).get("severe_halo"))
+    severe_skin = sum(1 for r in scored if r.get("severe", {}).get("severe_skin_error"))
+    delivery_ok = sum(1 for r in scored if (r.get("scores", {}).get("delivery_willingness") or 0) >= 4)
+    coherence_wins = sum(1 for r in scored if r.get("preferred") == "coherence_v1")
+    legacy_wins = sum(1 for r in scored if r.get("preferred") == "legacy_v0")
+    ties = sum(1 for r in scored if r.get("preferred") == "tie")
+    return jsonify({
+        "n_scored": n,
+        "n_unscored": len(unscored_ids),
+        "unscored_ids": unscored_ids,
+        "severe_fg_bg_disconnect_count": severe_fg_bg,
+        "severe_halo_count": severe_halo,
+        "severe_skin_error_count": severe_skin,
+        "delivery_willingness_ge4_ratio": round(delivery_ok / n, 3) if n else None,
+        "preferred": {"coherence_v1": coherence_wins, "legacy_v0": legacy_wins, "tie": ties},
+        "coherence_win_rate_excl_tie": (
+            round(coherence_wins / (coherence_wins + legacy_wins), 3)
+            if (coherence_wins + legacy_wins) else None
+        ),
+        "acceptance": {
+            "severe_issues_zero": severe_fg_bg == 0 and severe_halo == 0 and severe_skin == 0,
+            "delivery_willingness_ge_80pct": (delivery_ok / n >= 0.8) if n else False,
+            "coherence_win_rate_ge_70pct": (
+                (coherence_wins / (coherence_wins + legacy_wins) >= 0.7)
+                if (coherence_wins + legacy_wins) else False
+            ),
+            "min_focus_samples_scored": n >= len(ids),
+        },
+    })
 
 
 if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser(description="FG-BG-Coord-v1 人工评审网页")
+    ap.add_argument("--manifest", help="manifest jsonl path (default: manifest_focus_v1.jsonl if exists)")
+    ap.add_argument("--port", type=int, default=5058)
+    args = ap.parse_args()
+    if args.manifest:
+        app.config["MANIFEST_PATH"] = args.manifest
+    mp = _manifest_path()
     print("FG-BG-Coord-v1 人工评审")
-    print("http://127.0.0.1:5058")
-    app.run(host="127.0.0.1", port=5058, debug=False)
+    print(f"manifest: {mp.name} ({len(_load_manifest())} 组)")
+    print(f"http://127.0.0.1:{args.port}")
+    app.run(host="127.0.0.1", port=args.port, debug=False)

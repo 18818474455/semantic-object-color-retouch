@@ -1,0 +1,236 @@
+{
+  "outdoor_sky_DSC040851": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 1,
+      "fg_bg_same_tone": 3,
+      "skin_natural": 3,
+      "halo_free": 2,
+      "local_dirty_color_free": 4,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": "边界还是明显，前景的人物没有提亮，亮度不统一"
+  },
+  "outdoor_sky_DSC053601": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 2,
+      "fg_bg_same_tone": 2,
+      "skin_natural": 3,
+      "halo_free": 1,
+      "local_dirty_color_free": 2,
+      "delivery_willingness": 1
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "person_event_DSC01549": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 2,
+      "fg_bg_same_tone": 4,
+      "skin_natural": 3,
+      "halo_free": 4,
+      "local_dirty_color_free": 4,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "person_event_058A1518": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 3,
+      "fg_bg_same_tone": 3,
+      "skin_natural": 4,
+      "halo_free": 4,
+      "local_dirty_color_free": 4,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "stage_led_mixed_DSC04541": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 3,
+      "fg_bg_same_tone": 3,
+      "skin_natural": 3,
+      "halo_free": 3,
+      "local_dirty_color_free": 3,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "stage_led_mixed_DAP05979": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 3,
+      "fg_bg_same_tone": 3,
+      "skin_natural": 3,
+      "halo_free": 4,
+      "local_dirty_color_free": 4,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "difficult_DAP05876": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 2,
+      "background_strength_natural": 3,
+      "fg_bg_same_tone": 3,
+      "skin_natural": 3,
+      "halo_free": 4,
+      "local_dirty_color_free": 3,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "difficult_DAP09915_2": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 2,
+      "background_strength_natural": 2,
+      "fg_bg_same_tone": 2,
+      "skin_natural": 2,
+      "halo_free": 2,
+      "local_dirty_color_free": 2,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "outdoor_sky_DAP031701_r2": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 4,
+      "fg_bg_same_tone": 4,
+      "skin_natural": 4,
+      "halo_free": 3,
+      "local_dirty_color_free": 4,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "outdoor_sky_058A1908_r2": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 4,
+      "background_strength_natural": 4,
+      "fg_bg_same_tone": 4,
+      "skin_natural": 4,
+      "halo_free": 4,
+      "local_dirty_color_free": 4,
+      "delivery_willingness": 2
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "outdoor_sky_DAP06898_r2": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 3,
+      "fg_bg_same_tone": 3,
+      "skin_natural": 3,
+      "halo_free": 3,
+      "local_dirty_color_free": 3,
+      "delivery_willingness": 3
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "stage_led_mixed_DSC04543_r2": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 3,
+      "fg_bg_same_tone": 3,
+      "skin_natural": 3,
+      "halo_free": 3,
+      "local_dirty_color_free": 3,
+      "delivery_willingness": 3
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  },
+  "stage_led_mixed_DAP08349_r2": {
+    "preferred": "coherence_v1",
+    "scores": {
+      "foreground_change_visible": 3,
+      "background_strength_natural": 3,
+      "fg_bg_same_tone": 3,
+      "skin_natural": 3,
+      "halo_free": 3,
+      "local_dirty_color_free": 3,
+      "delivery_willingness": 1
+    },
+    "severe": {
+      "severe_fg_bg_disconnect": false,
+      "severe_halo": false,
+      "severe_skin_error": false
+    },
+    "notes": ""
+  }
+}

@@ -34,7 +34,11 @@ import common
 import face_detect
 from semantic_color_transfer import _percentile_stats, _vibrance_contrast_sharpen, SKIN_HUE_LOCK
 from region_provider_v2 import detect_classes
-from coherence_controller import compute_global_mood, apply_global_base, edge_aware_weights
+from coherence_controller import (
+    compute_global_mood, apply_global_base, edge_aware_weights,
+    compute_foreground_luma_lift, apply_foreground_luma_lift, boundary_residual_damp,
+    FG_CLASSES,
+)
 
 MIN_FRAC = 0.01
 
@@ -59,14 +63,14 @@ MIN_FRAC = 0.01
 # which is the exact "confidence should gate strength toward 0, not toward
 # 1" bug this upgrade exists to fix (see 语义物体调色专家-仿色一致性升级方案 §一).
 STRENGTH_PRESETS = {
-    "light":  {"default": 1.0, "skin": 0.9, "neutral": 0.25, "global_base": 0.15,
-               "region_default": 1.05, "region_skin": 0.60, "region_neutral": 0.20,
+    "light":  {"default": 1.0, "skin": 0.9, "neutral": 0.25, "global_base": 0.18,
+               "fg_luma_lift": 0.20, "region_default": 1.00, "region_skin": 0.65, "region_neutral": 0.30,
                "vibrance": 0.22, "contrast": 1.06, "sharpen": 0.25},
-    "medium": {"default": 1.6, "skin": 1.3, "neutral": 0.45, "global_base": 0.30,
-               "region_default": 1.20, "region_skin": 0.75, "region_neutral": 0.35,
+    "medium": {"default": 1.6, "skin": 1.3, "neutral": 0.45, "global_base": 0.42,
+               "fg_luma_lift": 0.38, "region_default": 1.10, "region_skin": 0.82, "region_neutral": 0.55,
                "vibrance": 0.40, "contrast": 1.14, "sharpen": 0.40},
-    "strong": {"default": 2.0, "skin": 1.5, "neutral": 0.55, "global_base": 0.45,
-               "region_default": 1.25, "region_skin": 0.85, "region_neutral": 0.45,
+    "strong": {"default": 2.0, "skin": 1.5, "neutral": 0.55, "global_base": 0.50,
+               "fg_luma_lift": 0.50, "region_default": 1.18, "region_skin": 0.90, "region_neutral": 0.62,
                "vibrance": 0.50, "contrast": 1.18, "sharpen": 0.45},
 }
 
@@ -535,11 +539,21 @@ def _render_coherence_from_analysis(analysis: dict, strength: str | dict = "medi
     profile = analysis["profile"]
 
     mood = compute_global_mood(profile, tgt_lab, analysis["compat"], preset.get("global_base", 0.0))
-    base_lab = apply_global_base(tgt_lab, mood, analysis["tgt_cls"].get("skin"))
+    skin_m = analysis["tgt_cls"].get("skin")
+    base_lab = apply_global_base(tgt_lab, mood, skin_m)
 
     class_masks = {c: analysis["tgt_cls"].get(c, np.zeros(tgt_lab.shape[:2], dtype=np.float32))
                   for c in analysis["class_names"]}
+    fg_mask = np.zeros(tgt_lab.shape[:2], dtype=np.float32)
+    for c in analysis["class_names"]:
+        if c in FG_CLASSES and class_masks.get(c) is not None:
+            fg_mask = np.maximum(fg_mask, class_masks[c])
+    lift = compute_foreground_luma_lift(profile, base_lab, class_masks, analysis["class_names"],
+                                        preset.get("fg_luma_lift", 0.0), analysis["compat"])
+    base_lab = apply_foreground_luma_lift(base_lab, lift, fg_mask, skin_m)
+
     weights = edge_aware_weights(tgt_lab[..., 0], class_masks)
+    boundary_damp = boundary_residual_damp(weights)
 
     scene_confidence = float(np.clip(analysis["compat"].get("explainable_tgt_frac", 0.0), 0.0, 1.0))
     acc_delta = np.zeros_like(base_lab)
@@ -585,7 +599,7 @@ def _render_coherence_from_analysis(analysis: dict, strength: str | dict = "medi
             region_strength = region_strength * (max(0.0, 1.0 - (info["tgt_frac"] - 0.5) / 0.5) ** 2)
 
         w = weights[c]
-        acc_delta += delta * (region_strength * w)[..., None]
+        acc_delta += delta * (region_strength * w * boundary_damp)[..., None]
 
     out_lab = base_lab + acc_delta
     out_lab[..., 0] = np.clip(out_lab[..., 0], 0.0, 100.0)

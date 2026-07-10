@@ -35,18 +35,18 @@
     "highlight_clip_frac>5% (高光裁剪偏多)"
   ],
   "coherence_v1": {
-    "fg_bg_luma_change_diff": 6.276072978973389,
-    "fg_bg_tone_direction_cos": -0.9982730746269226,
-    "neutral_vs_bg_change_ratio": 0.39032984222894723,
-    "boundary_delta_e_p95": 14.60037899017334,
-    "boundary_delta_e_p99": 18.676029205322266,
-    "skin_hue_drift_deg": 2.9855782985687256,
-    "highlight_clip_frac": 0.5258187660373901,
-    "shadow_clip_frac": 0.11363636363636363,
+    "fg_bg_luma_change_diff": 6.107909679412842,
+    "fg_bg_tone_direction_cos": -0.9816443920135498,
+    "neutral_vs_bg_change_ratio": 0.716458707659315,
+    "boundary_delta_e_p95": 14.817046165466309,
+    "boundary_delta_e_p99": 18.98900604248047,
+    "skin_hue_drift_deg": 3.946315288543701,
+    "highlight_clip_frac": 0.550779818090176,
+    "shadow_clip_frac": 0.0830536336143695,
     "region_max_delta_e_p95": {
-      "screen": 14.63306999206543,
-      "neutral": 12.579021453857422,
-      "clothing": 7.249942779541016
+      "screen": 14.711915016174316,
+      "neutral": 12.709884643554688,
+      "clothing": 7.305375099182129
     },
     "region_pair_confidence": {
       "screen": 1.0,

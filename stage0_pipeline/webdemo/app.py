@@ -48,7 +48,7 @@ SESSIONS: dict[str, dict] = {}
 SESSION_ORDER: list[str] = []
 
 IDENTITY_PRESET = {"default": 0.0, "skin": 0.0, "neutral": 0.0, "global_base": 0.0,
-                   "region_default": 0.0, "region_skin": 0.0, "region_neutral": 0.0,
+                   "fg_luma_lift": 0.0, "region_default": 0.0, "region_skin": 0.0, "region_neutral": 0.0,
                    "vibrance": 0.0, "contrast": 1.0, "sharpen": 0.0}
 # Slider anchors: 0% = no-op passthrough, 33/66/100% = the three validated
 # presets from the 20-image regression sweep. Anything in between is a

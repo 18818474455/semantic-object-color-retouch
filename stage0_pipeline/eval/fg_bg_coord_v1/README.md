@@ -4,10 +4,9 @@
 
 ## 当前覆盖
 
-- **已登记：30 组，达到方案文档最低要求**（20组继承自`regression_20.py`旧回归集 + 10组`mall_event_*`新补充，均已用`eval_harmony.py`跑通并生成`metrics.json`/`review_sheet.jpg`/空`review.json`模板）
-- 新补充的10组来自 `/Volumes/T7/松雅湖吾悦广场/20250501松雅湖吾悦广场/原图`（2026-05-01商场促销活动实拍），覆盖：密集人群+商场吊顶(`mall_event_DAP03654`/`DAP03662`)、白/浅色衣服(`mall_event_white_coats_*`)、LED游乐设施混合光(`mall_event_arcade_led_*`)、暖光昏暗室内+密集人群(`mall_event_warm_restaurant_*`)、参考图与目标图弱匹配(`mall_event_weak_match_*`)
-- **未解决的特别问题样本**：方案文档点名要的"商场**钢架桁架顶棚**+密集人群"原始bug图——在T7这个文件夹里逐一抽查约120/712张（含首尾全量联系表）后确认**没有裸露钢架桁架顶棚的画面**，全部是标准吊顶/拱形暖光顶。已用同一批素材里的"密集人群+标准商场吊顶"场景（`mall_event_DAP03654`/`DAP03662`）代替凑数，**但这不是原始bug图本身**，如果这张图对验收很关键，需要用户从别的素材源再指认一次
-- **2026-07-10**：`eval_harmony.py` 已实现并跑通全部30组，`outputs/<id>/metrics.json`（legacy_v0/coherence_v1两套自动指标+flag）+ `review_sheet.jpg`（4联对比图，方便打分时一次看全）已生成；`review.json` 是空模板，**人工打分尚未开始**。汇总对比见 `outputs/phase-c3-4-eval-harmony.md`。
+- **Focus 评审集（推荐）**：`manifest_focus_v1.jsonl`，**13 组**——来自用户已打分样本，打分页默认只显示这 13 组
+- 完整清单仍保留：`manifest.jsonl` 30 组（旧回归 20 + mall_event 10），需要时用 `--manifest manifest.jsonl` 切换
+- **2026-07-10 C3-4b**：按用户评分反馈做了前景提亮 / 边界残差衰减 / 皮肤只压色度；旧评分备份在 `scores_before_opt_v1.json`，focus 的 `review.json` 已清空待复评。详见 `outputs/phase-c3-4b-score-driven-opt.md`
 
 ## 每组输出
 
