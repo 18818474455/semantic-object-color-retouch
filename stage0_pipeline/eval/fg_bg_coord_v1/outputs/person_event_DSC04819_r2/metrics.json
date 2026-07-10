@@ -21,8 +21,8 @@
     "shadow_clip_frac": 0.07939367210410557,
     "region_max_delta_e_p95": {
       "skin": 19.521697998046875,
-      "sky": 6.533888339996338,
       "neutral": 16.85312271118164,
+      "sky": 6.533888339996338,
       "building": 50.91228485107422
     },
     "region_pair_confidence": {
@@ -46,8 +46,8 @@
     "shadow_clip_frac": 0.0786318960777126,
     "region_max_delta_e_p95": {
       "skin": 13.697854042053223,
-      "sky": 4.942226886749268,
       "neutral": 15.089598655700684,
+      "sky": 4.942226886749268,
       "building": 13.50443172454834
     },
     "region_pair_confidence": {

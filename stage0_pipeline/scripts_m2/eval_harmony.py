@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import common
+from build_review_sheet import make_comparison
 from color_reference_transfer import (
     PIPELINE_LEGACY,
     PIPELINE_COHERENCE,
@@ -238,6 +239,11 @@ def run_manifest(manifest_path: Path, out_root: Path, strength: str) -> None:
         common.save_rgb(tgt_rgb, out_dir / "target.jpg")
         common.save_rgb(outputs["legacy_v0"], out_dir / "legacy_v0.jpg")
         common.save_rgb(outputs["coherence_v1"], out_dir / "coherence_v1.jpg")
+        make_comparison(
+            [("reference", ref_rgb), ("target (orig)", tgt_rgb),
+             ("legacy_v0", outputs["legacy_v0"]), ("coherence_v1", outputs["coherence_v1"])],
+            out_dir / "review_sheet.jpg", panel_w=360,
+        )
         (out_dir / "metrics.json").write_text(json.dumps(result, ensure_ascii=False, indent=2))
         review_path = out_dir / "review.json"
         if not review_path.exists():
@@ -281,6 +287,57 @@ def summarize(out_root: Path) -> dict:
     return summary
 
 
+def score_summary(out_root: Path) -> dict:
+    """Aggregate filled-in review.json files against 方案文档 §四's acceptance
+    thresholds. Samples whose review.json is still the untouched empty
+    template (preferred is None) are reported separately and excluded from
+    the pass/fail ratios so an incomplete review pass doesn't silently look
+    like a 100%-scored one."""
+    scored, unscored = [], []
+    for review_path in sorted(out_root.glob("*/review.json")):
+        rec = json.loads(review_path.read_text())
+        if rec.get("preferred") is None:
+            unscored.append(review_path.parent.name)
+        else:
+            rec["_id"] = review_path.parent.name
+            scored.append(rec)
+
+    n = len(scored)
+    severe_fg_bg = sum(1 for r in scored if r.get("severe", {}).get("severe_fg_bg_disconnect"))
+    severe_halo = sum(1 for r in scored if r.get("severe", {}).get("severe_halo"))
+    severe_skin = sum(1 for r in scored if r.get("severe", {}).get("severe_skin_error"))
+    delivery_ok = sum(1 for r in scored
+                      if (r.get("scores", {}).get("delivery_willingness") or 0) >= 4)
+    coherence_wins = sum(1 for r in scored if r.get("preferred") == "coherence_v1")
+    legacy_wins = sum(1 for r in scored if r.get("preferred") == "legacy_v0")
+    ties = sum(1 for r in scored if r.get("preferred") == "tie")
+
+    summary = {
+        "n_scored": n,
+        "n_unscored": len(unscored),
+        "unscored_ids": unscored,
+        "severe_fg_bg_disconnect_count": severe_fg_bg,
+        "severe_halo_count": severe_halo,
+        "severe_skin_error_count": severe_skin,
+        "delivery_willingness_ge4_ratio": round(delivery_ok / n, 3) if n else None,
+        "preferred": {"coherence_v1": coherence_wins, "legacy_v0": legacy_wins, "tie": ties},
+        "coherence_win_rate_excl_tie": (
+            round(coherence_wins / (coherence_wins + legacy_wins), 3)
+            if (coherence_wins + legacy_wins) else None
+        ),
+        "acceptance": {
+            "severe_issues_zero": severe_fg_bg == 0 and severe_halo == 0 and severe_skin == 0,
+            "delivery_willingness_ge_80pct": (delivery_ok / n >= 0.8) if n else False,
+            "coherence_win_rate_ge_70pct": (
+                (coherence_wins / (coherence_wins + legacy_wins) >= 0.7)
+                if (coherence_wins + legacy_wins) else False
+            ),
+            "min_30_samples_scored": n >= 30,
+        },
+    }
+    return summary
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="C3-4 automated harmony metrics (legacy vs coherence)")
     ap.add_argument("--manifest", help="path to FG-BG-Coord-v1 manifest.jsonl; runs the whole set")
@@ -288,6 +345,8 @@ def main() -> int:
                     "(default: <manifest_dir>/outputs)")
     ap.add_argument("--summarize", action="store_true",
                     help="aggregate existing metrics.json under --out-root instead of re-rendering")
+    ap.add_argument("--score-summary", action="store_true",
+                    help="aggregate filled-in review.json under --out-root against the acceptance criteria")
     ap.add_argument("--ref", help="single-pair mode: reference image")
     ap.add_argument("--tgt", help="single-pair mode: target image")
     ap.add_argument("--strength", choices=("light", "medium", "strong"), default="medium")
@@ -297,6 +356,12 @@ def main() -> int:
         if not args.out_root:
             ap.error("--summarize needs --out-root")
         print(json.dumps(summarize(Path(args.out_root)), ensure_ascii=False, indent=2))
+        return 0
+
+    if args.score_summary:
+        if not args.out_root:
+            ap.error("--score-summary needs --out-root")
+        print(json.dumps(score_summary(Path(args.out_root)), ensure_ascii=False, indent=2))
         return 0
 
     if args.manifest:

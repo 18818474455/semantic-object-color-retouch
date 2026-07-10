@@ -1,0 +1,43 @@
+{
+  "id": "mall_event_warm_restaurant_DAP02867",
+  "compat": {
+    "jaccard": 0.333,
+    "explainable_tgt_frac": 0.023,
+    "shared_classes": [
+      "wall"
+    ],
+    "suitable": false
+  },
+  "legacy_v0": {
+    "fg_bg_luma_change_diff": 5.899100303649902,
+    "fg_bg_tone_direction_cos": -0.6808055639266968,
+    "neutral_vs_bg_change_ratio": 0.2575897250105646,
+    "boundary_delta_e_p95": 14.867897987365723,
+    "boundary_delta_e_p99": 18.247257232666016,
+    "skin_hue_drift_deg": 3.074211597442627,
+    "highlight_clip_frac": 0.010276068356515374,
+    "shadow_clip_frac": 0.17771006817349927,
+    "region_max_delta_e_p95": {
+      "neutral": 14.714353561401367
+    },
+    "region_pair_confidence": {}
+  },
+  "legacy_v0_flags": [
+    "fg_bg_tone_direction_cos<0 (前后景色调朝相反方向变化)"
+  ],
+  "coherence_v1": {
+    "fg_bg_luma_change_diff": 1.529916524887085,
+    "fg_bg_tone_direction_cos": 0.9960945248603821,
+    "neutral_vs_bg_change_ratio": 1.0061232904063622,
+    "boundary_delta_e_p95": 15.114591598510742,
+    "boundary_delta_e_p99": 18.817951202392578,
+    "skin_hue_drift_deg": 2.469111680984497,
+    "highlight_clip_frac": 0.01942687362737921,
+    "shadow_clip_frac": 0.14139566938140558,
+    "region_max_delta_e_p95": {
+      "neutral": 14.082446098327637
+    },
+    "region_pair_confidence": {}
+  },
+  "coherence_v1_flags": []
+}

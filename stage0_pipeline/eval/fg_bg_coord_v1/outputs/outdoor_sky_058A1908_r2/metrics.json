@@ -20,14 +20,14 @@
     "highlight_clip_frac": 0.2012805408125915,
     "shadow_clip_frac": 0.15212927800146414,
     "region_max_delta_e_p95": {
-      "floor": 60.91746139526367,
-      "sky": 30.932941436767578,
       "neutral": 19.0976505279541,
+      "sky": 30.932941436767578,
+      "floor": 60.91746139526367,
       "clothing": 81.33656311035156
     },
     "region_pair_confidence": {
-      "floor": 0.0,
       "sky": 1.0,
+      "floor": 0.0,
       "clothing": 0.8743487040201823
     }
   },
@@ -46,14 +46,14 @@
     "highlight_clip_frac": 0.2452258533125915,
     "shadow_clip_frac": 0.03364207769033675,
     "region_max_delta_e_p95": {
-      "floor": 12.855674743652344,
-      "sky": 19.920549392700195,
       "neutral": 14.436037063598633,
+      "sky": 19.920549392700195,
+      "floor": 12.855674743652344,
       "clothing": 12.78490161895752
     },
     "region_pair_confidence": {
-      "floor": 0.0,
       "sky": 1.0,
+      "floor": 0.0,
       "clothing": 0.8743487040201823
     }
   },

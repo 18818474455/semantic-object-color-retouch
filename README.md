@@ -2,7 +2,7 @@
 
 独立预研项目：识别照片中的语义区域（天空、人脸、皮肤、服装、草地、建筑等），判断各区域是否应调色及如何调色，并通过本地 Chroma 引擎或 GPT Image 2 执行。
 
-**当前状态（2026-07-10）**：C3 仿色一致性升级进行中——C3-0~C3-3（基线冻结→全局氛围基底→区域受信任度残差→引导滤波边缘融合）均已完成并验证。核心bug修复：低置信度区域现在收敛到"停在全局基底"而不是"仍执行100%统计匹配"。**C3-4进行中**：`eval_harmony.py` 自动指标已实现并跑通现有20组——`coherence` 相对 `legacy` 自动flag数-51%，前后景明暗差异-81%，边界ΔE(光晕代理)-40~44%，肤色漂移-33%（详见 `outputs/phase-c3-4-eval-harmony.md`）；但 **`FG-BG-Coord-v1` 仍停留在20组（未补齐到最低30组）、人工1~5分评审尚未开始**——这两项做完才算C3-4真正完成。M3.7 Smart Color v2 嫁接暂停，等待人工验收通过。
+**当前状态（2026-07-10）**：C3 仿色一致性升级进行中——C3-0~C3-3（基线冻结→全局氛围基底→区域受信任度残差→引导滤波边缘融合）均已完成并验证。核心bug修复：低置信度区域现在收敛到"停在全局基底"而不是"仍执行100%统计匹配"。**C3-4进行中**：`eval_harmony.py` 自动指标已实现并跑通全部30组（20组旧回归集+10组新补mall_event场景）——`coherence` 相对 `legacy` 自动flag数-65%，前后景明暗差异-85%，边界ΔE(光晕代理)-47~51%，肤色漂移-62%（详见 `outputs/phase-c3-4-eval-harmony.md`）；`FG-BG-Coord-v1` 已补齐到30组，但**人工1~5分评审尚未开始**，且方案文档点名要的"商场钢架桁架顶棚+密集人群"原始bug图在用户指认的素材源里没找到（已用同批素材的"密集人群+标准吊顶"代替凑数）——这两项做完/确认才算C3-4真正完成。M3.7 Smart Color v2 嫁接暂停，等待人工验收通过。
 
 **本目录即代码基地**：本项目已从 `/Users/mac/Documents/Codex/2026-07-05/gpt-image-2/` 迁移到 `/Users/mac/Desktop/整体代码1.0/仿色模型/` 作为唯一持续开发位置（`.git`/远程仓库随迁移保留）。虚拟环境 `.venv`/`.venv-m2` 太大（合计约1GB）未一起迁移，重建方式：
 
@@ -88,6 +88,6 @@ cp stage0_pipeline/secrets/api.local.json.example stage0_pipeline/secrets/api.lo
 10. ~~**C3-1** 全局氛围基底~~ ✅ —— `coherence_controller.py`：整图 Lab 加法位移，`ΔL≤10`/`Δab≤9` 严格限幅 + 内容匹配度打折 + 皮肤减半，20图回归全通过；`person_event_DSC04819_r2`（材质错配脱节）和 `outdoor_sky_DSC04085(1)`（光晕）两个原始bug case 视觉验证：脱节/光晕都消失，效果比 legacy 更自然但更弱（预期内，区域残差还没加回来）（详见 `outputs/phase-c3-1-global-mood-base.md`）
 11. ~~**C3-2** 区域受信任度残差~~ ✅ —— 区域分级改写成"相对全局基底的残差"，`trust=scene*pair*homogeneity*pixel` 控制整个残差而不是只控制`cs>1`过冲部分（`trust→0`时收敛到全局基底而不是100%匹配）；新增`_region_homogeneity_confidence`+`MAX_REGION_DELTA_E`预算；20图回归全通过，两个原始bug case复测依然正常，天空等高可靠区域的"抓眼感"比C3-1略有回归（详见 `outputs/phase-c3-2-region-residual.md`）
 12. ~~**C3-3** 边缘感知融合+纹理置信度~~ ✅ —— `coherence_controller.edge_aware_weights`/`guided_filter`：混合权重从固定半径高斯羽化换成用目标图L通道引导的box-filter引导滤波，边界往真实边缘"贴"；`_region_homogeneity_confidence`新增Sobel边缘密度项（`variance_conf*texture_conf`）。20图回归全通过，两个原始bug case复测依然安全（详见 `outputs/phase-c3-3-edge-aware-fusion.md`）
-13. **C3-4（当前主线，进行中）**：~~实现`eval_harmony.py`~~✅（20组自动指标对比：flag数-51%，前后景明暗差异-81%，边界ΔE-40~44%，肤色漂移-33%，详见`outputs/phase-c3-4-eval-harmony.md`）；**未完成**：补齐FG-BG-Coord-v1到30组（尤其"商场钢架顶棚+密集人群"原始bug图，路径待用户指认）、人工1~5分A/B评审（`review.json`目前是空模板）
-14. **C3-5/C3-6**：30组人工验收通过后重建C2 teacher数据，再恢复M3.7 Smart Color v2嫁接
+13. **C3-4（当前主线，进行中）**：~~实现`eval_harmony.py`~~✅、~~补齐FG-BG-Coord-v1到30组~~✅（30组自动指标对比：flag数-65%，前后景明暗差异-85%，边界ΔE-47~51%，肤色漂移-62%，详见`outputs/phase-c3-4-eval-harmony.md`）；**未完成**：人工1~5分A/B评审（`review.json`/`review_sheet.jpg`已就位，评分未开始）；"商场钢架桁架顶棚+密集人群"原始bug图在用户指认的T7素材源里未找到（已用同批素材凑数，非原图，如对验收关键需再指认）
+14. **C3-5/C3-6**：30组人工验收通过后重建C2 teacher数据，再恢复M3.7 Smart Color v2嫁接（人工评分可用`.venv-m2/bin/python stage0_pipeline/scripts_m2/eval_harmony.py --score-summary --out-root stage0_pipeline/eval/fg_bg_coord_v1/outputs`自动对照验收标准）
 15. **C1** API易 双图冒烟（并行，不阻塞 C3）

@@ -1,0 +1,52 @@
+{
+  "id": "mall_event_arcade_led_DAP02922",
+  "compat": {
+    "jaccard": 0.4,
+    "explainable_tgt_frac": 0.344,
+    "shared_classes": [
+      "building"
+    ],
+    "suitable": true
+  },
+  "legacy_v0": {
+    "fg_bg_luma_change_diff": 6.6387739181518555,
+    "fg_bg_tone_direction_cos": 0.9996439218521118,
+    "neutral_vs_bg_change_ratio": 0.35744230335620636,
+    "boundary_delta_e_p95": 60.8062858581543,
+    "boundary_delta_e_p99": 64.40750885009766,
+    "skin_hue_drift_deg": 3.8675525188446045,
+    "highlight_clip_frac": 0.4163101665446559,
+    "shadow_clip_frac": 0.12350727489019034,
+    "region_max_delta_e_p95": {
+      "building": 72.19705963134766,
+      "neutral": 44.431453704833984
+    },
+    "region_pair_confidence": {
+      "building": 0.0
+    }
+  },
+  "legacy_v0_flags": [
+    "boundary_delta_e_p99>25 (边界可能有光晕)",
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ],
+  "coherence_v1": {
+    "fg_bg_luma_change_diff": 3.041726589202881,
+    "fg_bg_tone_direction_cos": 0.9359344244003296,
+    "neutral_vs_bg_change_ratio": 0.9483056152839531,
+    "boundary_delta_e_p95": 12.928816795349121,
+    "boundary_delta_e_p99": 17.36407470703125,
+    "skin_hue_drift_deg": 2.106724262237549,
+    "highlight_clip_frac": 0.10700150988286969,
+    "shadow_clip_frac": 0.0862177434114202,
+    "region_max_delta_e_p95": {
+      "building": 8.935502052307129,
+      "neutral": 15.002565383911133
+    },
+    "region_pair_confidence": {
+      "building": 0.0
+    }
+  },
+  "coherence_v1_flags": [
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ]
+}

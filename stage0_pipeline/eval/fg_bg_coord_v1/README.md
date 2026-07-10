@@ -4,11 +4,10 @@
 
 ## 当前覆盖
 
-- 已登记：20 组（均来自 `regression_20.py`，外置盘挂载后可运行）
-- 待补：至少 10 组
-- 优先补充：密集人群+商场吊顶/钢架顶棚、人物+玻璃幕墙、人物+夜景暖光、白/浅色衣服、参考图与目标图弱匹配
-- 特别问题样本：商场钢架顶棚+密集人群原始测试图目前不在项目清单中，必须补录其参考图和目标图原始路径，不能用相似图片冒充
-- **2026-07-10**：`eval_harmony.py` 已实现并跑通现有20组，`outputs/<id>/metrics.json` 已生成（legacy_v0/coherence_v1两套自动指标+flag）；`review.json` 已生成空模板但**人工打分尚未开始**。汇总对比见 `outputs/phase-c3-4-eval-harmony.md`。
+- **已登记：30 组，达到方案文档最低要求**（20组继承自`regression_20.py`旧回归集 + 10组`mall_event_*`新补充，均已用`eval_harmony.py`跑通并生成`metrics.json`/`review_sheet.jpg`/空`review.json`模板）
+- 新补充的10组来自 `/Volumes/T7/松雅湖吾悦广场/20250501松雅湖吾悦广场/原图`（2026-05-01商场促销活动实拍），覆盖：密集人群+商场吊顶(`mall_event_DAP03654`/`DAP03662`)、白/浅色衣服(`mall_event_white_coats_*`)、LED游乐设施混合光(`mall_event_arcade_led_*`)、暖光昏暗室内+密集人群(`mall_event_warm_restaurant_*`)、参考图与目标图弱匹配(`mall_event_weak_match_*`)
+- **未解决的特别问题样本**：方案文档点名要的"商场**钢架桁架顶棚**+密集人群"原始bug图——在T7这个文件夹里逐一抽查约120/712张（含首尾全量联系表）后确认**没有裸露钢架桁架顶棚的画面**，全部是标准吊顶/拱形暖光顶。已用同一批素材里的"密集人群+标准商场吊顶"场景（`mall_event_DAP03654`/`DAP03662`）代替凑数，**但这不是原始bug图本身**，如果这张图对验收很关键，需要用户从别的素材源再指认一次
+- **2026-07-10**：`eval_harmony.py` 已实现并跑通全部30组，`outputs/<id>/metrics.json`（legacy_v0/coherence_v1两套自动指标+flag）+ `review_sheet.jpg`（4联对比图，方便打分时一次看全）已生成；`review.json` 是空模板，**人工打分尚未开始**。汇总对比见 `outputs/phase-c3-4-eval-harmony.md`。
 
 ## 每组输出
 
@@ -75,4 +74,13 @@ outputs/<id>/
   --summarize --out-root stage0_pipeline/eval/fg_bg_coord_v1/outputs
 ```
 
-自动指标只是异常门禁/参考证据，**不能代替下面的人工评分**——`review.json` 里的字段要由人对着 `outputs/<id>/` 下的4张图（reference/target/legacy_v0/coherence_v1）实际打分后回填。
+自动指标只是异常门禁/参考证据，**不能代替下面的人工评分**——`review.json` 里的字段要由人对着 `outputs/<id>/review_sheet.jpg`（reference/target/legacy_v0/coherence_v1 四联对比图，也可以分开看同目录下的4张单图）实际打分后回填。
+
+## 如何汇总人工评分（评分完成后）
+
+```bash
+.venv-m2/bin/python stage0_pipeline/scripts_m2/eval_harmony.py \
+  --score-summary --out-root stage0_pipeline/eval/fg_bg_coord_v1/outputs
+```
+
+会输出：已打分/未打分数量及ID列表、三类严重问题计数、`delivery_willingness>=4`比例、`coherence_v1`相对`legacy_v0`胜率，以及逐条对照§四验收标准的布尔结果（`acceptance`字段）。未打分样本会被排除在比例计算之外并单独列出，不会因为评审没做完而虚报100%通过。

@@ -20,8 +20,8 @@
     "shadow_clip_frac": 0.2379638314421669,
     "region_max_delta_e_p95": {
       "skin": 16.0488338470459,
-      "sky": 1.0665735006332397,
-      "neutral": 20.619932174682617
+      "neutral": 20.619932174682617,
+      "sky": 1.0665735006332397
     },
     "region_pair_confidence": {
       "sky": 1.0
@@ -43,8 +43,8 @@
     "shadow_clip_frac": 0.11670136346998536,
     "region_max_delta_e_p95": {
       "skin": 12.846966743469238,
-      "sky": 0.35614675283432007,
-      "neutral": 16.129783630371094
+      "neutral": 16.129783630371094,
+      "sky": 0.35614675283432007
     },
     "region_pair_confidence": {
       "sky": 1.0

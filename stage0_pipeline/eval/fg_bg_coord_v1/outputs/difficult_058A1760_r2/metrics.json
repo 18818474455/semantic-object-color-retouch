@@ -10,8 +10,8 @@
   },
   "legacy_v0": {
     "fg_bg_luma_change_diff": 8.512219429016113,
-    "fg_bg_tone_direction_cos": 0.1020783856511116,
-    "neutral_vs_bg_change_ratio": 2.2109538210360635,
+    "fg_bg_tone_direction_cos": 0.10207877308130264,
+    "neutral_vs_bg_change_ratio": 2.210951412456815,
     "boundary_delta_e_p95": 16.937530517578125,
     "boundary_delta_e_p99": 22.815940856933594,
     "skin_hue_drift_deg": 5.735080242156982,
