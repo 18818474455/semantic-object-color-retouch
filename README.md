@@ -2,7 +2,7 @@
 
 独立预研项目：识别照片中的语义区域（天空、人脸、皮肤、服装、草地、建筑等），判断各区域是否应调色及如何调色，并通过本地 Chroma 引擎或 GPT Image 2 执行。
 
-**当前状态（2026-07-10）**：C3 仿色一致性升级进行中——C3-0（基线冻结）、C3-1（全局氛围基底）已完成并验证；C3-1 单独一层就已经修好了"背景/前景脱节"和"过冲光晕"两个原始 bug case，效果比 legacy 更自然但更弱，符合预期。**当前主线是 C3-2：把区域分级改成受信任度控制的残差**，把"抓眼感"找回来同时不破坏 C3-1 的安全性。M3.7 Smart Color v2 嫁接暂停，等待 30 组 `FG-BG-Coord-v1` 视觉验收。
+**当前状态（2026-07-10）**：C3 仿色一致性升级进行中——C3-0（基线冻结）、C3-1（全局氛围基底）、C3-2（区域受信任度残差）均已完成并验证。核心bug修复：低置信度区域现在收敛到"停在全局基底"而不是"仍执行100%统计匹配"（`region_strength = region_cap * trust`，`trust→0` 时残差→0）；两个原始bug case（背景/前景脱节、过冲光晕）在C3-2下依然肉眼正常，且比C3-1单独全局基底版本略有"抓眼感"回归。**当前主线是 C3-3：残差级边缘融合（Guided Filter）+ 材质混杂度特征细化**。M3.7 Smart Color v2 嫁接暂停，等待 30 组 `FG-BG-Coord-v1` 视觉验收。
 
 **本目录即代码基地**：本项目已从 `/Users/mac/Documents/Codex/2026-07-05/gpt-image-2/` 迁移到 `/Users/mac/Desktop/整体代码1.0/仿色模型/` 作为唯一持续开发位置（`.git`/远程仓库随迁移保留）。虚拟环境 `.venv`/`.venv-m2` 太大（合计约1GB）未一起迁移，重建方式：
 
@@ -56,6 +56,7 @@ cd stage0_pipeline
 | C3 仿色一致性升级方案 | Obsidian `[[语义物体调色专家-仿色一致性升级方案]]` |
 | C3-0 legacy 基线清单 | `stage0_pipeline/baselines/c3-0/legacy_v0/manifest.json` |
 | C3-1 全局氛围基底（已实现+验证） | `outputs/phase-c3-1-global-mood-base.md`、`stage0_pipeline/scripts_m2/coherence_controller.py` |
+| C3-2 区域受信任度残差（已实现+验证） | `outputs/phase-c3-2-region-residual.md`（`_render_coherence_from_analysis` 内） |
 | FG-BG-Coord-v1 专项评审集 | `stage0_pipeline/eval/fg_bg_coord_v1/` |
 | 仿色 Web Demo（参考图+目标图+强度滑杆） | `stage0_pipeline/webdemo/` |
 | 开发启动清单 | `outputs/development-start-checklist.md` |
@@ -83,7 +84,8 @@ cp stage0_pipeline/secrets/api.local.json.example stage0_pipeline/secrets/api.lo
 8. ~~**"背景跟前景脱节"问题：同标签类别外观差过大压制强度**~~ ✅ —— 开放词汇标签把两种物理上完全不同的东西（商场白吊顶 vs 钢架顶棚）都标成"building"强行统计匹配，新增类别配对置信度按绝对 Lab 差距压制过冲，20图回归验证通过（顺带修好一张过曝背景模糊的图），**C2 训练数据再次重新生成**（held-out MAE 4.07→3.74，真实改善）（详见 `outputs/phase-teacher-class-mismatch-fix.md`）
 9. ~~**C3-0** 仿色一致性升级基线冻结~~ ✅ —— 已用 commit+SHA-256 锁定 `legacy_v0` teacher、97样本/208 class-rows C2 数据与 ridge head；核心接口新增 `pipeline=legacy/coherence`；`FG-BG-Coord-v1` 已登记旧20组
 10. ~~**C3-1** 全局氛围基底~~ ✅ —— `coherence_controller.py`：整图 Lab 加法位移，`ΔL≤10`/`Δab≤9` 严格限幅 + 内容匹配度打折 + 皮肤减半，20图回归全通过；`person_event_DSC04819_r2`（材质错配脱节）和 `outdoor_sky_DSC04085(1)`（光晕）两个原始bug case 视觉验证：脱节/光晕都消失，效果比 legacy 更自然但更弱（预期内，区域残差还没加回来）（详见 `outputs/phase-c3-1-global-mood-base.md`）
-11. **C3-2（当前主线）**：把区域分级结果改写成"相对全局基底的残差"，pair/pixel confidence 控制整个残差而不是只控制 `cs>1` 过冲部分；每区域设最大ΔE预算
-12. **C3-3/C3-4**：残差级边缘融合 + `eval_harmony.py` + 补齐 FG-BG-Coord-v1 到 30 组 + 人工A/B验收
-13. **C3-5/C3-6**：验收通过后重建C2 teacher数据，再恢复M3.7 Smart Color v2嫁接
-14. **C1** API易 双图冒烟（并行，不阻塞 C3）
+11. ~~**C3-2** 区域受信任度残差~~ ✅ —— 区域分级改写成"相对全局基底的残差"，`trust=scene*pair*homogeneity*pixel` 控制整个残差而不是只控制`cs>1`过冲部分（`trust→0`时收敛到全局基底而不是100%匹配）；新增`_region_homogeneity_confidence`+`MAX_REGION_DELTA_E`预算；20图回归全通过，两个原始bug case复测依然正常，天空等高可靠区域的"抓眼感"比C3-1略有回归（详见 `outputs/phase-c3-2-region-residual.md`）
+12. **C3-3（当前主线）**：残差级边缘融合（Guided Filter替代固定羽化半径）+ `homogeneity_confidence`补充纹理/边缘密度特征
+13. **C3-4**：`eval_harmony.py` + 补齐 FG-BG-Coord-v1 到 30 组 + 人工A/B验收
+14. **C3-5/C3-6**：验收通过后重建C2 teacher数据，再恢复M3.7 Smart Color v2嫁接
+15. **C1** API易 双图冒烟（并行，不阻塞 C3）

@@ -40,19 +40,41 @@ MIN_FRAC = 0.01
 
 # Validated in the Phase B / Phase D 20-image sweep. "medium" is exactly the
 # strength tier that passed the full regression + expanded-sample run.
-# `global_base` (added C3-1) is the coherence pipeline's whole-image mood
-# shift fraction — see coherence_controller.py. It rides the same
-# light/medium/strong tiers and the same slider interpolation (webdemo's
-# `_interp_preset` linearly blends every key in these dicts, including this
-# one) as a plain new numeric knob, no separate slider needed.
+# `default`/`skin`/`neutral` are consumed ONLY by the legacy pipeline
+# (`_render_legacy_from_analysis`) and are untouched by C3.
+#
+# `global_base` (C3-1) and `region_default`/`region_skin`/`region_neutral`
+# (C3-2) are consumed ONLY by the coherence pipeline
+# (`_render_coherence_from_analysis`) — see coherence_controller.py and the
+# residual-trust math below. They deliberately live in the SAME preset dicts
+# as the legacy knobs (not a parallel table) purely so webdemo's slider
+# interpolation (`_interp_preset` linearly blends every key it finds) keeps
+# working for both pipelines without extra plumbing.
+#
+# The region_* caps are much lower than legacy's default/skin/neutral: the
+# coherence pipeline multiplies its cap by a [0,1] trust score before use
+# (region_strength = cap * trust), so the cap is a ceiling reached only when
+# a region's pair/homogeneity/pixel/scene confidence are ALL high — legacy's
+# cs_base is instead a flat per-tier constant regardless of confidence,
+# which is the exact "confidence should gate strength toward 0, not toward
+# 1" bug this upgrade exists to fix (see 语义物体调色专家-仿色一致性升级方案 §一).
 STRENGTH_PRESETS = {
     "light":  {"default": 1.0, "skin": 0.9, "neutral": 0.25, "global_base": 0.15,
+               "region_default": 1.05, "region_skin": 0.60, "region_neutral": 0.20,
                "vibrance": 0.22, "contrast": 1.06, "sharpen": 0.25},
     "medium": {"default": 1.6, "skin": 1.3, "neutral": 0.45, "global_base": 0.30,
+               "region_default": 1.20, "region_skin": 0.75, "region_neutral": 0.35,
                "vibrance": 0.40, "contrast": 1.14, "sharpen": 0.40},
     "strong": {"default": 2.0, "skin": 1.5, "neutral": 0.55, "global_base": 0.45,
+               "region_default": 1.25, "region_skin": 0.85, "region_neutral": 0.45,
                "vibrance": 0.50, "contrast": 1.18, "sharpen": 0.45},
 }
+
+# Full delta (before trust/weight scaling) between a region's stats-matched
+# target and the global base, clamped per pixel. Prevents a degenerate
+# region statistic (tiny mask, extreme std ratio) from injecting an
+# arbitrarily large residual regardless of how trust is computed.
+MAX_REGION_DELTA_E = 30.0
 
 PIPELINE_LEGACY = "legacy"
 PIPELINE_COHERENCE = "coherence"
@@ -283,6 +305,37 @@ def _class_outlier_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> np.ndarray
     return np.clip(1.0 - (z - Z_FULL) / (Z_ZERO - Z_FULL), 0.0, 1.0).astype(np.float32)
 
 
+def _region_homogeneity_confidence(tgt_lab: np.ndarray, tm: np.ndarray) -> float:
+    """C3-2: scalar confidence in [0,1] — how visually uniform is this region
+    ON ITS OWN, independent of how well it happens to line up with the
+    reference? A region whose own pixels vary wildly in Lab (an open-vocab
+    "building" mask that swept up a bright wall AND a dark support beam) is
+    itself evidence the label lumped together different materials, and
+    shouldn't be trusted with a single mean/std statistical match no matter
+    how good `_class_pair_confidence`'s reference-vs-target mean comparison
+    looks.
+
+    Deliberately independent of `_class_outlier_confidence` (which flags
+    individual pixels atypical of THIS region's own mean) — this is a
+    single scene-level score for the region as a whole, feeding the same
+    `trust = scene * pair * homogeneity * pixel` product the upgrade plan
+    specifies (仿色一致性升级方案 §三·阶段三/四), not a per-pixel map.
+    """
+    t_sel = tm > 0.5
+    if t_sel.sum() < 20:
+        return 1.0
+    l_std = float(tgt_lab[..., 0][t_sel].std())
+    ab_std = tgt_lab[t_sel][:, 1:3].std(axis=0)
+    spread = float(np.hypot(l_std, np.hypot(*ab_std)))
+    # Loosely calibrated against the same "same label, different material"
+    # scale _class_pair_confidence uses (Z_ZERO=30 Lab units of absolute
+    # mean gap): a genuinely uniform sky/wall patch's own internal std
+    # sits comfortably under 10; a region straddling two different
+    # materials routinely exceeds 20.
+    FULL, ZERO = 10.0, 22.0
+    return float(np.clip(1.0 - (spread - FULL) / (ZERO - FULL), 0.0, 1.0))
+
+
 def analyze_target(profile: dict, tgt_rgb: np.ndarray, feather: float = 4.0) -> dict:
     """Strength-INDEPENDENT half of apply_profile: segmentation, the content-
     match gate, feathered blend weights, and per-class graded Lab targets.
@@ -404,18 +457,91 @@ def _render_legacy_from_analysis(analysis: dict, strength: str | dict = "medium"
 
 
 def _render_coherence_from_analysis(analysis: dict, strength: str | dict = "medium") -> np.ndarray:
-    """C3-1 coherence renderer: global mood base ONLY, no per-region residual
-    yet (that's C3-2). Deliberately isolated like this so the global base's
-    own effect on the reported foreground/background disconnect cases can be
-    judged before any regional logic is layered back on top.
+    """C3-2 coherence renderer: global mood base (C3-1) PLUS a trust-gated
+    per-region RESIDUAL, replacing C3-1's "global base only" placeholder.
+
+    Follows 仿色一致性升级方案 §二/三 literally:
+
+        base_lab = apply_global_base(target_lab, global_mood)
+        regional_target = grade_region(base_lab, reference_stats)   # graded
+                                                                     # FROM the
+                                                                     # base, not
+                                                                     # the raw
+                                                                     # target
+        regional_delta = regional_target - base_lab
+        output = base_lab + trust * clamp(regional_delta)
+
+    where ``trust = scene_confidence * pair_confidence *
+    homogeneity_confidence * pixel_confidence`` and ``region_strength =
+    preset_cap * trust`` — the SAME confidence terms legacy already computes
+    (`_class_pair_confidence`, `_class_outlier_confidence`), now gating the
+    entire residual rather than just legacy's `cs > 1` overshoot fraction.
+    A same-labeled-but-different-material region (confidence -> 0) now
+    converges toward "leave it at the global base", not toward "still do a
+    full statistical match" — that asymmetry was the concrete bug this
+    upgrade targets (see the module docstring reference in the plan doc).
+
+    Grading against `base_lab` (already mood-shifted) rather than the raw
+    target means the residual only has to cover what the global step didn't
+    already close, instead of re-deriving the reference's absolute stats
+    from scratch and double-counting the mood shift.
     """
     preset = STRENGTH_PRESETS[strength] if isinstance(strength, str) else strength
     tgt_lab = analysis["tgt_lab"]
-    mood = compute_global_mood(analysis["profile"], tgt_lab, analysis["compat"],
-                                preset.get("global_base", 0.0))
+    profile = analysis["profile"]
+
+    mood = compute_global_mood(profile, tgt_lab, analysis["compat"], preset.get("global_base", 0.0))
     base_lab = apply_global_base(tgt_lab, mood, analysis["tgt_cls"].get("skin"))
-    base_lab[..., 0] = np.clip(base_lab[..., 0], 0.0, 100.0)
-    out_rgb = np.clip(common.lab_to_rgb(base_lab), 0.0, 1.0)
+
+    scene_confidence = float(np.clip(analysis["compat"].get("explainable_tgt_frac", 0.0), 0.0, 1.0))
+    acc_delta = np.zeros_like(base_lab)
+    for c in analysis["class_names"]:
+        info = analysis["matched_info"][c]
+        if not info["matched"]:
+            continue
+        tm = analysis["tgt_cls"].get(c)
+        ref_stats = profile["classes"].get(c)
+
+        if c == "neutral":
+            graded = _grade_neutral_additive(base_lab, tm, ref_stats)
+        else:
+            graded = _grade_class_from_stats(c, base_lab, tm, ref_stats)
+        delta = graded - base_lab
+        delta_mag = np.linalg.norm(delta, axis=-1, keepdims=True) + 1e-6
+        delta = delta * np.minimum(1.0, MAX_REGION_DELTA_E / delta_mag)
+
+        # "neutral"/"skin" keep their own dedicated treatment (additive
+        # shift / hue-lock) — the same-label-different-material guard is
+        # specifically about open-vocab detected classes.
+        if c in ("neutral", "skin"):
+            pair_conf = 1.0
+        else:
+            # Recomputed against base_lab (not the precomputed tgt_lab-based
+            # analysis["class_confidence"]): the global shift may already
+            # have closed part of the reference-vs-target absolute gap, so
+            # the residual's own trust should judge the gap that's actually
+            # left, not the pre-global-shift gap.
+            pair_conf = _class_pair_confidence(ref_stats, base_lab, tm)
+        homog_conf = _region_homogeneity_confidence(tgt_lab, tm)
+        pixel_conf = analysis["confidence_by_class"][c]
+        if pixel_conf is None:
+            pixel_conf = np.ones(base_lab.shape[:2], dtype=np.float32)
+        trust = scene_confidence * pair_conf * homog_conf * pixel_conf
+
+        cap = preset["region_skin"] if c == "skin" else (preset["region_neutral"] if c == "neutral" else preset["region_default"])
+        region_strength = cap * trust
+        if c == "neutral" and info["tgt_frac"] > 0.5:
+            # Same "segmentation didn't understand this scene" taper legacy
+            # uses: unrecognized leftover swallowing most of the frame
+            # shouldn't get the reference's cast forced onto it.
+            region_strength = region_strength * (max(0.0, 1.0 - (info["tgt_frac"] - 0.5) / 0.5) ** 2)
+
+        w = analysis["weights"][c]
+        acc_delta += delta * (region_strength * w)[..., None]
+
+    out_lab = base_lab + acc_delta
+    out_lab[..., 0] = np.clip(out_lab[..., 0], 0.0, 100.0)
+    out_rgb = np.clip(common.lab_to_rgb(out_lab), 0.0, 1.0)
     out_rgb = _vibrance_contrast_sharpen(out_rgb, analysis["tgt_cls"]["skin"], vibrance=preset["vibrance"],
                                           contrast=preset["contrast"], sharpen_amount=preset["sharpen"])
     return out_rgb
