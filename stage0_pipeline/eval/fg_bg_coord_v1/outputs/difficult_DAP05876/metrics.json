@@ -1,0 +1,39 @@
+{
+  "id": "difficult_DAP05876",
+  "compat": {
+    "jaccard": 0.167,
+    "explainable_tgt_frac": 0,
+    "shared_classes": [],
+    "suitable": false
+  },
+  "legacy_v0": {
+    "fg_bg_luma_change_diff": 0.1162714958190918,
+    "fg_bg_tone_direction_cos": 0.14865456521511078,
+    "neutral_vs_bg_change_ratio": 2.309750662035987,
+    "boundary_delta_e_p95": 12.127312660217285,
+    "boundary_delta_e_p99": 18.90273666381836,
+    "skin_hue_drift_deg": 2.2314789295196533,
+    "highlight_clip_frac": 0.014120062774926686,
+    "shadow_clip_frac": 0.7633138975439883,
+    "region_max_delta_e_p95": {
+      "neutral": 12.916727066040039
+    },
+    "region_pair_confidence": {}
+  },
+  "legacy_v0_flags": [],
+  "coherence_v1": {
+    "fg_bg_luma_change_diff": 0.6430405378341675,
+    "fg_bg_tone_direction_cos": 0.9979782700538635,
+    "neutral_vs_bg_change_ratio": 1.102313220055534,
+    "boundary_delta_e_p95": 12.14708423614502,
+    "boundary_delta_e_p99": 19.04265022277832,
+    "skin_hue_drift_deg": 2.0515224933624268,
+    "highlight_clip_frac": 0.01454677190249267,
+    "shadow_clip_frac": 0.763275235978739,
+    "region_max_delta_e_p95": {
+      "neutral": 12.951675415039062
+    },
+    "region_pair_confidence": {}
+  },
+  "coherence_v1_flags": []
+}

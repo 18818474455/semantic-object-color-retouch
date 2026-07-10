@@ -1,0 +1,60 @@
+{
+  "id": "outdoor_sky_DAP031701_r2",
+  "compat": {
+    "jaccard": 0.429,
+    "explainable_tgt_frac": 0.921,
+    "shared_classes": [
+      "clothing",
+      "screen"
+    ],
+    "suitable": true
+  },
+  "legacy_v0": {
+    "fg_bg_luma_change_diff": 28.411705017089844,
+    "fg_bg_tone_direction_cos": -0.8284094333648682,
+    "neutral_vs_bg_change_ratio": 5.1087949345002945,
+    "boundary_delta_e_p95": 63.10465621948242,
+    "boundary_delta_e_p99": 68.5252914428711,
+    "skin_hue_drift_deg": 2.254319667816162,
+    "highlight_clip_frac": 0.6948499931268328,
+    "shadow_clip_frac": 0.0008290757881231672,
+    "region_max_delta_e_p95": {
+      "screen": 28.708951950073242,
+      "neutral": 21.901554107666016,
+      "clothing": 71.4061279296875
+    },
+    "region_pair_confidence": {
+      "screen": 1.0,
+      "clothing": 0.0
+    }
+  },
+  "legacy_v0_flags": [
+    "fg_bg_luma_change_diff>15 (前后景明暗变化差异大)",
+    "fg_bg_tone_direction_cos<0 (前后景色调朝相反方向变化)",
+    "boundary_delta_e_p99>25 (边界可能有光晕)",
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ],
+  "coherence_v1": {
+    "fg_bg_luma_change_diff": 6.276072978973389,
+    "fg_bg_tone_direction_cos": -0.9982730746269226,
+    "neutral_vs_bg_change_ratio": 0.39032984222894723,
+    "boundary_delta_e_p95": 14.60037899017334,
+    "boundary_delta_e_p99": 18.676029205322266,
+    "skin_hue_drift_deg": 2.9855782985687256,
+    "highlight_clip_frac": 0.5258187660373901,
+    "shadow_clip_frac": 0.11363636363636363,
+    "region_max_delta_e_p95": {
+      "screen": 14.63306999206543,
+      "neutral": 12.579021453857422,
+      "clothing": 7.249942779541016
+    },
+    "region_pair_confidence": {
+      "screen": 1.0,
+      "clothing": 0.0
+    }
+  },
+  "coherence_v1_flags": [
+    "fg_bg_tone_direction_cos<0 (前后景色调朝相反方向变化)",
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ]
+}

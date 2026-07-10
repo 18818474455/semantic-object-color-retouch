@@ -1,0 +1,43 @@
+{
+  "id": "stage_led_mixed_DAP05979",
+  "compat": {
+    "jaccard": 0.2,
+    "explainable_tgt_frac": 0,
+    "shared_classes": [],
+    "suitable": false
+  },
+  "legacy_v0": {
+    "fg_bg_luma_change_diff": null,
+    "fg_bg_tone_direction_cos": null,
+    "neutral_vs_bg_change_ratio": null,
+    "boundary_delta_e_p95": 16.380859375,
+    "boundary_delta_e_p99": 19.57515525817871,
+    "skin_hue_drift_deg": 2.6663143634796143,
+    "highlight_clip_frac": 0.062408357771261,
+    "shadow_clip_frac": 0.7662278340359238,
+    "region_max_delta_e_p95": {
+      "neutral": 12.022068977355957
+    },
+    "region_pair_confidence": {}
+  },
+  "legacy_v0_flags": [
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ],
+  "coherence_v1": {
+    "fg_bg_luma_change_diff": null,
+    "fg_bg_tone_direction_cos": null,
+    "neutral_vs_bg_change_ratio": null,
+    "boundary_delta_e_p95": 16.307655334472656,
+    "boundary_delta_e_p99": 19.521453857421875,
+    "skin_hue_drift_deg": 2.7391774654388428,
+    "highlight_clip_frac": 0.06121987261730205,
+    "shadow_clip_frac": 0.7695656158357771,
+    "region_max_delta_e_p95": {
+      "neutral": 12.164863586425781
+    },
+    "region_pair_confidence": {}
+  },
+  "coherence_v1_flags": [
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ]
+}

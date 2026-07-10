@@ -1,0 +1,57 @@
+{
+  "id": "outdoor_sky_DSC040851",
+  "compat": {
+    "jaccard": 0.333,
+    "explainable_tgt_frac": 0.448,
+    "shared_classes": [
+      "building",
+      "sky"
+    ],
+    "suitable": true
+  },
+  "legacy_v0": {
+    "fg_bg_luma_change_diff": 6.961963653564453,
+    "fg_bg_tone_direction_cos": 0.9997147917747498,
+    "neutral_vs_bg_change_ratio": 0.06718125928470103,
+    "boundary_delta_e_p95": 24.766542434692383,
+    "boundary_delta_e_p99": 37.989479064941406,
+    "skin_hue_drift_deg": 6.606947422027588,
+    "highlight_clip_frac": 0.22806170958577712,
+    "shadow_clip_frac": 0.14405012829912023,
+    "region_max_delta_e_p95": {
+      "sky": 27.679954528808594,
+      "neutral": 16.2213134765625,
+      "building": 48.20354461669922
+    },
+    "region_pair_confidence": {
+      "sky": 1.0,
+      "building": 0.2761474609375
+    }
+  },
+  "legacy_v0_flags": [
+    "boundary_delta_e_p99>25 (边界可能有光晕)",
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ],
+  "coherence_v1": {
+    "fg_bg_luma_change_diff": 0.16077375411987305,
+    "fg_bg_tone_direction_cos": 0.9857378602027893,
+    "neutral_vs_bg_change_ratio": 0.18268742542048505,
+    "boundary_delta_e_p95": 14.557333946228027,
+    "boundary_delta_e_p99": 19.60694694519043,
+    "skin_hue_drift_deg": 6.12137508392334,
+    "highlight_clip_frac": 0.24405614232038123,
+    "shadow_clip_frac": 0.018806703629032258,
+    "region_max_delta_e_p95": {
+      "sky": 14.166092872619629,
+      "neutral": 14.250612258911133,
+      "building": 13.61967658996582
+    },
+    "region_pair_confidence": {
+      "sky": 1.0,
+      "building": 0.2761474609375
+    }
+  },
+  "coherence_v1_flags": [
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ]
+}

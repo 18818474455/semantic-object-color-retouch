@@ -1,0 +1,45 @@
+{
+  "id": "difficult_DAP09915_2",
+  "compat": {
+    "jaccard": 0.2,
+    "explainable_tgt_frac": 0,
+    "shared_classes": [],
+    "suitable": false
+  },
+  "legacy_v0": {
+    "fg_bg_luma_change_diff": 3.209874391555786,
+    "fg_bg_tone_direction_cos": -0.5685595870018005,
+    "neutral_vs_bg_change_ratio": 0.24992466374537944,
+    "boundary_delta_e_p95": 14.924736022949219,
+    "boundary_delta_e_p99": 21.09500503540039,
+    "skin_hue_drift_deg": 4.947604179382324,
+    "highlight_clip_frac": 0.7075682161840176,
+    "shadow_clip_frac": 0.18221052510997068,
+    "region_max_delta_e_p95": {
+      "neutral": 9.44837760925293
+    },
+    "region_pair_confidence": {}
+  },
+  "legacy_v0_flags": [
+    "fg_bg_tone_direction_cos<0 (前后景色调朝相反方向变化)",
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ],
+  "coherence_v1": {
+    "fg_bg_luma_change_diff": 3.3320846557617188,
+    "fg_bg_tone_direction_cos": -0.778217613697052,
+    "neutral_vs_bg_change_ratio": 0.17002688843899486,
+    "boundary_delta_e_p95": 14.922768592834473,
+    "boundary_delta_e_p99": 21.34679412841797,
+    "skin_hue_drift_deg": 3.9008541107177734,
+    "highlight_clip_frac": 0.7076197649376833,
+    "shadow_clip_frac": 0.18999438691348974,
+    "region_max_delta_e_p95": {
+      "neutral": 10.027029037475586
+    },
+    "region_pair_confidence": {}
+  },
+  "coherence_v1_flags": [
+    "fg_bg_tone_direction_cos<0 (前后景色调朝相反方向变化)",
+    "highlight_clip_frac>5% (高光裁剪偏多)"
+  ]
+}
